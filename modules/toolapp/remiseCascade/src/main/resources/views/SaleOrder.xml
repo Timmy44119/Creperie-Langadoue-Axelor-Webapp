@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.3.xsd">
+
+    <form name="sale-order-form" title="Sale order"
+          model="com.axelor.apps.sale.db.SaleOrder"
+          onLoad="action-group-sale-saleorder-onload"
+          onNew="action-group-sale-saleorder-onnew"
+          id="sale-order-form-extend"
+          extension="true">
+        <extend target="panel[@name='salesFollowUpPanel']">
+            <insert position="before">
+                <panel name="discountPanel" title="Global Discount" colSpan="12" hideIf="clientPartner == null" sidebar="true"
+                       itemSpan="6" canCollapse="true" collapseIf="true" >
+                    <panel name="firstDiscountPanel" title="First global discount" colSpan="12">
+                        <field name="discountTypeSelect" canEdit="true"/>
+                        <field name="discountAmount" onChange="action-sale-order-method-compute-extend" hideIf="discountTypeSelect == 0"/>
+                    </panel>
+                    <panel name="secondDiscountPanel" title="Second global discount" colSpan="12">
+                        <field name="secDiscountTypeSelect" canEdit="true" />
+                        <field name="secDiscountAmount" onChange="action-sale-order-method-compute-extend" hideIf="secDiscountTypeSelect == 0"/>
+                    </panel>
+                </panel>
+            </insert>
+        </extend>
+    </form>
+    <action-method name="action-sale-order-method-compute-extend">
+        <call class="bzh.toolapp.apps.remisecascade.web.SaleOrderController" method="compute"/>
+    </action-method>
+</object-views>

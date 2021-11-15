@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.3.xsd">
+
+    <form name="price-list-form" title="Price list" model="com.axelor.apps.base.db.PriceList"
+          onNew="action-price-list-record-default,action-price-list-attrs-readonly-type-select"
+          width="large"
+          id="price-list-form-extend"
+          extension="true">
+        <extend target="panel[@name='priceListLinePanel']">
+            <replace>
+                <panel name="priceListLinePanel" title="Price list lines">
+                    <panel name="firstPriceListLinePanel" title="First Price list lines">
+                        <field name="generalDiscount"/>
+                    </panel>
+
+                    <panel name="secPriceListLinePanel" title="Second Price list lines">
+                        <field name="secGeneralDiscount"/>
+                    </panel>
+                    <label name="andLabel" title="And" colSpan="12"/>
+                    <panel-related name="historizedPriceListPanel" field="priceListLineList"
+                                   grid-view="price-list-line-grid"
+                                   form-view="price-list-line-form" colSpan="12"/>
+                </panel>
+            </replace>
+        </extend>
+    </form>
+
+</object-views>

@@ -1,0 +1,11 @@
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://axelor.com/xml/ns/domain-models
+  http://axelor.com/xml/ns/domain-models/domain-models_5.3.xsd">
+
+    <module name="remiseCascade" package="com.axelor.apps.base.db"/>
+    <entity name="PriceList" lang="java">
+        <one-to-one name="priceList" ref="com.axelor.apps.base.db.PriceList" title="Price list"/>
+        <decimal name="secGeneralDiscount" title="Second General discount (%)" min="0" max="100"/>
+    </entity>
+</domain-models>

@@ -1,0 +1,14 @@
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://axelor.com/xml/ns/domain-models
+  http://axelor.com/xml/ns/domain-models/domain-models_5.3.xsd">
+
+    <module name="remiseCascade" package="com.axelor.apps.account.db"/>
+    <entity name="Invoice" lang="java">
+        <one-to-one name="invoice" ref="com.axelor.apps.account.db.Invoice" title="Invoice"/>
+        <decimal name="discountAmount" title="Discount amount" precision="20" scale="10"/>
+        <integer name="discountTypeSelect" title="Discount type" selection="base.price.list.line.amount.type.select" default="0"/>
+        <decimal name="secDiscountAmount" title="Second discount amount" precision="20" scale="10"/>
+        <integer name="secDiscountTypeSelect" title="Second discount type" selection="base.price.list.line.amount.type.select" default="0"/>
+    </entity>
+</domain-models>

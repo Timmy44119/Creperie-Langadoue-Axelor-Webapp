@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.3.xsd">
+    <form name="sale-order-line-form" title="SO line" model="com.axelor.apps.sale.db.SaleOrderLine"
+          onLoad="action-group-sale-saleorderline-onload,action-sale-order-line-attrs-hidden-fields-for-client"
+          onNew="action-group-sale-saleorderline-onnew" width="large"
+          id="sale-order-line-form-extend"
+          extension="true">
+        <extend target="panel-tabs[@name='mainPanelTab']//panel[@name='informationsPanel']//panel[@name='productDetailPanel']//panel[@name='discountPanel']">
+            <replace>
+                <panel name="discountPanel" title="Discount" colSpan="12">
+                    <panel name="firstDiscountPanel" title="First discount" colSpan="12">
+                        <field name="discountTypeSelect"  canEdit="true"/>
+                        <field name="discountAmount" onChange="action-sale-line-method-compute-extend" hideIf="discountTypeSelect == 0"/>
+                    </panel>
+                    <panel name="secondDiscountPanel" title="Second discount" colSpan="12">
+                        <field name="secDiscountTypeSelect" canEdit="true"/>
+                        <field name="secDiscountAmount" onChange="action-sale-line-method-compute-extend" hideIf="secDiscountTypeSelect == 0"/>
+                    </panel>
+                </panel>
+            </replace>
+        </extend>
+    </form>
+
+    <action-method name="action-sale-line-method-compute-extend">
+        <call class="bzh.toolapp.apps.remisecascade.web.SaleOrderLineController" method="compute"/>
+    </action-method>
+</object-views>

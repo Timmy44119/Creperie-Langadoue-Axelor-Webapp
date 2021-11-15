@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.3.xsd">
+    <form name="price-list-line-form" title="Price list line" model="com.axelor.apps.base.db.PriceListLine"
+          onNew="action-group-base-pricelistline-onnew"
+          onLoad="action-price-list-line-attrs-scale-and-precision" width="large"
+          id="price-list-line-form-extend"
+          extension="true">
+        <extend target="panel[@name='calculationMethodPanel']">
+            <insert position="after">
+                <panel name="secCalculationMethodPanel" title="Second calculation method" colSpan="12" >
+                    <field name="secTypeSelect" hideIf="productCategory" selection="base.price.list.line.type.select" colSpan="12" onChange="action-price-list-line-record-type-select, action-price-list-line-attrs-amount-title-change, action-price-list-line-attrs-amount-percent-title-change" />
+                    <field name="secTypeSelect" hideIf="!productCategory" selection-in="[1,2]" selection="base.price.list.line.type.select" colSpan="12" onChange="action-price-list-line-record-type-select, action-price-list-line-attrs-amount-title-change, action-price-list-line-attrs-amount-percent-title-change" />
+                    <field name="secAmountTypeSelect" colSpan="12" hideIf="secTypeSelect == 3" onChange="action-price-list-line-attrs-amount-percent-title-change"/>
+                    <field name="secAmount" colSpan="12" hideIf="secAmountTypeSelect == 3"/>
+                    <field name="secMinQty" colSpan="12"/>
+                </panel>
+            </insert>
+        </extend>
+    </form>
+</object-views>

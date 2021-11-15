@@ -1,0 +1,15 @@
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://axelor.com/xml/ns/domain-models
+  http://axelor.com/xml/ns/domain-models/domain-models_5.3.xsd">
+
+    <module name="remiseCascade" package="com.axelor.apps.base.db"/>
+    <entity name="PriceListLine" lang="java">
+        <one-to-one name="priceListLine" ref="com.axelor.apps.base.db.PriceList" title="Price list line"/>
+        <integer name="secTypeSelect" title="Second Discount/Additionnal/Replace" selection="base.price.list.line.type.select"/>
+        <integer name="secAmountTypeSelect" title="Second Fixed Amount/%" selection="base.price.list.line.amount.type.select"/>
+        <decimal name="secAmount" title="Second Amount/%" precision="20" scale="10" min="0"/>
+        <decimal name="secMinQty" title="Second Qty min (by product)" precision="20" scale="10" min="0"/>
+    </entity>
+
+</domain-models>

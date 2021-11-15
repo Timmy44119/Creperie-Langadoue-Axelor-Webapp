@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.3.xsd">
+    <form name="invoice-form" title="Invoice" model="com.axelor.apps.account.db.Invoice"
+          onNew="action-account-invoice-onnew-group"
+          onLoad="action-account-invoice-onload-group"
+          id="invoice-form-extend"
+          extension="true">
+        <extend target="panel-stack[@name='otherDetailsPanel']//panel[@name='referenceDocumentsPanel']">
+            <insert position="before">
+                <panel name="discountPanel" title="Global Discount" colSpan="12" itemSpan="6" canCollapse="true"
+                       collapseIf="true" >
+                    <panel name="firstDiscountPanel" title="First global discount" colSpan="12">
+                        <field name="discountTypeSelect" canEdit="true"/>
+                        <field name="discountAmount" onChange="action-invoice-method-compute-extend" hideIf="discountTypeSelect == 0"/>
+                    </panel>
+                    <panel name="secondDiscountPanel" title="Second global discount" colSpan="12">
+                        <field name="secDiscountTypeSelect" canEdit="true"/>
+                        <field name="secDiscountAmount" onChange="action-invoice-method-compute-extend" hideIf="secDiscountTypeSelect == 0"/>
+                    </panel>
+                </panel>
+            </insert>
+        </extend>
+    </form>
+    <action-method name="action-invoice-method-compute-extend">
+        <call class="bzh.toolapp.apps.remisecascade.web.InvoiceController" method="compute"/>
+    </action-method>
+</object-views>
