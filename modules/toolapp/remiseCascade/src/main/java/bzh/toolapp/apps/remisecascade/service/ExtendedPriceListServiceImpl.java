@@ -1,0 +1,227 @@
+package bzh.toolapp.apps.remisecascade.service;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.axelor.apps.base.db.PriceList;
+import com.axelor.apps.base.db.PriceListLine;
+import com.axelor.apps.base.db.repo.AppBaseRepository;
+import com.axelor.apps.base.db.repo.PriceListLineRepository;
+import com.axelor.apps.base.db.repo.PriceListRepository;
+import com.axelor.apps.base.service.PriceListService;
+import com.axelor.apps.base.service.app.AppBaseService;
+import com.google.inject.Inject;
+
+public class ExtendedPriceListServiceImpl extends PriceListService {
+
+
+	private static final String GLOBAL_SECOND_DISCOUNT_TYPE_SELECT = "globalSecondDiscountTypeSelect";
+	private static final String GLOBAL_SECOND_DISCOUNT_AMOUNT = "globalSecondDiscountAmount";
+	private static final String GLOBAL_DISCOUNT_TYPE_SELECT = "globalDiscountTypeSelect";
+	private static final String GLOBAL_DISCOUNT_AMOUNT = "globalDiscountAmount";
+	private static final String LINE_SECOND_DISCOUNT_TYPE_SELECT = "lineSecondDiscountTypeSelect";
+	private static final String LINE_SECOND_DISCOUNT_AMOUNT = "lineSecondDiscountAmount";
+	private static final String LINE_DISCOUNT_TYPE_SELECT = "lineDiscountTypeSelect";
+	private static final String LINE_DISCOUNT_AMOUNT = "lineDiscountAmount";
+
+	@Inject protected AppBaseService appBaseService;
+
+
+
+
+	@Override
+	public BigDecimal getUnitPriceDiscounted(final PriceListLine priceListLine, final BigDecimal unitPrice) {
+		BigDecimal targetPrice;
+
+		switch (priceListLine.getTypeSelect()) {
+		case PriceListLineRepository.TYPE_ADDITIONNAL:
+			if (priceListLine.getAmountTypeSelect() == PriceListLineRepository.AMOUNT_TYPE_FIXED) {
+				targetPrice = unitPrice.add(priceListLine.getAmount());
+			} else if (priceListLine.getAmountTypeSelect()
+					== PriceListLineRepository.AMOUNT_TYPE_PERCENT) {
+				targetPrice = unitPrice.multiply(
+						BigDecimal.ONE.add(priceListLine.getAmount().divide(new BigDecimal(100))));
+			} else {
+
+				targetPrice = unitPrice;
+			}
+			break;
+		case PriceListLineRepository.TYPE_DISCOUNT:
+			// first discount amount (shared with every context, sale or purchase)
+			if (priceListLine.getAmountTypeSelect() == PriceListLineRepository.AMOUNT_TYPE_FIXED) {
+				targetPrice = unitPrice.subtract(priceListLine.getAmount());
+			} else if (priceListLine.getAmountTypeSelect()
+					== PriceListLineRepository.AMOUNT_TYPE_PERCENT) {
+				targetPrice = unitPrice.multiply(
+						BigDecimal.ONE.subtract(priceListLine.getAmount().divide(new BigDecimal(100))));
+			}else {
+				targetPrice = unitPrice;
+			}
+			// second discount amount
+			if (priceListLine.getSecAmountTypeSelect() == PriceListLineRepository.AMOUNT_TYPE_FIXED) {
+				targetPrice = targetPrice.subtract(priceListLine.getSecAmount());
+			} else if (priceListLine.getSecAmountTypeSelect() == PriceListLineRepository.AMOUNT_TYPE_PERCENT) {
+				targetPrice = targetPrice.multiply(
+						BigDecimal.ONE.subtract(priceListLine.getSecAmount().divide(new BigDecimal(100))));
+			}
+
+			final PriceList priceList = priceListLine.getPriceList();
+			if (priceList != null) {
+				// first global discount amount
+				final BigDecimal generalDiscount = priceList.getGeneralDiscount();
+				if (generalDiscount != BigDecimal.ZERO) {
+					targetPrice = targetPrice
+							.multiply(BigDecimal.ONE.subtract(generalDiscount.divide(new BigDecimal(100))));
+				}
+				// second global discount amount
+				final BigDecimal secondGeneralDiscount = priceList.getSecGeneralDiscount();
+				if (secondGeneralDiscount != BigDecimal.ZERO) {
+					targetPrice = targetPrice
+							.multiply(BigDecimal.ONE.subtract(secondGeneralDiscount.divide(new BigDecimal(100))));
+				}
+			}
+			break;
+		case PriceListLineRepository.TYPE_REPLACE:
+			targetPrice = priceListLine.getAmount();
+			break;
+		default:
+			targetPrice = unitPrice;
+		}
+		return targetPrice;
+	}
+
+	@Override
+	public Map<String, Object> getReplacedPriceAndDiscounts(
+			final PriceList priceList, final PriceListLine priceListLine, BigDecimal price) {
+		int discountTypeSelect = 0;
+
+		if (priceListLine != null) {
+			discountTypeSelect = priceListLine.getTypeSelect();
+		}
+		final Map<String, Object> discounts = this.getDiscounts(priceList, priceListLine, price);
+		if (discounts != null) {
+			final int computeMethodDiscountSelect =
+					this.appBaseService.getAppBase().getComputeMethodDiscountSelect();
+			if (((computeMethodDiscountSelect == AppBaseRepository.INCLUDE_DISCOUNT_REPLACE_ONLY)
+					&& (discountTypeSelect == PriceListLineRepository.TYPE_REPLACE))
+					|| (computeMethodDiscountSelect == AppBaseRepository.INCLUDE_DISCOUNT)) {
+
+				price =
+						this.computeExtendedDiscount(
+								price,
+								discounts, priceList.getTypeSelect());
+				discounts.put("price", price);
+				discounts.put("discountTypeSelect", PriceListLineRepository.AMOUNT_TYPE_NONE);
+				discounts.put("discountAmount", BigDecimal.ZERO);
+			}
+		}
+		return discounts;
+	}
+
+	/**
+	 * Here, we will manage two cases :
+	 *
+	 * For purchase, we continue to use only one discount (per line or global)
+	 *
+	 * For invoice and sale, we have to manage 2 discounts per line and 2 discounts globally.
+	 *
+	 * @param price original element to modify.
+	 * @param discounts
+	 * @param typeSelection could be Purchase or Sale
+	 * @return a price adapted with discounts information.
+	 */
+	private BigDecimal computeExtendedDiscount(final BigDecimal price, final Map<String, Object> discounts, final Integer typeSelection) {
+		BigDecimal targetPrice;
+		if (PriceListRepository.TYPE_SALE == typeSelection) {
+			// custom behavior for invoice and sale
+			targetPrice = price;
+			targetPrice = this.computeDiscount(targetPrice,
+					(int) discounts.get(LINE_DISCOUNT_TYPE_SELECT),
+					(BigDecimal) discounts.get(LINE_DISCOUNT_AMOUNT));
+			targetPrice = this.computeDiscount(targetPrice,
+					(int) discounts.get(LINE_SECOND_DISCOUNT_TYPE_SELECT),
+					(BigDecimal) discounts.get(LINE_SECOND_DISCOUNT_AMOUNT));
+			targetPrice = this.computeDiscount(targetPrice,
+					(int) discounts.get(GLOBAL_DISCOUNT_TYPE_SELECT),
+					(BigDecimal) discounts.get(GLOBAL_DISCOUNT_AMOUNT));
+			targetPrice = this.computeDiscount(targetPrice,
+					(int) discounts.get(GLOBAL_SECOND_DISCOUNT_TYPE_SELECT),
+					(BigDecimal) discounts.get(GLOBAL_SECOND_DISCOUNT_AMOUNT));
+		} else {
+			// classic behavior for purchase
+			targetPrice = this.computeDiscount(price,
+					(int) discounts.get("discountTypeSelect"),
+					(BigDecimal) discounts.get("discountAmount"));
+		}
+		return targetPrice;
+	}
+
+	@Override
+	public Map<String, Object> getDiscounts(
+			final PriceList priceList, final PriceListLine priceListLine, final BigDecimal price) {
+
+		final Map<String, Object> discounts = new HashMap<>();
+
+		if (priceListLine != null) {
+			// basic code for purchase
+			discounts.put(
+					"discountAmount",
+					this.getDiscountAmount(priceListLine, price)
+					.setScale(this.appBaseService.getNbDecimalDigitForUnitPrice(), RoundingMode.HALF_UP));
+			discounts.put("discountTypeSelect", this.getDiscountTypeSelect(priceListLine));
+
+			// extended code for invoice and sale
+			discounts.put(LINE_DISCOUNT_AMOUNT, this.getDiscountAmount(priceListLine, price).setScale(this.appBaseService.getNbDecimalDigitForUnitPrice(), RoundingMode.HALF_UP));
+			discounts.put(LINE_DISCOUNT_TYPE_SELECT, this.getDiscountTypeSelect(priceListLine));
+			discounts.put(LINE_SECOND_DISCOUNT_AMOUNT, this.getSecDiscountAmount(priceListLine, price).setScale(this.appBaseService.getNbDecimalDigitForUnitPrice(), RoundingMode.HALF_UP));
+			discounts.put(LINE_SECOND_DISCOUNT_TYPE_SELECT, priceListLine.getSecAmountTypeSelect());
+		} else {
+			// basic code for purchase
+			final BigDecimal discountAmount =
+					priceList
+					.getGeneralDiscount()
+					.setScale(this.appBaseService.getNbDecimalDigitForUnitPrice(), RoundingMode.HALF_UP);
+			discounts.put("discountAmount", discountAmount);
+			if (discountAmount.compareTo(BigDecimal.ZERO) == 0) {
+				discounts.put("discountTypeSelect", PriceListLineRepository.AMOUNT_TYPE_NONE);
+			} else {
+				discounts.put("discountTypeSelect", PriceListLineRepository.AMOUNT_TYPE_PERCENT);
+			}
+		}
+
+		// extends code for global discounts for invoice and sale
+		discounts.put(GLOBAL_DISCOUNT_AMOUNT, priceList.getGeneralDiscount().setScale(this.appBaseService.getNbDecimalDigitForUnitPrice(), RoundingMode.HALF_UP));
+		discounts.put(GLOBAL_DISCOUNT_TYPE_SELECT, this.computeDiscountTypeSelection(priceList.getGeneralDiscount()));
+		discounts.put(GLOBAL_SECOND_DISCOUNT_AMOUNT, priceList.getSecGeneralDiscount().setScale(this.appBaseService.getNbDecimalDigitForUnitPrice(), RoundingMode.HALF_UP));
+		discounts.put(GLOBAL_SECOND_DISCOUNT_TYPE_SELECT, this.computeDiscountTypeSelection(priceList.getSecGeneralDiscount()));
+
+		return discounts;
+	}
+
+	private int computeDiscountTypeSelection(final BigDecimal discountAmount) {
+		int selection = PriceListLineRepository.AMOUNT_TYPE_PERCENT;
+		if (discountAmount.compareTo(BigDecimal.ZERO) == 0) {
+			selection = PriceListLineRepository.AMOUNT_TYPE_NONE;
+		}
+		return selection;
+	}
+
+	private BigDecimal getSecDiscountAmount(final PriceListLine priceListLine, final BigDecimal unitPrice) {
+		switch (priceListLine.getTypeSelect()) {
+		case PriceListLineRepository.TYPE_ADDITIONNAL:
+			return priceListLine.getSecAmount().negate();
+
+		case PriceListLineRepository.TYPE_DISCOUNT:
+			return priceListLine.getSecAmount();
+
+		case PriceListLineRepository.TYPE_REPLACE:
+			return unitPrice.subtract(priceListLine.getSecAmount());
+
+		default:
+			return BigDecimal.ZERO;
+		}
+	}
+
+}
