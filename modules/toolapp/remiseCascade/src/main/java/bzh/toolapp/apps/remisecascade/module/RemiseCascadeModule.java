@@ -20,8 +20,10 @@ package bzh.toolapp.apps.remisecascade.module;
 import com.axelor.app.AxelorModule;
 import com.axelor.apps.base.service.PriceListService;
 import com.axelor.apps.businessproduction.service.SaleOrderLineBusinessProductionServiceImpl;
+import com.axelor.apps.businessproject.service.InvoiceLineProjectServiceImpl;
 import com.axelor.apps.supplychain.service.SaleOrderComputeServiceSupplychainImpl;
 
+import bzh.toolapp.apps.remisecascade.service.ExtendedInvoiceLineServiceImpl;
 import bzh.toolapp.apps.remisecascade.service.ExtendedPriceListServiceImpl;
 import bzh.toolapp.apps.remisecascade.service.ExtendedSaleOrderComputeServiceImpl;
 import bzh.toolapp.apps.remisecascade.service.ExtendedSaleOrderLineServiceImpl;
@@ -34,5 +36,6 @@ public class RemiseCascadeModule extends AxelorModule {
 		this.bind(SaleOrderLineBusinessProductionServiceImpl.class)
 		.to(ExtendedSaleOrderLineServiceImpl.class);
 		this.bind(PriceListService.class).to(ExtendedPriceListServiceImpl.class);
+		this.bind(InvoiceLineProjectServiceImpl.class).to(ExtendedInvoiceLineServiceImpl.class);
 	}
 }
