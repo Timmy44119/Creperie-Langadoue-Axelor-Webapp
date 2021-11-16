@@ -26,4 +26,8 @@
     <action-method name="action-sale-line-method-compute-extend">
         <call class="bzh.toolapp.apps.remisecascade.web.SaleOrderLineController" method="compute"/>
     </action-method>
+    
+    <action-method name="action-sale-order-line-method-get-discount">
+		<call class="bzh.toolapp.apps.remisecascade.web.SaleOrderLineController" method="getDiscount"/>
+	</action-method>
 </object-views>
