@@ -1,27 +1,151 @@
 package bzh.toolapp.apps.remisecascade.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.axelor.apps.account.db.Invoice;
+import com.axelor.apps.account.db.InvoiceLine;
+import com.axelor.apps.account.db.InvoiceLineTax;
+import com.axelor.apps.account.service.invoice.generator.InvoiceGenerator;
+import com.axelor.apps.base.service.PriceListService;
 import com.axelor.apps.sale.db.SaleOrder;
 import com.axelor.apps.supplychain.service.invoice.generator.InvoiceGeneratorSupplyChain;
 import com.axelor.exception.AxelorException;
 
+/**
+ * Create two contexts to generate Invoice from Sales order or delivery
+ *
+ * @author vince
+ *
+ */
 public class ExtendedInvoiceGeneratorSupplyChain extends InvoiceGeneratorSupplyChain {
+	private final Logger logger = LoggerFactory.getLogger(InvoiceGenerator.class);
 
-	protected ExtendedInvoiceGeneratorSupplyChain(final SaleOrder saleOrder, final boolean isRefund)
+	private final Invoice invoice;
+	private final PriceListService priceListService;
+
+	public ExtendedInvoiceGeneratorSupplyChain(final Invoice invoiceParam, final PriceListService priceListServiceParam)
 			throws AxelorException {
+		super((SaleOrder) null);
+		this.invoice = invoiceParam;
+		this.priceListService = priceListServiceParam;
+	}
+
+	protected ExtendedInvoiceGeneratorSupplyChain(final SaleOrder saleOrder, final boolean isRefund,
+			final PriceListService priceListServiceParam) throws AxelorException {
 		super(saleOrder, isRefund);
+		this.invoice = null;
+		this.priceListService = priceListServiceParam;
 	}
 
 	@Override
 	public Invoice generate() throws AxelorException {
-		final Invoice invoice = super.createInvoiceHeader();
-		invoice.setHeadOfficeAddress(this.saleOrder.getClientPartner().getHeadOfficeAddress());
+		final Invoice invoiceResult;
+		if (this.invoice == null) {
 
-		invoice.setDiscountAmount(this.saleOrder.getDiscountAmount());
-		invoice.setDiscountTypeSelect(this.saleOrder.getDiscountTypeSelect());
-		invoice.setSecDiscountAmount(this.saleOrder.getSecDiscountAmount());
-		invoice.setSecDiscountTypeSelect(this.saleOrder.getSecDiscountTypeSelect());
-		return invoice;
+			invoiceResult = super.createInvoiceHeader();
+			invoiceResult.setHeadOfficeAddress(this.saleOrder.getClientPartner().getHeadOfficeAddress());
+
+			invoiceResult.setDiscountAmount(this.saleOrder.getDiscountAmount());
+			invoiceResult.setDiscountTypeSelect(this.saleOrder.getDiscountTypeSelect());
+			invoiceResult.setSecDiscountAmount(this.saleOrder.getSecDiscountAmount());
+			invoiceResult.setSecDiscountTypeSelect(this.saleOrder.getSecDiscountTypeSelect());
+
+		} else {
+			invoiceResult = this.invoice;
+			final List<InvoiceLine> invoiceLines = new ArrayList<>();
+			invoiceLines.addAll(this.invoice.getInvoiceLineList());
+
+			this.populate(this.invoice, invoiceLines);
+
+		}
+		return invoiceResult;
 	}
 
+	/**
+	 * Compute the invoice total amounts
+	 *
+	 * @param invoice
+	 * @throws AxelorException
+	 */
+	@Override
+	public void computeInvoice(final Invoice invoice) throws AxelorException {
+
+		// In the invoice currency
+		invoice.setExTaxTotal(BigDecimal.ZERO);
+		invoice.setTaxTotal(BigDecimal.ZERO);
+		invoice.setInTaxTotal(BigDecimal.ZERO);
+
+		// In the company accounting currency
+		invoice.setCompanyExTaxTotal(BigDecimal.ZERO);
+		invoice.setCompanyTaxTotal(BigDecimal.ZERO);
+		invoice.setCompanyInTaxTotal(BigDecimal.ZERO);
+
+		for (final InvoiceLine invoiceLine : invoice.getInvoiceLineList()) {
+			// In the company accounting currency
+			// TODO this computation should be updated too ...
+			invoice.setCompanyExTaxTotal(invoice.getCompanyExTaxTotal().add(invoiceLine.getCompanyExTaxTotal()));
+
+			// start computation of target price for each line using global discount
+			// information
+			final BigDecimal lineExTaxTotal = invoiceLine.getExTaxTotal();
+			this.logger.debug("Prix HT {} de la ligne.", lineExTaxTotal);
+
+			final BigDecimal intermediateExTaxPrice = this.computeGlobalDiscountPerLine(lineExTaxTotal, invoice)
+					.setScale(2, RoundingMode.HALF_UP);
+
+			// update global total without taxes
+			invoice.setExTaxTotal(invoice.getExTaxTotal().add(intermediateExTaxPrice));
+			final BigDecimal taxLineValue = invoiceLine.getTaxLine().getValue();
+			final BigDecimal taxPrice = intermediateExTaxPrice.multiply(taxLineValue).setScale(2, RoundingMode.HALF_UP);
+
+			// update also final total of taxes
+			invoice.setTaxTotal(invoice.getTaxTotal().add(taxPrice));
+			this.logger.debug("montant de la taxe {}", taxPrice);
+
+			// compute price for this line with global discount (HT + taxes)
+			final BigDecimal intermediateInTaxPrice = intermediateExTaxPrice.add(taxPrice);
+			this.logger.debug("Remise globale appliquée sur le montant de la ligne : HT = {}, TTC = {}",
+					intermediateExTaxPrice, intermediateInTaxPrice);
+
+			// update also final total with taxes
+			invoice.setInTaxTotal(invoice.getInTaxTotal().add(intermediateInTaxPrice));
+			this.logger.debug("prix global intermédiaire : TTC = {}", invoice.getInTaxTotal());
+		}
+
+		for (final InvoiceLineTax invoiceLineTax : invoice.getInvoiceLineTaxList()) {
+			// In the company accounting currency
+			// TODO this computation should be updated too ...
+			invoice.setCompanyTaxTotal(invoice.getCompanyTaxTotal().add(invoiceLineTax.getCompanyTaxTotal()));
+		}
+
+		// In the company accounting currency
+		// TODO this computation should be updated too ...
+		invoice.setCompanyInTaxTotal(invoice.getCompanyExTaxTotal().add(invoice.getCompanyTaxTotal()));
+
+		invoice.setAmountRemaining(invoice.getInTaxTotal());
+		invoice.setHasPendingPayments(false);
+
+		this.logger.debug("Invoice amounts : W.T. = {}, Tax = {}, A.T.I. = {}", invoice.getExTaxTotal(),
+				invoice.getTaxTotal(), invoice.getInTaxTotal());
+	}
+
+	private BigDecimal computeGlobalDiscountPerLine(final BigDecimal originalPrice, final Invoice invoice) {
+		/*
+		 * Now, we have to use discount information to update amount without taxes, then
+		 * compute again final amount with taxes.
+		 */
+		// compute first discount
+		final BigDecimal firstDiscount = this.priceListService.computeDiscount(originalPrice,
+				invoice.getDiscountTypeSelect(), invoice.getDiscountAmount());
+		// then second discount
+		final BigDecimal secondDiscount = this.priceListService.computeDiscount(firstDiscount,
+				invoice.getSecDiscountTypeSelect(), invoice.getSecDiscountAmount());
+		return secondDiscount;
+	}
 }
