@@ -7,8 +7,14 @@
           onNew="action-group-sale-saleorderline-onnew" width="large"
           id="sale-order-line-form-extend"
           extension="true">
-        <extend target="panel-tabs[@name='mainPanelTab']//panel[@name='informationsPanel']//panel[@name='productDetailPanel']//panel[@name='discountPanel']">
+        <extend target="panel-tabs[@name='mainPanelTab']//panel[@name='informationsPanel']//panel[@name='productDetailPanel']">
             <replace>
+                <field name="qty"  onChange="action-group-sale-saleorderline-qty-onchange-extended" readonlyIf="isSubLine"/>
+                <field name="unit" readonlyIf="isSubLine || typeSelect == 2" canEdit="false" requiredIf="typeSelect == 0"
+                       form-view="unit-form" grid-view="unit-grid"/>
+                <field name="price"  onChange="action-sale-order-line-method-onchange-price,action-sale-order-line-method-compute,action-sale-order-line-method-compute-analytic-distribution" colSpan="4" hidden="true"/>
+                <field name="inTaxPrice" onChange="action-sale-order-line-method-onchange-intaxprice,action-sale-order-line-method-compute,action-sale-order-line-method-compute-analytic-distribution" colSpan="4" hidden="true"/>
+
                 <panel name="discountPanel" title="Discount" colSpan="12">
                     <panel name="firstDiscountPanel" title="First discount" colSpan="12">
                         <field name="discountTypeSelect"  canEdit="true"/>
@@ -23,11 +29,50 @@
         </extend>
     </form>
 
+    <action-group name="action-group-sale-saleorderline-qty-onchange-extended">
+        <action name="action-sale-order-line-method-check-delivered-or-invoiced-order-qty" if="__config__.app.isApp('supplychain') &amp;&amp; saleOrder?.statusSelect == 3"/>
+        <action name="action-sale-order-line-method-get-discount-extended"/>
+        <action name="action-sale-order-line-method-compute"/>
+        <action name="action-sale-order-line-method-compute-analytic-distribution" if="__config__.app.isApp('supplychain') &amp;&amp; __config__.app.getApp('account').getManageAnalyticAccounting()"/>
+        <action name="action-sale-order-line-method-check-stock"
+                if="__config__.app.isApp('supplychain') &amp;&amp; __config__.app.getApp('supplychain').getCheckSaleStocks()"/>
+        <action name="action-sale-order-line-method-check-qty" if="__config__.app.getApp('sale')?.manageMultipleSaleQuantity"/>
+        <action name="action-sale-order-line-record-update-requested-reserved-qty-from-qty" if="__config__.app.isApp('supplychain') &amp;&amp; __config__.app.getApp('supplychain').getManageStockReservation()"/>
+    </action-group>
+
     <action-method name="action-sale-line-method-compute-extend">
         <call class="bzh.toolapp.apps.remisecascade.web.SaleOrderLineController" method="compute"/>
     </action-method>
     
-    <action-method name="action-sale-order-line-method-get-discount">
+    <action-method name="action-sale-order-line-method-get-discount-extended">
 		<call class="bzh.toolapp.apps.remisecascade.web.SaleOrderLineController" method="getDiscount"/>
 	</action-method>
+
+    <action-method name="action-sale-order-line-method-compute">
+        <call class="com.axelor.apps.sale.web.SaleOrderLineController" method="compute"/>
+    </action-method>
+
+    <action-method name="action-sale-order-line-method-compute-analytic-distribution" if-module="axelor-supplychain">
+        <call class="com.axelor.apps.supplychain.web.SaleOrderLineController" method="computeAnalyticDistribution" />
+    </action-method>
+
+    <action-method name="action-sale-order-line-method-check-stock" if-module="axelor-supplychain">
+        <call class="com.axelor.apps.supplychain.web.SaleOrderLineController" method="checkStocks"/>
+    </action-method>
+
+    <action-method name="action-sale-order-line-method-check-qty">
+        <call class="com.axelor.apps.sale.web.SaleOrderLineController" method="checkQty"/>
+    </action-method>
+
+    <action-method name="action-sale-order-line-method-onchange-price">
+        <call class="com.axelor.apps.sale.web.SaleOrderLineController" method="updateInTaxPrice"/>
+    </action-method>
+
+    <action-method name="action-sale-order-line-method-compute-analytic-distribution" if-module="axelor-supplychain">
+        <call class="com.axelor.apps.supplychain.web.SaleOrderLineController" method="computeAnalyticDistribution" if="__config__.app.isApp('supplychain')" />
+    </action-method>
+
+    <action-method name="action-sale-order-line-method-compute-analytic-distribution" if-module="axelor-supplychain">
+        <call class="com.axelor.apps.supplychain.web.SaleOrderLineController" method="computeAnalyticDistribution" if="__config__.app.isApp('supplychain')" />
+    </action-method>
 </object-views>
