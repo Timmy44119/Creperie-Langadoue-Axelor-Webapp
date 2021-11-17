@@ -1,7 +1,6 @@
 package bzh.toolapp.apps.remisecascade.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,7 +25,6 @@ import com.axelor.apps.supplychain.service.PurchaseOrderInvoiceService;
 import com.axelor.apps.supplychain.service.SaleOrderInvoiceService;
 import com.axelor.apps.supplychain.service.StockMoveLineServiceSupplychain;
 import com.axelor.apps.supplychain.service.config.SupplyChainConfigService;
-import com.axelor.apps.supplychain.service.invoice.generator.InvoiceLineGeneratorSupplyChain;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.i18n.I18n;
@@ -79,20 +77,9 @@ public class ExtendedProjectStockMoveInvoiceServiceImpl extends ProjectStockMove
 					I18n.get(IExceptionMessage.STOCK_MOVE_INVOICE_1), stockMoveLine.getStockMove().getStockMoveSeq());
 		}
 
-		final InvoiceLineGenerator invoiceLineGenerator = new InvoiceLineGeneratorSupplyChain(invoice, product,
+		final InvoiceLineGenerator invoiceLineGenerator = new ExtendedInvoiceLineGeneratorSupplyChain(invoice, product,
 				stockMoveLine.getProductName(), stockMoveLine.getDescription(), qty, stockMoveLine.getUnit(), sequence,
-				false, stockMoveLine.getSaleOrderLine(), stockMoveLine.getPurchaseOrderLine(), stockMoveLine) {
-			@Override
-			public List<InvoiceLine> creates() throws AxelorException {
-
-				final InvoiceLine invoiceLine = this.createInvoiceLine();
-
-				final List<InvoiceLine> invoiceLines = new ArrayList<>();
-				invoiceLines.add(invoiceLine);
-
-				return invoiceLines;
-			}
-		};
+				false, stockMoveLine.getSaleOrderLine(), stockMoveLine.getPurchaseOrderLine(), stockMoveLine);
 
 		final List<InvoiceLine> invoiceLines = invoiceLineGenerator.creates();
 		InvoiceLine invoiceLine = null;

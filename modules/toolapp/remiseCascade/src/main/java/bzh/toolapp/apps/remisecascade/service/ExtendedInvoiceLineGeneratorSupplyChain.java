@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.axelor.apps.account.db.Invoice;
 import com.axelor.apps.account.db.InvoiceLine;
-import com.axelor.apps.account.db.TaxLine;
 import com.axelor.apps.base.db.Product;
 import com.axelor.apps.base.db.Unit;
 import com.axelor.apps.purchase.db.PurchaseOrderLine;
@@ -18,14 +17,10 @@ import com.axelor.exception.AxelorException;
 public class ExtendedInvoiceLineGeneratorSupplyChain extends InvoiceLineGeneratorSupplyChain {
 
 	public ExtendedInvoiceLineGeneratorSupplyChain(final Invoice invoice, final Product product,
-			final String productName, final BigDecimal price, final BigDecimal inTaxPrice,
-			final BigDecimal priceDiscounted, final String description, final BigDecimal qty, final Unit unit,
-			final TaxLine taxLine, final int sequence, final BigDecimal discountAmount, final int discountTypeSelect,
-			final BigDecimal exTaxTotal, final BigDecimal inTaxTotal, final boolean isTaxInvoice,
-			final SaleOrderLine saleOrderLine, final PurchaseOrderLine purchaseOrderLine,
-			final StockMoveLine stockMoveLine) {
-		super(invoice, product, productName, price, inTaxPrice, priceDiscounted, description, qty, unit, taxLine,
-				sequence, discountAmount, discountTypeSelect, exTaxTotal, inTaxTotal, isTaxInvoice, saleOrderLine,
+			final String productName, final String description, final BigDecimal qty, final Unit unit,
+			final int sequence, final boolean isTaxInvoice, final SaleOrderLine saleOrderLine,
+			final PurchaseOrderLine purchaseOrderLine, final StockMoveLine stockMoveLine) throws AxelorException {
+		super(invoice, product, productName, description, qty, unit, sequence, isTaxInvoice, saleOrderLine,
 				purchaseOrderLine, stockMoveLine);
 	}
 
@@ -38,6 +33,7 @@ public class ExtendedInvoiceLineGeneratorSupplyChain extends InvoiceLineGenerato
 		if (this.saleOrderLine != null) {
 			invoiceLine.setSecDiscountAmount(this.saleOrderLine.getSecDiscountAmount());
 			invoiceLine.setSecDiscountTypeSelect(this.saleOrderLine.getSecDiscountTypeSelect());
+
 		}
 
 		final List<InvoiceLine> invoiceLines = new ArrayList<>();
