@@ -9,7 +9,7 @@
           extension="true">
         <extend target="panel-tabs[@name='mainPanelTab']//panel[@name='informationsPanel']//panel[@name='productDetailPanel']">
             <replace>
-                <field name="qty"  onChange="action-group-sale-saleorderline-qty-onchange" readonlyIf="isSubLine"/>
+                <field name="qty"  onChange="action-group-sale-saleorderline-qty-onchange-extended" readonlyIf="isSubLine"/>
                 <field name="unit" readonlyIf="isSubLine || typeSelect == 2" canEdit="false" requiredIf="typeSelect == 0"
                        form-view="unit-form" grid-view="unit-grid"/>
                 <field name="price"  onChange="action-sale-order-line-method-onchange-price,action-sale-order-line-method-compute,action-sale-order-line-method-compute-analytic-distribution" colSpan="4" hidden="true"/>
@@ -29,9 +29,9 @@
         </extend>
     </form>
 
-    <action-group name="action-group-sale-saleorderline-qty-onchange">
+    <action-group name="action-group-sale-saleorderline-qty-onchange-extended">
         <action name="action-sale-order-line-method-check-delivered-or-invoiced-order-qty" if="__config__.app.isApp('supplychain') &amp;&amp; saleOrder?.statusSelect == 3"/>
-        <action name="action-sale-order-line-method-get-discount"/>
+        <action name="action-sale-order-line-method-get-discount-extended"/>
         <action name="action-sale-order-line-method-compute"/>
         <action name="action-sale-order-line-method-compute-analytic-distribution" if="__config__.app.isApp('supplychain') &amp;&amp; __config__.app.getApp('account').getManageAnalyticAccounting()"/>
         <action name="action-sale-order-line-method-check-stock"
@@ -44,7 +44,7 @@
         <call class="bzh.toolapp.apps.remisecascade.web.SaleOrderLineController" method="compute"/>
     </action-method>
     
-    <action-method name="action-sale-order-line-method-get-discount">
+    <action-method name="action-sale-order-line-method-get-discount-extended">
 		<call class="bzh.toolapp.apps.remisecascade.web.SaleOrderLineController" method="getDiscount"/>
 	</action-method>
 
