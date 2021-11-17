@@ -12,4 +12,5 @@ dependencies {
     api project(":modules:axelor-base")
     api project(":modules:axelor-business-production")
     api project(":modules:axelor-supplychain")
+    api project(":modules:axelor-cash-management")
 }
