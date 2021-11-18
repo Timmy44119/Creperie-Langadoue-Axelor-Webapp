@@ -31,7 +31,8 @@ public class ExtendedInvoiceGeneratorSupplyChain extends InvoiceGeneratorSupplyC
 
 	public ExtendedInvoiceGeneratorSupplyChain(final Invoice invoiceParam, final PriceListService priceListServiceParam)
 			throws AxelorException {
-		super((SaleOrder) null);
+		super(new SaleOrder()); // use fake sale order to bypass super initialization without
+								// NullPointerException
 		this.invoice = invoiceParam;
 		this.priceListService = priceListServiceParam;
 	}
