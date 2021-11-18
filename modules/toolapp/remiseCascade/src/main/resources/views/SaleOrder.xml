@@ -5,8 +5,8 @@
 
     <form name="sale-order-form" title="Sale order"
           model="com.axelor.apps.sale.db.SaleOrder"
-          onLoad="action-group-sale-saleorder-onload"
-          onNew="action-group-sale-saleorder-onnew"
+          onLoad="action-group-sale-saleorder-onload,action-group-sale-saleorder-onload-extended"
+          onNew="action-group-sale-saleorder-onnew,action-group-sale-saleorder-onnew-extended"
           id="sale-order-form-extend"
           extension="true">
         <extend target="panel[@name='salesFollowUpPanel']">
@@ -14,18 +14,32 @@
                 <panel name="discountPanel" title="Global Discount" colSpan="12" hideIf="clientPartner == null" sidebar="true"
                        itemSpan="6" canCollapse="true" collapseIf="true" >
                     <panel name="firstDiscountPanel" title="First global discount" colSpan="12">
-                        <field name="discountTypeSelect" canEdit="true"/>
+                        <field name="discountTypeSelect" onChange="action-sale-order-method-compute-extend" canEdit="true"/>
                         <field name="discountAmount" onChange="action-sale-order-method-compute-extend" hideIf="discountTypeSelect == 0"/>
                     </panel>
                     <panel name="secondDiscountPanel" title="Second global discount" colSpan="12">
-                        <field name="secDiscountTypeSelect" canEdit="true" />
+                        <field name="secDiscountTypeSelect" onChange="action-sale-order-method-compute-extend" canEdit="true" />
                         <field name="secDiscountAmount" onChange="action-sale-order-method-compute-extend" hideIf="secDiscountTypeSelect == 0"/>
                     </panel>
                 </panel>
             </insert>
         </extend>
     </form>
+    
     <action-method name="action-sale-order-method-compute-extend">
         <call class="bzh.toolapp.apps.remisecascade.web.SaleOrderController" method="compute"/>
     </action-method>
+    
+    <action-attrs name="action-sale-order-attrs-scale-and-precision-extended">
+		<attribute name="scale" for="discountAmount" expr="eval: __config__.app.getNbDecimalDigitForUnitPrice()"/>
+		<attribute name="scale" for="secDiscountAmount" expr="eval: __config__.app.getNbDecimalDigitForUnitPrice()"/>
+	</action-attrs>
+	
+	<action-group name="action-group-sale-saleorder-onnew-extended">
+        <action name="action-sale-order-attrs-scale-and-precision-extended"/>
+    </action-group>
+    
+    <action-group name="action-group-sale-saleorder-onload-extended">
+    	<action name="action-sale-order-attrs-scale-and-precision-extended"/>
+    </action-group>
 </object-views>

@@ -3,27 +3,40 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.3.xsd">
     <form name="invoice-line-form" title="Invoice line" model="com.axelor.apps.account.db.InvoiceLine" width="large" readonlyIf="$isReadOnly"
-      onNew="action-account-invoice-line-onnew-group"
-      onLoad="action-group-account-invoice-line-onload"
+      onNew="action-account-invoice-line-onnew-group,action-group-invoice-invoiceline-onnew-extended"
+      onLoad="action-group-account-invoice-line-onload,action-group-invoice-invoiceline-onload-extended"
       id="invoice-line-form-extend"
       extension="true">
         <extend target="panel-tabs[@name='mainPanelTab']//panel[@name='informationsPanel']//panel[@name='discountPanel']">
             <replace>
                 <panel name="discountPanel" title="Discount" colSpan="12" itemSpan="6">
                     <panel name="firstDiscountPanel" title="First discount" colSpan="12">
-                        <field name="discountTypeSelect" canEdit="true"/>
-                        <field name="discountAmount" onChange="action-invoice-line-method-compute-extend" hideIf="discountTypeSelect == 0"/>
+                        <field name="discountTypeSelect" onChange="action-invoice-line-method-compute-extended" canEdit="true"/>
+                        <field name="discountAmount" onChange="action-invoice-line-method-compute-extended" hideIf="discountTypeSelect == 0" x-scale="2"/>
                     </panel>
                     <panel name="secondDiscountPanel" title="Second discount" colSpan="12">
-                        <field name="secDiscountTypeSelect" canEdit="true"/>
-                        <field name="secDiscountAmount" onChange="action-invoice-line-method-compute-extend" hideIf="secDiscountTypeSelect == 0"/>
+                        <field name="secDiscountTypeSelect" onChange="action-invoice-line-method-compute-extended" canEdit="true"/>
+                        <field name="secDiscountAmount" onChange="action-invoice-line-method-compute-extended" hideIf="secDiscountTypeSelect == 0" x-scale="2"/>
                     </panel>
                 </panel>
             </replace>
         </extend>
     </form>
 
-    <action-method name="action-invoice-line-method-compute-extend">
+    <action-method name="action-invoice-line-method-compute-extended">
         <call class="bzh.toolapp.apps.remisecascade.web.InvoiceLineController" method="compute"/>
     </action-method>
+    
+    <action-attrs name="action-invoice-line-attrs-scale-and-precision-extended">
+		<attribute name="scale" for="discountAmount" expr="eval: __config__.app.getNbDecimalDigitForUnitPrice()"/>
+		<attribute name="scale" for="secDiscountAmount" expr="eval: __config__.app.getNbDecimalDigitForUnitPrice()"/>
+	</action-attrs>
+	
+	<action-group name="action-group-invoice-invoiceline-onnew-extended">
+        <action name="action-invoice-line-attrs-scale-and-precision-extended"/>
+    </action-group>
+    
+    <action-group name="action-group-invoice-invoiceline-onload-extended">
+    	<action name="action-invoice-line-attrs-scale-and-precision-extended"/>
+    </action-group>
 </object-views>
