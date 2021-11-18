@@ -13,59 +13,33 @@ import com.axelor.apps.account.db.InvoiceLine;
 import com.axelor.apps.account.db.InvoiceLineTax;
 import com.axelor.apps.account.service.invoice.generator.InvoiceGenerator;
 import com.axelor.apps.base.service.PriceListService;
-import com.axelor.apps.sale.db.SaleOrder;
-import com.axelor.apps.supplychain.service.invoice.generator.InvoiceGeneratorSupplyChain;
 import com.axelor.exception.AxelorException;
 
 /**
- * Create two contexts to generate Invoice from Sales order or delivery
- *
- * @author vince
+ * To generate Invoice for delivery from scratch.
  *
  */
-public class ExtendedInvoiceGeneratorSupplyChain extends InvoiceGeneratorSupplyChain {
+public class ExtendedInvoiceGeneratorFromScratch extends InvoiceGenerator {
 	private final Logger logger = LoggerFactory.getLogger(InvoiceGenerator.class);
 
 	private final Invoice invoice;
 	private final PriceListService priceListService;
 
-	public ExtendedInvoiceGeneratorSupplyChain(final Invoice invoiceParam, final PriceListService priceListServiceParam)
+	public ExtendedInvoiceGeneratorFromScratch(final Invoice invoiceParam, final PriceListService priceListServiceParam)
 			throws AxelorException {
-		super(new SaleOrder()); // use fake sale order to bypass super initialization without
-								// NullPointerException
 		this.invoice = invoiceParam;
-		this.priceListService = priceListServiceParam;
-	}
-
-	protected ExtendedInvoiceGeneratorSupplyChain(final SaleOrder saleOrder, final boolean isRefund,
-			final PriceListService priceListServiceParam) throws AxelorException {
-		super(saleOrder, isRefund);
-		this.invoice = null;
 		this.priceListService = priceListServiceParam;
 	}
 
 	@Override
 	public Invoice generate() throws AxelorException {
-		final Invoice invoiceResult;
-		if (this.invoice == null) {
 
-			invoiceResult = super.createInvoiceHeader();
-			invoiceResult.setHeadOfficeAddress(this.saleOrder.getClientPartner().getHeadOfficeAddress());
+		final List<InvoiceLine> invoiceLines = new ArrayList<InvoiceLine>();
+		invoiceLines.addAll(this.invoice.getInvoiceLineList());
 
-			invoiceResult.setDiscountAmount(this.saleOrder.getDiscountAmount());
-			invoiceResult.setDiscountTypeSelect(this.saleOrder.getDiscountTypeSelect());
-			invoiceResult.setSecDiscountAmount(this.saleOrder.getSecDiscountAmount());
-			invoiceResult.setSecDiscountTypeSelect(this.saleOrder.getSecDiscountTypeSelect());
+		this.populate(this.invoice, invoiceLines);
 
-		} else {
-			invoiceResult = this.invoice;
-			final List<InvoiceLine> invoiceLines = new ArrayList<>();
-			invoiceLines.addAll(this.invoice.getInvoiceLineList());
-
-			this.populate(this.invoice, invoiceLines);
-
-		}
-		return invoiceResult;
+		return this.invoice;
 	}
 
 	/**

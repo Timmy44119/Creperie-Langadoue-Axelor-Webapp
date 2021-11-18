@@ -54,7 +54,7 @@ public class ExtendedSaleOrderInvoiceServiceImpl extends SaleOrderInvoiceProject
 					I18n.get(IExceptionMessage.SO_INVOICE_6), saleOrder.getSaleOrderSeq());
 		}
 
-		return new ExtendedInvoiceGeneratorSupplyChain(saleOrder, isRefund, this.priceListService);
+		return new ExtendedInvoiceGeneratorFromSaleOrder(saleOrder, isRefund, this.priceListService);
 	}
 
 	@Override

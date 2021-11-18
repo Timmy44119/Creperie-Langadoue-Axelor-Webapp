@@ -57,7 +57,7 @@ public class ExtendedInvoiceServiceImpl extends InvoiceServiceManagementImpl imp
 
 		this.logger.debug("Calcul de la facture");
 
-		final InvoiceGenerator invoiceGenerator = new ExtendedInvoiceGeneratorSupplyChain(invoice,
+		final InvoiceGenerator invoiceGenerator = new ExtendedInvoiceGeneratorFromScratch(invoice,
 				this.priceListService);
 
 		final Invoice invoice1 = invoiceGenerator.generate();
