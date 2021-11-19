@@ -1,42 +1,78 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <object-views xmlns="http://axelor.com/xml/ns/object-views"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.3.xsd">
-    <form name="invoice-form" title="Invoice" model="com.axelor.apps.account.db.Invoice"
-          onNew="action-group-invoice-onnew-extended"
-          onLoad="action-account-invoice-onload-group,action-group-invoice-onload-extended"
-          id="invoice-form-extend"
-          extension="true">
-        <extend target="panel-stack[@name='otherDetailsPanel']//panel[@name='referenceDocumentsPanel']">
-            <insert position="before">
-                <panel name="discountPanel" title="Global Discount" colSpan="12" itemSpan="6" canCollapse="true"
-                       collapseIf="true" >
-                    <panel name="firstDiscountPanel" title="First global discount" colSpan="12">
-                        <field name="discountTypeSelect" onChange="action-invoice-method-compute-extend" canEdit="true"/>
-                        <field name="discountAmount" onChange="action-invoice-method-compute-extend" hideIf="discountTypeSelect == 0" x-scale="2"/>
-                    </panel>
-                    <panel name="secondDiscountPanel" title="Second global discount" colSpan="12">
-                        <field name="secDiscountTypeSelect" onChange="action-invoice-method-compute-extend" canEdit="true"/>
-                        <field name="secDiscountAmount" onChange="action-invoice-method-compute-extend" hideIf="secDiscountTypeSelect == 0" x-scale="2"/>
-                    </panel>
-                </panel>
-            </insert>
-        </extend>
-    </form>
-    <action-method name="action-invoice-method-compute-extend">
-        <call class="bzh.toolapp.apps.remisecascade.web.InvoiceController" method="compute"/>
-    </action-method>
-    
-    <action-attrs name="action-invoice-attrs-scale-and-precision-extended">
-		<attribute name="scale" for="discountAmount" expr="eval: __config__.app.getNbDecimalDigitForUnitPrice()"/>
-		<attribute name="scale" for="secDiscountAmount" expr="eval: __config__.app.getNbDecimalDigitForUnitPrice()"/>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.3.xsd">
+	<form name="invoice-form" title="Invoice"
+		model="com.axelor.apps.account.db.Invoice"
+		onNew="action-group-invoice-onnew-extended"
+		onLoad="action-account-invoice-onload-group,action-group-invoice-onload-extended"
+		id="invoice-form-extend" extension="true">
+		<extend
+			target="panel-stack[@name='otherDetailsPanel']//panel[@name='referenceDocumentsPanel']">
+			<insert position="before">
+				<panel name="discountPanel" title="Global Discount"
+					colSpan="12" itemSpan="6" canCollapse="true" collapseIf="true">
+					<panel name="firstDiscountPanel"
+						title="First global discount" colSpan="12">
+						<field name="discountTypeSelect"
+							onChange="action-invoice-method-compute-extend" canEdit="true" />
+						<field name="discountAmount"
+							onChange="action-invoice-method-compute-extend"
+							hideIf="discountTypeSelect == 0" x-scale="2" />
+					</panel>
+					<panel name="secondDiscountPanel"
+						title="Second global discount" colSpan="12">
+						<field name="secDiscountTypeSelect"
+							onChange="action-invoice-method-compute-extend" canEdit="true" />
+						<field name="secDiscountAmount"
+							onChange="action-invoice-method-compute-extend"
+							hideIf="secDiscountTypeSelect == 0" x-scale="2" />
+					</panel>
+				</panel>
+			</insert>
+		</extend>
+		<!-- just to be able to react on price list change to update global discount 
+			amounts -->
+		<extend
+			target="panel[@name='mainPanel']//field[@name='priceList']">
+			<replace>
+				<field name="priceList" colSpan="3" canEdit="false"
+					onChange="action-invoice-record-hide-discount,action-invoice-pricelist-method-extended"
+					readonlyIf="statusSelect != 1"
+					onSelect="action-invoice-method-domain-priceList"
+					form-view="price-list-form" grid-view="price-list-grid" />
+			</replace>
+		</extend>
+	</form>
+	<action-method
+		name="action-invoice-method-compute-extend">
+		<call
+			class="bzh.toolapp.apps.remisecascade.web.InvoiceController"
+			method="compute" />
+	</action-method>
+
+	<action-attrs
+		name="action-invoice-attrs-scale-and-precision-extended">
+		<attribute name="scale" for="discountAmount"
+			expr="eval: __config__.app.getNbDecimalDigitForUnitPrice()" />
+		<attribute name="scale" for="secDiscountAmount"
+			expr="eval: __config__.app.getNbDecimalDigitForUnitPrice()" />
 	</action-attrs>
-	
+
 	<action-group name="action-group-invoice-onnew-extended">
-        <action name="action-invoice-attrs-scale-and-precision-extended"/>
-    </action-group>
-    
-    <action-group name="action-group-invoice-onload-extended">
-    	<action name="action-invoice--attrs-scale-and-precision-extended"/>
-    </action-group>
+		<action
+			name="action-invoice-attrs-scale-and-precision-extended" />
+	</action-group>
+
+	<action-group name="action-group-invoice-onload-extended">
+		<action
+			name="action-invoice--attrs-scale-and-precision-extended" />
+	</action-group>
+
+	<action-method
+		name="action-invoice-pricelist-method-extended">
+		<call
+			class="bzh.toolapp.apps.remisecascade.web.InvoiceController"
+			method="propagatePriceListDiscounts" />
+	</action-method>
 </object-views>
