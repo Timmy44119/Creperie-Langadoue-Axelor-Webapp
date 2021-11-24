@@ -23,7 +23,6 @@ import com.axelor.meta.schema.actions.ActionView.ActionViewBuilder;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 import com.axelor.rpc.Context;
-import com.google.common.base.Joiner;
 import com.google.inject.Singleton;
 
 @Singleton
@@ -31,6 +30,7 @@ public class StockMoveInvoiceController {
 
 	private final Logger logger = LoggerFactory.getLogger(SaleOrderLineService.class);
 	private final String CUSTOMER_STOCK_MOVE_TO_INVOICE = "customerStockMoveToInvoice";
+	private final String ORIGIN_TYPE_SELECT_NULL = "NULL";
 
 	public void generateInvoice(final ActionRequest request, final ActionResponse response) {
 		try {
@@ -38,7 +38,7 @@ public class StockMoveInvoiceController {
 			final Context context = request.getContext();
 
 			// Get detail of stockMoves selected
-			final List<Map> stockMoveMap = (List<Map>) context.get("customerStockMoveToInvoice");
+			final List<Map> stockMoveMap = (List<Map>) context.get(this.CUSTOMER_STOCK_MOVE_TO_INVOICE);
 			final List<StockMove> stockMoves = this.stockMovesDetail(stockMoveMap);
 
 			// Sort the stock moves by the sales orders numbers
@@ -46,31 +46,35 @@ public class StockMoveInvoiceController {
 
 			// Get partner Id
 			final List<Long> partnerId = this.partnerIds(stockMoves);
-			this.logger.debug("Partner Id liste");
+			this.logger.debug("Partner Id liste le nombre est : {}", partnerId.size());
 			// Loop on partner to create invoice
 			for (final Long id : partnerId) {
 				this.logger.debug("Boucle sur les partner ID");
+
 				// Define Stock move without sale order
-				final List<StockMove> stockMovesWoSo = this.getStockMoves(null, id, stockMoves);
+				final List<StockMove> stockMovesWoSo = this.getStockMoves(this.ORIGIN_TYPE_SELECT_NULL, id, stockMoves);
+
 				// Get list of id of stock move without sale order
 				final List<Long> stockMovesWoSoIdList = this.getStockMovesIdList(stockMovesWoSo);
+
+				this.logger.debug("le size de la liste avec commande est de {} ", stockMovesWoSo.size());
 
 				// Sending the list of stock move to be created
 				if (stockMovesWoSo.size() != 0) {
 					this.sendToInvoice(response, stockMovesWoSo, stockMovesWoSoIdList);
 				}
 
-				this.logger.debug("Liste envoyé");
-
 				// Define stock move with saleOrder
 				final List<StockMove> stockMovesWSo = this.getStockMoves(StockMoveRepository.ORIGIN_SALE_ORDER, id,
 						stockMoves);
 
 				this.logger.debug("le size de la liste avec commande est de {} ", stockMovesWSo.size());
+				// Get list of id of stock move without sale order
+				final List<Long> stockMovesWSoIdList = this.getStockMovesIdList(stockMovesWSo);
 
 				// Sending the list of stock move to be created
 				if (stockMovesWSo.size() != 0) {
-					this.sendToInvoice(response, stockMovesWoSo, stockMovesWoSoIdList);
+					this.sendToInvoice(response, stockMovesWSo, stockMovesWSoIdList);
 				}
 			}
 		} catch (final Exception e) {
@@ -103,14 +107,18 @@ public class StockMoveInvoiceController {
 		for (final StockMove sm : stockMovesList) {
 			// Same Partner Id
 			if (sm.getPartner().getId().equals(idPartner)) {
-				// If the stock move origin is null
-				if ((sm.getOriginTypeSelect() == null) && (typeStockMove == null)) {
+				final String originTypeSelect;
+				// Check if the origin is fill
+				if (sm.getOriginTypeSelect() == null) {
+					originTypeSelect = this.ORIGIN_TYPE_SELECT_NULL;
+				} else {
+					originTypeSelect = sm.getOriginTypeSelect();
+				}
+				// Add the stock move to send to the invoice
+				if (originTypeSelect.equals(typeStockMove)) {
 					stockMovesToInvoice.add(sm);
 				}
-				this.logger.debug("{} / {}", typeStockMove, sm.getOriginTypeSelect());
-				if (sm.getOriginTypeSelect().toString() == StockMoveRepository.ORIGIN_SALE_ORDER) {
-					stockMovesToInvoice.add(sm);
-				}
+
 			}
 		}
 		return stockMovesToInvoice;
@@ -198,8 +206,10 @@ public class StockMoveInvoiceController {
 			} else {
 				confirmView.context("contactPartner", mapResult.get("contactPartner"));
 			}
-			confirmView.context("customerStockMoveToInvoice", Joiner.on(",").join(stockMoveIdList));
-			response.setView(confirmView.map());
+			/*
+			 * confirmView.context("customerStockMoveToInvoice",
+			 * Joiner.on(",").join(stockMoveIdList)); response.setView(confirmView.map());
+			 */
 		} else {
 			this.logger.debug("Envoi vers la facturation");
 
