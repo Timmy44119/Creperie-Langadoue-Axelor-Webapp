@@ -108,17 +108,18 @@ public class StockMoveInvoiceController {
 			// Same Partner Id
 			if (sm.getPartner().getId().equals(idPartner)) {
 				final String originTypeSelect;
+
 				// Check if the origin is fill
 				if (sm.getOriginTypeSelect() == null) {
 					originTypeSelect = this.ORIGIN_TYPE_SELECT_NULL;
 				} else {
 					originTypeSelect = sm.getOriginTypeSelect();
 				}
+
 				// Add the stock move to send to the invoice
 				if (originTypeSelect.equals(typeStockMove)) {
 					stockMovesToInvoice.add(sm);
 				}
-
 			}
 		}
 		return stockMovesToInvoice;
