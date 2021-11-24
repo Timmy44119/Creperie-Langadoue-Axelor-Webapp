@@ -1,12 +1,8 @@
 package bzh.toolapp.apps.remisecascade.service;
 
-import java.math.BigDecimal;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.axelor.apps.account.service.app.AppAccountService;
 import com.axelor.apps.base.service.PriceListService;
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.sale.db.SaleOrder;
 import com.axelor.apps.sale.db.SaleOrderLine;
 import com.axelor.apps.sale.db.repo.SaleOrderLineRepository;
@@ -19,104 +15,133 @@ import com.axelor.apps.supplychain.service.app.AppSupplychainService;
 import com.axelor.exception.AxelorException;
 import com.axelor.inject.Beans;
 import com.google.inject.Inject;
+import java.math.BigDecimal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExtendedSaleOrderComputeServiceImpl extends SaleOrderComputeServiceSupplychainImpl
-		implements SaleOrderComputeService {
+    implements SaleOrderComputeService {
 
-	private final Logger logger = LoggerFactory.getLogger(SaleOrderComputeService.class);
+  private final Logger logger = LoggerFactory.getLogger(SaleOrderComputeService.class);
 
-	protected PriceListService priceListService;
+  protected PriceListService priceListService;
 
-	@Inject
-	public ExtendedSaleOrderComputeServiceImpl(final SaleOrderLineService saleOrderLineService,
-			final SaleOrderLineTaxService saleOrderLineTaxService, final PriceListService priceListServiceParam) {
+  @Inject protected AppBaseService appBaseService;
 
-		super(saleOrderLineService, saleOrderLineTaxService);
-		this.priceListService = priceListServiceParam;
-	}
+  @Inject
+  public ExtendedSaleOrderComputeServiceImpl(
+      final SaleOrderLineService saleOrderLineService,
+      final SaleOrderLineTaxService saleOrderLineTaxService,
+      final PriceListService priceListServiceParam) {
 
-	@Override
-	public void _computeSaleOrder(final SaleOrder saleOrder) throws AxelorException {
-		saleOrder.setExTaxTotal(BigDecimal.ZERO);
-		saleOrder.setCompanyExTaxTotal(BigDecimal.ZERO);
-		saleOrder.setTaxTotal(BigDecimal.ZERO);
-		saleOrder.setInTaxTotal(BigDecimal.ZERO);
+    super(saleOrderLineService, saleOrderLineTaxService);
+    this.priceListService = priceListServiceParam;
+  }
 
-		for (final SaleOrderLine saleOrderLine : saleOrder.getSaleOrderLineList()) {
+  @Override
+  public void _computeSaleOrder(final SaleOrder saleOrder) throws AxelorException {
+    saleOrder.setExTaxTotal(BigDecimal.ZERO);
+    saleOrder.setCompanyExTaxTotal(BigDecimal.ZERO);
+    saleOrder.setTaxTotal(BigDecimal.ZERO);
+    saleOrder.setInTaxTotal(BigDecimal.ZERO);
 
-			// skip title lines in computing total amounts
-			if (saleOrderLine.getTypeSelect() == SaleOrderLineRepository.TYPE_TITLE) {
-				continue;
-			}
-			final BigDecimal lineExTaxTotal = saleOrderLine.getExTaxTotal();
-			this.logger.debug("Prix HT {} de la ligne.", lineExTaxTotal);
+    for (final SaleOrderLine saleOrderLine : saleOrder.getSaleOrderLineList()) {
 
-			// In the company accounting currency
-			// TODO this computation should be updated too ...
-			saleOrder.setCompanyExTaxTotal(saleOrder.getCompanyExTaxTotal().add(saleOrderLine.getCompanyExTaxTotal()));
+      // skip title lines in computing total amounts
+      if (saleOrderLine.getTypeSelect() == SaleOrderLineRepository.TYPE_TITLE) {
+        continue;
+      }
+      final BigDecimal lineExTaxTotal = saleOrderLine.getExTaxTotal();
+      this.logger.debug("Prix HT {} de la ligne.", lineExTaxTotal);
 
-			final BigDecimal intermediateExTaxPrice = this.computeGlobalDiscountPerLine(lineExTaxTotal, saleOrder);
+      // In the company accounting currency
+      // TODO this computation should be updated too ...
+      saleOrder.setCompanyExTaxTotal(
+          saleOrder.getCompanyExTaxTotal().add(saleOrderLine.getCompanyExTaxTotal()));
 
-			// update global total without taxes
-			saleOrder.setExTaxTotal(saleOrder.getExTaxTotal().add(intermediateExTaxPrice));
-			final BigDecimal taxLineValue = saleOrderLine.getTaxLine().getValue();
-			final BigDecimal taxPrice = intermediateExTaxPrice.multiply(taxLineValue);
+      final BigDecimal intermediateExTaxPrice =
+          this.computeGlobalDiscountPerLine(lineExTaxTotal, saleOrder);
 
-			// update also final total of taxes
-			saleOrder.setTaxTotal(saleOrder.getTaxTotal().add(taxPrice));
-			this.logger.debug("montant de la taxe {}", taxPrice);
+      // update global total without taxes
+      saleOrder.setExTaxTotal(saleOrder.getExTaxTotal().add(intermediateExTaxPrice));
+      final BigDecimal taxLineValue = saleOrderLine.getTaxLine().getValue();
+      final BigDecimal taxPrice = intermediateExTaxPrice.multiply(taxLineValue);
 
-			// compute price for this line with global discount (HT + taxes)
-			final BigDecimal intermediateInTaxPrice = intermediateExTaxPrice.add(taxPrice);
-			this.logger.debug("Remise globale appliquée sur le montant de la ligne : HT = {}, TTC = {}",
-					intermediateExTaxPrice, intermediateInTaxPrice);
+      // update also final total of taxes
+      saleOrder.setTaxTotal(
+          saleOrder
+              .getTaxTotal()
+              .add(taxPrice)
+              .setScale(this.appBaseService.getNbDecimalDigitForUnitPrice()));
+      this.logger.debug("montant de la taxe {}", taxPrice);
 
-			// update also final total with taxes
-			saleOrder.setInTaxTotal(saleOrder.getInTaxTotal().add(intermediateInTaxPrice));
-			this.logger.debug("prix global intermédiaire : TTC = {}", saleOrder.getInTaxTotal());
-		}
+      // compute price for this line with global discount (HT + taxes)
+      final BigDecimal intermediateInTaxPrice = intermediateExTaxPrice.add(taxPrice);
+      this.logger.debug(
+          "Remise globale appliquée sur le montant de la ligne : HT = {}, TTC = {}",
+          intermediateExTaxPrice,
+          intermediateInTaxPrice);
 
-		saleOrder.setAdvanceTotal(this.computeTotalAdvancePayment(saleOrder));
-		this.logger.debug("Montant de la facture: HTT = {},  HT = {}, TTC = {}", saleOrder.getExTaxTotal(),
-				saleOrder.getTaxTotal(), saleOrder.getInTaxTotal());
+      // update also final total with taxes
+      saleOrder.setInTaxTotal(
+          saleOrder
+              .getInTaxTotal()
+              .add(intermediateInTaxPrice)
+              .setScale(this.appBaseService.getNbDecimalDigitForUnitPrice()));
+      this.logger.debug("prix global intermédiaire : TTC = {}", saleOrder.getInTaxTotal());
+    }
 
-		// duplicate also supplychain behavior
-		if (!Beans.get(AppSupplychainService.class).isApp("supplychain")) {
-			return;
-		}
+    saleOrder.setAdvanceTotal(this.computeTotalAdvancePayment(saleOrder));
+    this.logger.debug(
+        "Montant de la facture: HTT = {},  HT = {}, TTC = {}",
+        saleOrder.getExTaxTotal(),
+        saleOrder.getTaxTotal(),
+        saleOrder.getInTaxTotal());
 
-		int maxDelay = 0;
+    // duplicate also supplychain behavior
+    if (!Beans.get(AppSupplychainService.class).isApp("supplychain")) {
+      return;
+    }
 
-		if ((saleOrder.getSaleOrderLineList() != null) && !saleOrder.getSaleOrderLineList().isEmpty()) {
-			for (final SaleOrderLine saleOrderLine : saleOrder.getSaleOrderLineList()) {
+    int maxDelay = 0;
 
-				if (((saleOrderLine.getSaleSupplySelect() == SaleOrderLineRepository.SALE_SUPPLY_PRODUCE)
-						|| (saleOrderLine.getSaleSupplySelect() == SaleOrderLineRepository.SALE_SUPPLY_PURCHASE))) {
-					maxDelay = Integer.max(maxDelay,
-							saleOrderLine.getStandardDelay() == null ? 0 : saleOrderLine.getStandardDelay());
-				}
-			}
-		}
-		saleOrder.setStandardDelay(maxDelay);
+    if ((saleOrder.getSaleOrderLineList() != null) && !saleOrder.getSaleOrderLineList().isEmpty()) {
+      for (final SaleOrderLine saleOrderLine : saleOrder.getSaleOrderLineList()) {
 
-		if (Beans.get(AppAccountService.class).getAppAccount().getManageAdvancePaymentInvoice()) {
-			saleOrder.setAdvanceTotal(this.computeTotalInvoiceAdvancePayment(saleOrder));
-		}
-		Beans.get(SaleOrderServiceSupplychainImpl.class).updateAmountToBeSpreadOverTheTimetable(saleOrder);
-	}
+        if (((saleOrderLine.getSaleSupplySelect() == SaleOrderLineRepository.SALE_SUPPLY_PRODUCE)
+            || (saleOrderLine.getSaleSupplySelect()
+                == SaleOrderLineRepository.SALE_SUPPLY_PURCHASE))) {
+          maxDelay =
+              Integer.max(
+                  maxDelay,
+                  saleOrderLine.getStandardDelay() == null ? 0 : saleOrderLine.getStandardDelay());
+        }
+      }
+    }
+    saleOrder.setStandardDelay(maxDelay);
 
-	private BigDecimal computeGlobalDiscountPerLine(final BigDecimal originalPrice, final SaleOrder saleOrder) {
-		/*
-		 * Now, we have to use discount information to update amount without taxes, then
-		 * compute again final amount with taxes.
-		 */
-		// compute first discount
-		final BigDecimal firstDiscount = this.priceListService.computeDiscount(originalPrice,
-				saleOrder.getDiscountTypeSelect(), saleOrder.getDiscountAmount());
+    if (Beans.get(AppAccountService.class).getAppAccount().getManageAdvancePaymentInvoice()) {
+      saleOrder.setAdvanceTotal(this.computeTotalInvoiceAdvancePayment(saleOrder));
+    }
+    Beans.get(SaleOrderServiceSupplychainImpl.class)
+        .updateAmountToBeSpreadOverTheTimetable(saleOrder);
+  }
 
-		// then second discount
-		final BigDecimal secondDiscount = this.priceListService.computeDiscount(firstDiscount,
-				saleOrder.getSecDiscountTypeSelect(), saleOrder.getSecDiscountAmount());
-		return secondDiscount;
-	}
+  private BigDecimal computeGlobalDiscountPerLine(
+      final BigDecimal originalPrice, final SaleOrder saleOrder) {
+    /*
+     * Now, we have to use discount information to update amount without taxes, then
+     * compute again final amount with taxes.
+     */
+    // compute first discount
+    final BigDecimal firstDiscount =
+        this.priceListService.computeDiscount(
+            originalPrice, saleOrder.getDiscountTypeSelect(), saleOrder.getDiscountAmount());
+
+    // then second discount
+    final BigDecimal secondDiscount =
+        this.priceListService.computeDiscount(
+            firstDiscount, saleOrder.getSecDiscountTypeSelect(), saleOrder.getSecDiscountAmount());
+    return secondDiscount;
+  }
 }

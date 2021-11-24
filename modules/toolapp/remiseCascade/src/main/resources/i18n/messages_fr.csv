@@ -1,22 +1,23 @@
-"key","message","comment","context"
-"Discount","Remises",,
-"Discount amount","Montant remise",,
-"Second discount amount","Montant remise",,
-"Discount rate","Taux remise",,
-"Discount type","Type de remise",,
-"Second discount type","Type de remise",,
-"Global Discount","Remises globales",,
-"First global discount","Première remise globale",,
-"Second global discount","Seconde remise globale",,
-"First discount","Première remise",,
-"Second discount","Seconde remise",,
-"Price list lines","Lignes de liste de prix",,
-"First Price list lines","Première remise globale",,
-"Second Price list lines","Seconde remise globale",,
-"Second calculation method","Méthode de calcul pour la deuxième remise",,
-"Second Discount/Additionnal/Replace","Remise/Surcharge/Remplace",,
-"Second Fixed Amount/%","Montant fixe/%",,
-"Second Amount/%","Montant/%",,
-"Second Qty min (by product)","Qté Min. (par produit)",,
-"General discount (%)","Taux remise (%)",,
-"Second General discount (%)","Taux remise (%)",,
+"key,""message"",""comment"",""context"""
+"And,""Et"",,"
+"Discount,""Remises"",,"
+"Discount amount,""Montant remise"",,"
+"Second Discount amount,""Montant remise"",,"
+"Discount rate,""Taux remise"",,"
+"Discount type,""Type de remise"",,"
+"Second Discount type,""Type de remise"",,"
+"Global Discount,""Remises globales"",,"
+"First global discount,""Première remise globale"",,"
+"Second global discount,""Seconde remise globale"",,"
+"First discount,""Première remise"",,"
+"Second discount,""Seconde remise"",,"
+"Price list lines,""Lignes de liste de prix"",,"
+"First Price list lines,""Première remise globale"",,"
+"Second Price list lines,""Seconde remise globale"",,"
+"Second calculation method,""Méthode de calcul pour la deuxième remise"",,"
+"Second Discount/Additionnal/Replace,""Remise/Surcharge/Remplace"",,"
+"Second Fixed Amount/%,""Montant fixe/%"",,"
+"Second Amount/%,""%"",,"
+"Second Qty min (by product),""Qté Min. (par produit)"",,"
+"General discount (%),""Taux remise (%)"",,"
+"Second General discount (%),""Taux remise (%)"",,"

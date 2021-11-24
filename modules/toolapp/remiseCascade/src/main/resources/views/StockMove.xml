@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.3.xsd">
+
+	<form name="stock-move-multi-sale-invoicing-form" model="com.axelor.apps.stock.db.StockMove" title="Mass Suppl. Stock Move Invoicing" 
+	id="stock-move-multi-sale-invoicing-form-extend" extension="true">
+	
+	<extend target="panel[@name='actionsPanel']">
+		<replace>
+			<panel sidebar="true" name="actionsPanelChanged" title="Actions">
+			<button name="generateInvoiceConcatStockMoveBtn" title="Generate single invoice" onClick="action-supplychain-stock-move-method-generate-concat-cust-invoice-check-fields-extended"/>
+			<button name="generateMultiInvoiceBtn" title="Generate one invoice per outgoing stockMove" onClick="action-validate-supplychain-outgoing-stock-move-check-selection,action-supplychain-stock-move-method-generate-multi-customer-invoice"/>
+	  	</panel></replace>
+	</extend>	
+	</form>
+
+	<action-method name="action-supplychain-stock-move-method-generate-concat-cust-invoice-check-fields-extended">
+		<call class="bzh.toolapp.apps.remisecascade.web.StockMoveInvoiceController" method="generateInvoice"/>
+	</action-method>
+</object-views>

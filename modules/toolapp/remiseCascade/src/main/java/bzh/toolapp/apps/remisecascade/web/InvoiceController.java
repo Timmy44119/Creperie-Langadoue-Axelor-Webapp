@@ -12,38 +12,39 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class InvoiceController {
-	/**
-	 * Same method content than InvoiceController in project axelor-account. Naybe
-	 * not needed as we override InvoiceService ...
-	 *
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	public void compute(final ActionRequest request, final ActionResponse response) {
+  /**
+   * Same method content than InvoiceController in project axelor-account. Naybe not needed as we
+   * override InvoiceService ...
+   *
+   * @param request
+   * @param response
+   * @return
+   */
+  public void compute(final ActionRequest request, final ActionResponse response) {
 
-		Invoice invoice = request.getContext().asType(Invoice.class);
+    Invoice invoice = request.getContext().asType(Invoice.class);
 
-		try {
-			invoice = Beans.get(InvoiceService.class).compute(invoice);
-			response.setValues(invoice);
-		} catch (final Exception e) {
-			TraceBackService.trace(response, e);
-		}
-	}
+    try {
+      invoice = Beans.get(InvoiceService.class).compute(invoice);
+      response.setValues(invoice);
+    } catch (final Exception e) {
+      TraceBackService.trace(response, e);
+    }
+  }
 
-	public void propagatePriceListDiscounts(final ActionRequest request, final ActionResponse response) {
-		final Invoice invoice = request.getContext().asType(Invoice.class);
+  public void propagatePriceListDiscounts(
+      final ActionRequest request, final ActionResponse response) {
+    final Invoice invoice = request.getContext().asType(Invoice.class);
 
-		final PriceList priceList = invoice.getPriceList();
-		if (priceList != null) {
-			// override global discount information
-			invoice.setDiscountAmount(priceList.getGeneralDiscount());
-			invoice.setDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
-			invoice.setSecDiscountAmount(priceList.getSecGeneralDiscount());
-			invoice.setSecDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
-			// send updated element to view
-			response.setValues(invoice);
-		}
-	}
+    final PriceList priceList = invoice.getPriceList();
+    if (priceList != null) {
+      // override global discount information
+      invoice.setDiscountAmount(priceList.getGeneralDiscount());
+      invoice.setDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
+      invoice.setSecDiscountAmount(priceList.getSecGeneralDiscount());
+      invoice.setSecDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
+      // send updated element to view
+      response.setValues(invoice);
+    }
+  }
 }

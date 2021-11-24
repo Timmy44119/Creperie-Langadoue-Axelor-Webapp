@@ -1,22 +1,23 @@
-"key","message","comment","context"
-"Discount",,,
-"Discount amount",,,
-"Second discount amount","Discount amount",,
-"Discount rate",,,
-"Discount type",,,
-"Second discount type","Discount type",,
-"Global Discount",,,
-"First global discount",,,
-"Second global discount",,,
-"First discount",,,
-"Second discount",,,
-"Price list lines",,,
-"First Price list lines","First global discount",,
-"Second Price list lines","Second global discount",,
-"Second calculation method","Calculation method for second discount",,
-"Second Discount/Additionnal/Replace","Discount/Additionnal/Replace",,
-"Second Fixed Amount/%","Fixed Amount/%",,
-"Second Amount/%","Amount/%",,
-"Second Qty min (by product)","Qty min (by product)",,
-"General discount (%)","Discount rate (%)",,
-"Second General discount (%)","Discount rate (%)",,
+"key,""message"",""comment"",""context"""
+And,,,
+Discount,,,
+Discount amount,,,
+"Second Discount amount,""Discount amount"",,"
+Discount rate,,,
+Discount type,,,
+"Second Discount type,""Discount type"",,"
+Global Discount,,,
+First global discount,,,
+Second global discount,,,
+First discount,,,
+Second discount,,,
+Price list lines,,,
+"First Price list lines,""First global discount"",,"
+"Second Price list lines,""Second global discount"",,"
+"Second calculation method,""Calculation method for second discount"",,"
+"Second Discount/Additionnal/Replace,""Discount/Additionnal/Replace"",,"
+"Second Fixed Amount/%,""Fixed Amount/%"",,"
+"Second Amount/%,""Amount/%"",,"
+"Second Qty min (by product),""Qty min (by product)"",,"
+"General discount (%),""Discount rate (%)"",,"
+"Second General discount (%),""Discount rate (%)"",,"
