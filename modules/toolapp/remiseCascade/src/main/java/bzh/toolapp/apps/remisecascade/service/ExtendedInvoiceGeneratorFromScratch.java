@@ -36,10 +36,11 @@ public class ExtendedInvoiceGeneratorFromScratch extends InvoiceGenerator {
 	public Invoice generate() throws AxelorException {
 
 		final List<InvoiceLine> invoiceLines = new ArrayList<>();
-		invoiceLines.addAll(this.invoice.getInvoiceLineList());
+		if (this.invoice.getInvoiceLineList() != null) {
+			invoiceLines.addAll(this.invoice.getInvoiceLineList());
 
-		this.populate(this.invoice, invoiceLines);
-
+			this.populate(this.invoice, invoiceLines);
+		}
 		return this.invoice;
 	}
 

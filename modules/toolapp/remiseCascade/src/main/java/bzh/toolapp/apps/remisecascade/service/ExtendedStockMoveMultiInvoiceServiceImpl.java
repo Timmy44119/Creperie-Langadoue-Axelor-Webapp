@@ -12,6 +12,7 @@ import com.axelor.apps.account.db.Invoice;
 import com.axelor.apps.account.db.repo.InvoiceRepository;
 import com.axelor.apps.account.service.invoice.generator.InvoiceGenerator;
 import com.axelor.apps.base.db.PriceList;
+import com.axelor.apps.base.db.repo.PriceListLineRepository;
 import com.axelor.apps.purchase.db.repo.PurchaseOrderRepository;
 import com.axelor.apps.sale.db.SaleOrder;
 import com.axelor.apps.sale.db.repo.SaleOrderRepository;
@@ -66,6 +67,11 @@ public class ExtendedStockMoveMultiInvoiceServiceImpl extends StockMoveMultiInvo
 			dummyInvoice.setContactPartner(saleOrder.getContactPartner());
 			dummyInvoice.setPriceList(saleOrder.getPriceList());
 			dummyInvoice.setInAti(saleOrder.getInAti());
+			dummyInvoice.setDiscountTypeSelect(saleOrder.getDiscountTypeSelect());
+			dummyInvoice.setDiscountAmount(saleOrder.getDiscountAmount());
+			dummyInvoice.setSecDiscountTypeSelect(saleOrder.getSecDiscountTypeSelect());
+			dummyInvoice.setSecDiscountAmount(saleOrder.getSecDiscountAmount());
+
 		} else {
 
 			dummyInvoice.setCurrency(stockMove.getCompany().getCurrency());
@@ -75,7 +81,7 @@ public class ExtendedStockMoveMultiInvoiceServiceImpl extends StockMoveMultiInvo
 			dummyInvoice.setAddress(stockMove.getToAddress());
 			dummyInvoice.setAddressStr(stockMove.getToAddressStr());
 
-			if (!stockMove.getPartner().getSalePartnerPriceList().getPriceListSet().isEmpty()) {
+			if (stockMove.getPartner().getSalePartnerPriceList() != null) {
 				// Find the price list of partner
 				final Set<PriceList> partnerPriceListSet = stockMove.getPartner().getSalePartnerPriceList()
 						.getPriceListSet();
@@ -85,6 +91,10 @@ public class ExtendedStockMoveMultiInvoiceServiceImpl extends StockMoveMultiInvo
 				if (priceList != null) {
 					this.logger.debug("Le nom de la priceList appliquee est {}", priceList.getTitle());
 					dummyInvoice.setPriceList(priceList);
+					dummyInvoice.setDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
+					dummyInvoice.setDiscountAmount(priceList.getGeneralDiscount());
+					dummyInvoice.setSecDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
+					dummyInvoice.setSecDiscountAmount(priceList.getSecGeneralDiscount());
 				}
 			}
 		}

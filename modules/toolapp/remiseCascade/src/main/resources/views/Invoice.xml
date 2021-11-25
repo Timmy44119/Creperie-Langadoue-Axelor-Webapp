@@ -43,7 +43,39 @@
 					form-view="price-list-form" grid-view="price-list-grid" />
 			</replace>
 		</extend>
+		
+		<extend
+			target="panel[@name='invoicingInfoPanel']//field[@name='partner']">
+			<replace>
+	            <field name="partner" colSpan="3" canEdit="false" 
+		            readonlyIf="((operationTypeSelect == 3 || operationTypeSelect == 4) &amp;&amp; statusSelect != 1) || ((operationTypeSelect == 1 || operationTypeSelect == 2) &amp;&amp; (statusSelect != 1 || invoiceLineList.length > 0))"  
+		            onChange="action-group-account-invoice-partner-onchange-extended,action-method-invoice-address-str" 
+		            onSelect="action-invoice-method-set-partner-domain" 
+		            form-view="partner-form" 
+		            grid-view="partner-grid"/>
+			</replace>
+		</extend>
+		
 	</form>
+	
+	 <action-group name="action-group-account-invoice-partner-onchange-extended">
+    	<action name="action-invoice-record-partner-change"/>
+		  <action name="action-invoice-method-payment-mode-condition"/>
+    	<action name="action-invoice-record-due-date"/>
+    	<action name="action-invoice-record-estimated-payment-date"/>
+			<action name="action-invoice-method-fill-company-bank-details"/>
+			<action name="action-invoice-record-specific-note-on-invoice"/>
+			<action name="action-invoice-method-fill-advance-payment-set"/>
+			<action name="action-invoice-method-set-default-mail"/>
+			<action name="action-invoice-method-fill-price-list-extended"/>
+			<action name="action-invoice-attrs-interco-supplychain"/>
+			<action name="action-invoice-record-interco-supplychain"/>
+			<action name="action-invoice-method-check-partner-bank-details-list"/>
+			<action name="action-invoice-method-set-pfp-validator-user"
+        if="__config__.app.getApp('account').getActivatePassedForPayment() &amp;&amp; (company.accountConfig.isManagePassedForPayment &amp;&amp; (operationTypeSelect == 1 || company.accountConfig.isManagePFPInRefund &amp;&amp; operationTypeSelect == 2) ) "/>
+      <action name="action-invoice-record-set-dummy-field-language"/>
+    </action-group>
+    
 	<action-method
 		name="action-invoice-method-compute-extend">
 		<call
@@ -57,4 +89,11 @@
 			class="bzh.toolapp.apps.remisecascade.web.InvoiceController"
 			method="propagatePriceListDiscounts" />
 	</action-method>
+	
+	<action-method name="action-invoice-method-fill-price-list-extended">
+		<call class="bzh.toolapp.apps.remisecascade.web.InvoiceController"
+			  method="fillPriceList"/>
+	</action-method>
+	
+	
 </object-views>
