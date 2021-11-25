@@ -75,16 +75,17 @@ public class ExtendedStockMoveMultiInvoiceServiceImpl extends StockMoveMultiInvo
 			dummyInvoice.setAddress(stockMove.getToAddress());
 			dummyInvoice.setAddressStr(stockMove.getToAddressStr());
 
-			// Find the price list of partner
-			final Set<PriceList> partnerPriceListSet = stockMove.getPartner().getSalePartnerPriceList()
-					.getPriceListSet();
+			if (stockMove.getPartner().getSalePartnerPriceList().getPriceListSet() != null) {
+				// Find the price list of partner
+				final Set<PriceList> partnerPriceListSet = stockMove.getPartner().getSalePartnerPriceList()
+						.getPriceListSet();
 
-			final PriceList priceList = this.findPriceList(partnerPriceListSet, stockMove.getStockMoveLineList());
+				final PriceList priceList = this.findPriceList(partnerPriceListSet, stockMove.getStockMoveLineList());
 
-			this.logger.debug("Liste de prix client {}:", priceList != null);
-
-			if (priceList != null) {
-				dummyInvoice.setPriceList(priceList);
+				if (priceList != null) {
+					this.logger.debug("Le nom de la priceList appliquee est {}", priceList.getTitle());
+					dummyInvoice.setPriceList(priceList);
+				}
 			}
 		}
 		return dummyInvoice;
