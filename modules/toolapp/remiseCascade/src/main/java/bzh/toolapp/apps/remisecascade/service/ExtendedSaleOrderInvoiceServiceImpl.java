@@ -1,5 +1,10 @@
 package bzh.toolapp.apps.remisecascade.service;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import com.axelor.apps.account.db.Invoice;
 import com.axelor.apps.account.db.InvoiceLine;
 import com.axelor.apps.account.db.repo.InvoiceRepository;
@@ -23,85 +28,56 @@ import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
-import java.math.BigDecimal;
-import java.util.List;
-import javax.inject.Inject;
 
 public class ExtendedSaleOrderInvoiceServiceImpl extends SaleOrderInvoiceProjectServiceImpl {
-  private final PriceListService priceListService;
+	private final PriceListService priceListService;
 
-  @Inject
-  public ExtendedSaleOrderInvoiceServiceImpl(
-      final AppBaseService appBaseService,
-      final AppSupplychainService appSupplychainService,
-      final SaleOrderRepository saleOrderRepo,
-      final InvoiceRepository invoiceRepo,
-      final InvoiceService invoiceService,
-      final AppBusinessProjectService appBusinessProjectService,
-      final StockMoveRepository stockMoveRepository,
-      final SaleOrderLineService saleOrderLineService,
-      final SaleOrderWorkflowServiceImpl saleOrderWorkflowServiceImpl,
-      final PriceListService priceListServiceParam) {
-    super(
-        appBaseService,
-        appSupplychainService,
-        saleOrderRepo,
-        invoiceRepo,
-        invoiceService,
-        appBusinessProjectService,
-        stockMoveRepository,
-        saleOrderLineService,
-        saleOrderWorkflowServiceImpl);
-    this.priceListService = priceListServiceParam;
-  }
+	@Inject
+	public ExtendedSaleOrderInvoiceServiceImpl(final AppBaseService appBaseService,
+			final AppSupplychainService appSupplychainService, final SaleOrderRepository saleOrderRepo,
+			final InvoiceRepository invoiceRepo, final InvoiceService invoiceService,
+			final AppBusinessProjectService appBusinessProjectService, final StockMoveRepository stockMoveRepository,
+			final SaleOrderLineService saleOrderLineService,
+			final SaleOrderWorkflowServiceImpl saleOrderWorkflowServiceImpl,
+			final PriceListService priceListServiceParam) {
+		super(appBaseService, appSupplychainService, saleOrderRepo, invoiceRepo, invoiceService,
+				appBusinessProjectService, stockMoveRepository, saleOrderLineService, saleOrderWorkflowServiceImpl);
+		this.priceListService = priceListServiceParam;
+	}
 
-  @Override
-  public InvoiceGenerator createInvoiceGenerator(final SaleOrder saleOrder, final boolean isRefund)
-      throws AxelorException {
-    if (saleOrder.getCurrency() == null) {
-      throw new AxelorException(
-          saleOrder,
-          TraceBackRepository.CATEGORY_CONFIGURATION_ERROR,
-          I18n.get(IExceptionMessage.SO_INVOICE_6),
-          saleOrder.getSaleOrderSeq());
-    }
+	@Override
+	public InvoiceGenerator createInvoiceGenerator(final SaleOrder saleOrder, final boolean isRefund)
+			throws AxelorException {
+		if (saleOrder.getCurrency() == null) {
+			throw new AxelorException(saleOrder, TraceBackRepository.CATEGORY_CONFIGURATION_ERROR,
+					I18n.get(IExceptionMessage.SO_INVOICE_6), saleOrder.getSaleOrderSeq());
+		}
 
-    return new ExtendedInvoiceGeneratorFromSaleOrder(saleOrder, isRefund, this.priceListService);
-  }
+		return new ExtendedInvoiceGeneratorFromSaleOrder(saleOrder, isRefund, this.priceListService);
+	}
 
-  @Override
-  public List<InvoiceLine> createInvoiceLine(
-      final Invoice invoice, final SaleOrderLine saleOrderLine, final BigDecimal qtyToInvoice)
-      throws AxelorException {
+	@Override
+	public List<InvoiceLine> createInvoiceLine(final Invoice invoice, final SaleOrderLine saleOrderLine,
+			final BigDecimal qtyToInvoice) throws AxelorException {
 
-    final Product product = saleOrderLine.getProduct();
+		final Product product = saleOrderLine.getProduct();
 
-    final InvoiceLineGenerator invoiceLineGenerator =
-        new ExtendedInvoiceLineGeneratorSupplyChain(
-            invoice,
-            product,
-            saleOrderLine.getProductName(),
-            saleOrderLine.getDescription(),
-            qtyToInvoice,
-            saleOrderLine.getUnit(),
-            saleOrderLine.getSequence(),
-            false,
-            saleOrderLine,
-            null,
-            null);
+		final InvoiceLineGenerator invoiceLineGenerator = new ExtendedInvoiceLineGeneratorSupplyChain(invoice, product,
+				saleOrderLine.getProductName(), saleOrderLine.getDescription(), qtyToInvoice, saleOrderLine.getUnit(),
+				saleOrderLine.getSequence(), false, saleOrderLine, null, null, this.priceListService);
 
-    final List<InvoiceLine> invoiceLines = invoiceLineGenerator.creates();
+		final List<InvoiceLine> invoiceLines = invoiceLineGenerator.creates();
 
-    if (!Beans.get(AppBusinessProjectService.class).isApp("business-project")) {
-      return invoiceLines;
-    }
+		if (!Beans.get(AppBusinessProjectService.class).isApp("business-project")) {
+			return invoiceLines;
+		}
 
-    for (final InvoiceLine invoiceLine : invoiceLines) {
-      if (saleOrderLine != null) {
-        invoiceLine.setProject(saleOrderLine.getProject());
-      }
-    }
+		for (final InvoiceLine invoiceLine : invoiceLines) {
+			if (saleOrderLine != null) {
+				invoiceLine.setProject(saleOrderLine.getProject());
+			}
+		}
 
-    return invoiceLines;
-  }
+		return invoiceLines;
+	}
 }
