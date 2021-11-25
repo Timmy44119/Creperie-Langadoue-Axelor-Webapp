@@ -81,7 +81,7 @@ public class ExtendedInvoiceGeneratorFromScratch extends InvoiceGenerator {
 			final BigDecimal taxPrice = intermediateExTaxPrice.multiply(taxLineValue).setScale(2, RoundingMode.HALF_UP);
 
 			// update also final total of taxes
-			invoice.setTaxTotal(invoice.getTaxTotal().add(taxPrice).setScale(2));
+			invoice.setTaxTotal(invoice.getTaxTotal().add(taxPrice).setScale(2, RoundingMode.HALF_UP));
 			this.logger.debug("montant de la taxe {}", taxPrice);
 
 			// compute price for this line with global discount (HT + taxes)
@@ -90,20 +90,22 @@ public class ExtendedInvoiceGeneratorFromScratch extends InvoiceGenerator {
 					intermediateExTaxPrice, intermediateInTaxPrice);
 
 			// update also final total with taxes
-			invoice.setInTaxTotal(invoice.getInTaxTotal().add(intermediateInTaxPrice).setScale(2));
+			invoice.setInTaxTotal(
+					invoice.getInTaxTotal().add(intermediateInTaxPrice).setScale(2, RoundingMode.HALF_UP));
 			this.logger.debug("prix global intermédiaire : TTC = {}", invoice.getInTaxTotal());
 		}
 
 		for (final InvoiceLineTax invoiceLineTax : invoice.getInvoiceLineTaxList()) {
 			// In the company accounting currency
 			// TODO this computation should be updated too ...
-			invoice.setCompanyTaxTotal(
-					invoice.getCompanyTaxTotal().add(invoiceLineTax.getCompanyTaxTotal().setScale(2)));
+			invoice.setCompanyTaxTotal(invoice.getCompanyTaxTotal()
+					.add(invoiceLineTax.getCompanyTaxTotal().setScale(2, RoundingMode.HALF_UP)));
 		}
 
 		// In the company accounting currency
 		// TODO this computation should be updated too ...
-		invoice.setCompanyInTaxTotal(invoice.getCompanyExTaxTotal().add(invoice.getCompanyTaxTotal().setScale(2)));
+		invoice.setCompanyInTaxTotal(
+				invoice.getCompanyExTaxTotal().add(invoice.getCompanyTaxTotal().setScale(2, RoundingMode.HALF_UP)));
 
 		invoice.setAmountRemaining(invoice.getInTaxTotal());
 		invoice.setHasPendingPayments(false);

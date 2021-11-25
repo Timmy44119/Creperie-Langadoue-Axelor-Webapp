@@ -34,6 +34,8 @@ public class StockMoveInvoiceController {
 
 	public void generateInvoice(final ActionRequest request, final ActionResponse response) {
 		try {
+
+			Boolean singleDocument = false;
 			// Get Context
 			final Context context = request.getContext();
 
@@ -52,7 +54,8 @@ public class StockMoveInvoiceController {
 				this.logger.debug("Boucle sur les partner ID");
 
 				// Define Stock move without sale order
-				final List<StockMove> stockMovesWoSo = this.getStockMoves(this.ORIGIN_TYPE_SELECT_NULL, id, stockMoves);
+				final List<StockMove> stockMovesWoSo = this.getStockMoves(this.ORIGIN_TYPE_SELECT_NULL, id, stockMoves,
+						singleDocument);
 
 				// Get list of id of stock move without sale order
 				final List<Long> stockMovesWoSoIdList = this.getStockMovesIdList(stockMovesWoSo);
@@ -64,9 +67,11 @@ public class StockMoveInvoiceController {
 					this.sendToInvoice(response, stockMovesWoSo, stockMovesWoSoIdList);
 				}
 
+				singleDocument = true;
+
 				// Define stock move with saleOrder
 				final List<StockMove> stockMovesWSo = this.getStockMoves(StockMoveRepository.ORIGIN_SALE_ORDER, id,
-						stockMoves);
+						stockMoves, singleDocument);
 
 				this.logger.debug("le size de la liste avec commande est de {} ", stockMovesWSo.size());
 				// Get list of id of stock move without sale order
@@ -99,7 +104,7 @@ public class StockMoveInvoiceController {
 
 	// Collect the stock moves
 	private List<StockMove> getStockMoves(final String typeStockMove, final Long idPartner,
-			final List<StockMove> stockMovesList) {
+			final List<StockMove> stockMovesList, final Boolean singleDocument) {
 
 		final List<StockMove> stockMovesToInvoice = new ArrayList<>();
 
@@ -119,6 +124,9 @@ public class StockMoveInvoiceController {
 				// Add the stock move to send to the invoice
 				if (originTypeSelect.equals(typeStockMove)) {
 					stockMovesToInvoice.add(sm);
+					if (singleDocument) {
+						break;
+					}
 				}
 			}
 		}
