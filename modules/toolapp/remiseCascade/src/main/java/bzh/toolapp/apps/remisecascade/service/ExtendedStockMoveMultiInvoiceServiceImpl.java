@@ -75,7 +75,7 @@ public class ExtendedStockMoveMultiInvoiceServiceImpl extends StockMoveMultiInvo
 			dummyInvoice.setAddress(stockMove.getToAddress());
 			dummyInvoice.setAddressStr(stockMove.getToAddressStr());
 
-			if (stockMove.getPartner().getSalePartnerPriceList().getPriceListSet() != null) {
+			if (!stockMove.getPartner().getSalePartnerPriceList().getPriceListSet().isEmpty()) {
 				// Find the price list of partner
 				final Set<PriceList> partnerPriceListSet = stockMove.getPartner().getSalePartnerPriceList()
 						.getPriceListSet();
