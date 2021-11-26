@@ -48,10 +48,13 @@ public class ExtendedInvoiceLineGeneratorSupplyChain extends InvoiceLineGenerato
 		if (this.stockMoveLine != null) {
 			if (invoiceLine.getInvoice().getPriceList() != null) {
 				final PriceList priceList = invoiceLine.getInvoice().getPriceList();
-				final PriceListLine priceListLine = this.priceListService.getPriceListLine(invoiceLine.getProduct(),
-						invoiceLine.getQty(), priceList, invoiceLine.getPrice());
 
-				if (priceListLine != null) {
+				if (this.priceListService.getPriceListLine(invoiceLine.getProduct(), invoiceLine.getQty(), priceList,
+						invoiceLine.getPrice()) != null) {
+
+					final PriceListLine priceListLine = this.priceListService.getPriceListLine(invoiceLine.getProduct(),
+							invoiceLine.getQty(), priceList, invoiceLine.getPrice());
+
 					invoiceLine.setDiscountTypeSelect(priceListLine.getAmountTypeSelect());
 					invoiceLine.setDiscountAmount(priceListLine.getAmount());
 					invoiceLine.setSecDiscountAmount(priceListLine.getSecAmount());
