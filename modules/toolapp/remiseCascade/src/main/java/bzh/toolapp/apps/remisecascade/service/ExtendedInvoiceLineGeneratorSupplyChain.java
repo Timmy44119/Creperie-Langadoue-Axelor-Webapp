@@ -57,7 +57,6 @@ public class ExtendedInvoiceLineGeneratorSupplyChain extends InvoiceLineGenerato
 					invoiceLine.setSecDiscountAmount(priceListLine.getSecAmount());
 					invoiceLine.setSecDiscountTypeSelect(priceListLine.getSecTypeSelect());
 				}
-
 			}
 		}
 
