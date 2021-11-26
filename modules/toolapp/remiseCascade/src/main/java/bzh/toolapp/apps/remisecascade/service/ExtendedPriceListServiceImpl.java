@@ -230,8 +230,8 @@ public class ExtendedPriceListServiceImpl extends PriceListService {
 				if (priceListLine.getSecMinQty().compareTo(qty) > 0) {
 					// We have to disable manually information about second discount to avoid
 					// activation
-					priceListLine.setSecAmountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_NONE);
-					priceListLine.setSecAmount(BigDecimal.ZERO);
+					//priceListLine.setSecAmountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_NONE);
+					//priceListLine.setSecAmount(BigDecimal.ZERO);
 				}
 			}
 		}
