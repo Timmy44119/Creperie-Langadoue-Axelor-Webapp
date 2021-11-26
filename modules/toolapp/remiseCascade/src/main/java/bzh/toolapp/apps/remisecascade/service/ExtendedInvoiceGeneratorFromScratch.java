@@ -2,6 +2,7 @@ package bzh.toolapp.apps.remisecascade.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,10 +12,22 @@ import org.slf4j.LoggerFactory;
 import com.axelor.apps.account.db.Invoice;
 import com.axelor.apps.account.db.InvoiceLine;
 import com.axelor.apps.account.db.InvoiceLineTax;
+import com.axelor.apps.account.db.PaymentCondition;
+import com.axelor.apps.account.db.PaymentMode;
+import com.axelor.apps.account.service.app.AppAccountService;
 import com.axelor.apps.account.service.invoice.generator.InvoiceGenerator;
+import com.axelor.apps.base.db.Address;
+import com.axelor.apps.base.db.BankDetails;
+import com.axelor.apps.base.db.Company;
+import com.axelor.apps.base.db.Currency;
+import com.axelor.apps.base.db.Partner;
+import com.axelor.apps.base.db.PriceList;
+import com.axelor.apps.base.db.TradingName;
+import com.axelor.apps.base.db.repo.PriceListLineRepository;
 import com.axelor.apps.base.service.PriceListService;
 import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.exception.AxelorException;
+import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 
 /** To generate Invoice for delivery from scratch. */
@@ -23,25 +36,87 @@ public class ExtendedInvoiceGeneratorFromScratch extends InvoiceGenerator {
 
 	private final Invoice invoice;
 	private final PriceListService priceListService;
+	protected int operationType;
+	protected Company company;
+	protected PaymentCondition paymentCondition;
+	protected PaymentMode paymentMode;
+	protected Address mainInvoicingAddress;
+	protected Partner partner;
+	protected Partner contactPartner;
+	protected Currency currency;
+	protected LocalDate today;
+	protected PriceList priceList;
+	protected String internalReference;
+	protected String externalReference;
+	protected Boolean inAti;
+	protected BankDetails companyBankDetails;
+	protected TradingName tradingName;
+	protected static int DEFAULT_INVOICE_COPY = 1;
+	protected Boolean header = false;
+	protected PriceListService priceListServiceParam;
+
 	@Inject
 	protected AppBaseService appBaseService;
+
+	public ExtendedInvoiceGeneratorFromScratch(final int operationType, final Company company,
+			final PaymentCondition paymentCondition, final PaymentMode paymentMode, final Address mainInvoicingAddress,
+			final Partner partner, final Partner contactPartner, final Currency currency, final PriceList priceList,
+			final String internalReference, final String externalReference, final Boolean inAti,
+			final BankDetails companyBankDetails, final TradingName tradingName, final boolean header,
+			final PriceListService priceListServiceParam) throws AxelorException {
+		super(operationType, company, paymentCondition, paymentMode, mainInvoicingAddress, partner, contactPartner,
+				currency, priceList, internalReference, externalReference, inAti, companyBankDetails, tradingName);
+		this.operationType = operationType;
+		this.company = company;
+		this.paymentCondition = paymentCondition;
+		this.paymentMode = paymentMode;
+		this.mainInvoicingAddress = mainInvoicingAddress;
+		this.partner = partner;
+		this.contactPartner = contactPartner;
+		this.currency = currency;
+		this.priceList = priceList;
+		this.internalReference = internalReference;
+		this.externalReference = externalReference;
+		this.inAti = inAti;
+		this.companyBankDetails = companyBankDetails;
+		this.tradingName = tradingName;
+		this.today = Beans.get(AppAccountService.class).getTodayDate(company);
+		this.header = header;
+		this.invoice = null;
+		this.priceListService = priceListServiceParam;
+	}
 
 	public ExtendedInvoiceGeneratorFromScratch(final Invoice invoiceParam, final PriceListService priceListServiceParam)
 			throws AxelorException {
 		this.invoice = invoiceParam;
 		this.priceListService = priceListServiceParam;
+		this.header = false;
 	}
 
 	@Override
 	public Invoice generate() throws AxelorException {
+		Invoice invoiceGenerated;
+		if (this.header) {
+			invoiceGenerated = super.createInvoiceHeader();
+			invoiceGenerated.setPartnerTaxNbr(this.partner.getTaxNbr());
 
-		final List<InvoiceLine> invoiceLines = new ArrayList<>();
-		if (this.invoice.getInvoiceLineList() != null) {
-			invoiceLines.addAll(this.invoice.getInvoiceLineList());
+			invoiceGenerated.setDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
+			invoiceGenerated.setSecDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
+			invoiceGenerated.setDiscountAmount(this.priceList.getGeneralDiscount());
+			invoiceGenerated.setSecDiscountAmount(this.priceList.getSecGeneralDiscount());
+			this.logger.debug("{}", invoiceGenerated);
+		} else {
 
-			this.populate(this.invoice, invoiceLines);
+			final List<InvoiceLine> invoiceLines = new ArrayList<>();
+			if (this.invoice.getInvoiceLineList() != null) {
+				invoiceLines.addAll(this.invoice.getInvoiceLineList());
+
+				this.populate(this.invoice, invoiceLines);
+			}
+			invoiceGenerated = this.invoice;
 		}
-		return this.invoice;
+
+		return invoiceGenerated;
 	}
 
 	/**
@@ -120,6 +195,7 @@ public class ExtendedInvoiceGeneratorFromScratch extends InvoiceGenerator {
 		 * Now, we have to use discount information to update amount without taxes, then
 		 * compute again final amount with taxes.
 		 */
+		this.logger.debug("{}, {}, {}", originalPrice, invoice.getDiscountTypeSelect(), invoice.getDiscountAmount());
 		// compute first discount
 		final BigDecimal firstDiscount = this.priceListService.computeDiscount(originalPrice,
 				invoice.getDiscountTypeSelect(), invoice.getDiscountAmount());

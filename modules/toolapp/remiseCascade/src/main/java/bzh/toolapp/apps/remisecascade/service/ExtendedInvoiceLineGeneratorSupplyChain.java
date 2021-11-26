@@ -43,6 +43,7 @@ public class ExtendedInvoiceLineGeneratorSupplyChain extends InvoiceLineGenerato
 
 			// Add second discount type select
 			invoiceLine.setSecDiscountTypeSelect(this.saleOrderLine.getSecDiscountTypeSelect());
+
 		}
 
 		if (this.stockMoveLine != null) {
