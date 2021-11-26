@@ -99,11 +99,18 @@ public class ExtendedInvoiceGeneratorFromScratch extends InvoiceGenerator {
 		if (this.header) {
 			invoiceGenerated = super.createInvoiceHeader();
 			invoiceGenerated.setPartnerTaxNbr(this.partner.getTaxNbr());
+			if (this.priceList != null) {
+				invoiceGenerated.setDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
+				invoiceGenerated.setSecDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
+				invoiceGenerated.setDiscountAmount(this.priceList.getGeneralDiscount());
+				invoiceGenerated.setSecDiscountAmount(this.priceList.getSecGeneralDiscount());
+			} else {
+				invoiceGenerated.setDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_NONE);
+				invoiceGenerated.setSecDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_NONE);
+				invoiceGenerated.setDiscountAmount(BigDecimal.ZERO);
+				invoiceGenerated.setSecDiscountAmount(BigDecimal.ZERO);
 
-			invoiceGenerated.setDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
-			invoiceGenerated.setSecDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
-			invoiceGenerated.setDiscountAmount(this.priceList.getGeneralDiscount());
-			invoiceGenerated.setSecDiscountAmount(this.priceList.getSecGeneralDiscount());
+			}
 			this.logger.debug("{}", invoiceGenerated);
 		} else {
 
