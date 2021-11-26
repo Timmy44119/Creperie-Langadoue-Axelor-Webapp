@@ -109,7 +109,6 @@ public class ExtendedInvoiceGeneratorFromScratch extends InvoiceGenerator {
 				invoiceGenerated.setSecDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_NONE);
 				invoiceGenerated.setDiscountAmount(BigDecimal.ZERO);
 				invoiceGenerated.setSecDiscountAmount(BigDecimal.ZERO);
-
 			}
 			this.logger.debug("{}", invoiceGenerated);
 		} else {
