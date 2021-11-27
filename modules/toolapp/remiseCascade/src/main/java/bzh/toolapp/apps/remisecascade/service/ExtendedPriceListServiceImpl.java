@@ -5,6 +5,10 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.axelor.apps.account.service.invoice.generator.InvoiceGenerator;
 import com.axelor.apps.base.db.PriceList;
 import com.axelor.apps.base.db.PriceListLine;
 import com.axelor.apps.base.db.Product;
@@ -19,6 +23,7 @@ public class ExtendedPriceListServiceImpl extends PriceListService {
 
 	@Inject
 	protected AppBaseService appBaseService;
+	private final Logger logger = LoggerFactory.getLogger(InvoiceGenerator.class);
 
 	@Override
 	public BigDecimal getUnitPriceDiscounted(final PriceListLine priceListLine, final BigDecimal unitPrice) {
@@ -222,19 +227,34 @@ public class ExtendedPriceListServiceImpl extends PriceListService {
 	@Override
 	public PriceListLine getPriceListLine(final Product product, final BigDecimal qty, final PriceList priceList,
 			final BigDecimal price) {
+		final PriceListLine priceListLineTemp = new PriceListLine();
 		final PriceListLine priceListLine = super.getPriceListLine(product, qty, priceList, price);
 
 		if (priceListLine != null) {
+			this.logger.debug("{}", priceListLine);
+
+			priceListLineTemp.setId(priceListLine.getId());
+			priceListLineTemp.setTypeSelect(priceListLine.getTypeSelect());
+			priceListLineTemp.setProduct(priceListLine.getProduct());
+			priceListLineTemp.setProductCategory(priceListLine.getProductCategory());
+			priceListLineTemp.setAmount(priceListLine.getAmount());
+			priceListLineTemp.setAmountTypeSelect(priceListLine.getAmountTypeSelect());
+			priceListLineTemp.setMinQty(priceListLine.getMinQty());
+
 			// check activation of second discount
 			if (priceListLine.getSecAmountTypeSelect() != PriceListLineRepository.AMOUNT_TYPE_NONE) {
 				if (priceListLine.getSecMinQty().compareTo(qty) > 0) {
 					// We have to disable manually information about second discount to avoid
 					// activation
-					//priceListLine.setSecAmountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_NONE);
-					//priceListLine.setSecAmount(BigDecimal.ZERO);
+					priceListLineTemp.setSecAmountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_NONE);
+					priceListLineTemp.setSecAmount(BigDecimal.ZERO);
+				} else {
+					priceListLineTemp.setSecAmountTypeSelect(priceListLine.getSecAmountTypeSelect());
+					priceListLineTemp.setSecAmount(priceListLine.getSecAmount());
 				}
 			}
 		}
-		return priceListLine;
+		this.logger.debug("{}", priceListLineTemp);
+		return priceListLineTemp;
 	}
 }
