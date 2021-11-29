@@ -1,6 +1,7 @@
 package bzh.toolapp.apps.remisecascade.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import com.axelor.apps.account.db.AnalyticMoveLine;
 import com.axelor.apps.account.db.Invoice;
 import com.axelor.apps.account.db.InvoiceLine;
 import com.axelor.apps.account.service.invoice.InvoiceLineService;
+import com.axelor.apps.account.service.invoice.generator.line.InvoiceLineManagement;
 import com.axelor.apps.base.db.PriceList;
 import com.axelor.apps.base.db.PriceListLine;
 import com.axelor.apps.base.db.Product;
@@ -73,9 +75,25 @@ public class ExtendedInvoiceLineGeneratorSupplyChain extends InvoiceLineGenerato
 						invoiceLine.setSecDiscountTypeSelect(priceListLine.getSecTypeSelect());
 
 						// Reload price determination
-						invoiceLine.setPrice(invoiceLineService.computeDiscount(invoiceLine, false));
+						invoiceLine.setPriceSecDiscounted(
+								invoiceLineService.computeDiscount(invoiceLine, invoiceLine.getInvoice().getInAti()));
 						invoiceLine.setInTaxPrice(invoiceLineService.getInTaxUnitPrice(this.invoice, invoiceLine,
 								invoiceLine.getTaxLine(), false));
+						// Check if the invoice is in ATI
+						if (!invoiceLine.getInvoice().getInAti()) {
+							// Calculate the tax total
+							invoiceLine.setExTaxTotal(InvoiceLineManagement.computeAmount(invoiceLine.getQty(),
+									invoiceLine.getPriceSecDiscounted(), 2));
+
+							invoiceLine.setInTaxTotal(invoiceLine.getExTaxTotal()
+									.add(invoiceLine.getExTaxTotal().multiply(invoiceLine.getTaxRate()))
+									.setScale(2, RoundingMode.HALF_UP));
+						} else {
+							invoiceLine.setInTaxTotal(InvoiceLineManagement.computeAmount(invoiceLine.getQty(),
+									invoiceLine.getPriceSecDiscounted(), 2));
+							invoiceLine.setExTaxTotal(invoiceLine.getInTaxTotal()
+									.divide(invoiceLine.getTaxRate().add(BigDecimal.ONE), 2, BigDecimal.ROUND_HALF_UP));
+						}
 
 					}
 				}
@@ -84,7 +102,7 @@ public class ExtendedInvoiceLineGeneratorSupplyChain extends InvoiceLineGenerato
 
 		// Fill the Analytics part
 		final List<AnalyticMoveLine> analyticMoveLineList = invoiceLineService
-				.getAndComputeAnalyticDistribution(invoiceLine, this.invoice);
+				.getAndComputeAnalyticDistribution(invoiceLine, invoiceLine.getInvoice());
 
 		analyticMoveLineList.stream().forEach(invoiceLine::addAnalyticMoveLineListItem);
 
