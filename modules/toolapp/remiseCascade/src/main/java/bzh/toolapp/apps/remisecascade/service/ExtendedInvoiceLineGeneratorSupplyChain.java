@@ -68,29 +68,41 @@ public class ExtendedInvoiceLineGeneratorSupplyChain extends InvoiceLineGenerato
 
 					// if not null
 					if (priceListLine != null) {
-						// Apply the discount
+						// Apply the first discount
 						invoiceLine.setDiscountTypeSelect(priceListLine.getAmountTypeSelect());
 						invoiceLine.setDiscountAmount(priceListLine.getAmount());
-						invoiceLine.setSecDiscountAmount(priceListLine.getSecAmount());
-						invoiceLine.setSecDiscountTypeSelect(priceListLine.getSecTypeSelect());
 
-						// Reload price determination
-						invoiceLine.setPriceSecDiscounted(
+						// Reload price determination with the first
+						invoiceLine.setPriceDiscounted(
 								invoiceLineService.computeDiscount(invoiceLine, invoiceLine.getInvoice().getInAti()));
-						invoiceLine.setInTaxPrice(invoiceLineService.getInTaxUnitPrice(this.invoice, invoiceLine,
-								invoiceLine.getTaxLine(), false));
+
+						if (!(priceListLine.getSecAmount() == BigDecimal.ZERO)) {
+							invoiceLine.setSecDiscountAmount(priceListLine.getSecAmount());
+							invoiceLine.setSecDiscountTypeSelect(priceListLine.getSecTypeSelect());
+
+							// Reload price determination
+							invoiceLine.setPriceSecDiscounted(invoiceLineService.computeDiscount(invoiceLine,
+									invoiceLine.getInvoice().getInAti()));
+
+							// Update price Discounted to display it in the list
+							invoiceLine.setPriceDiscounted(invoiceLine.getPriceSecDiscounted());
+						}
+
 						// Check if the invoice is in ATI
 						if (!invoiceLine.getInvoice().getInAti()) {
-							// Calculate the tax total
+							// Calculate the total excluding tax
 							invoiceLine.setExTaxTotal(InvoiceLineManagement.computeAmount(invoiceLine.getQty(),
-									invoiceLine.getPriceSecDiscounted(), 2));
-
+									invoiceLine.getPriceDiscounted(), 2));
+							// Calculate the total including tax
 							invoiceLine.setInTaxTotal(invoiceLine.getExTaxTotal()
 									.add(invoiceLine.getExTaxTotal().multiply(invoiceLine.getTaxRate()))
 									.setScale(2, RoundingMode.HALF_UP));
 						} else {
+							// Calculate the total including tax
 							invoiceLine.setInTaxTotal(InvoiceLineManagement.computeAmount(invoiceLine.getQty(),
-									invoiceLine.getPriceSecDiscounted(), 2));
+									invoiceLine.getPriceDiscounted(), 2));
+
+							// Calculate the total excluding tax
 							invoiceLine.setExTaxTotal(invoiceLine.getInTaxTotal()
 									.divide(invoiceLine.getTaxRate().add(BigDecimal.ONE), 2, BigDecimal.ROUND_HALF_UP));
 						}
