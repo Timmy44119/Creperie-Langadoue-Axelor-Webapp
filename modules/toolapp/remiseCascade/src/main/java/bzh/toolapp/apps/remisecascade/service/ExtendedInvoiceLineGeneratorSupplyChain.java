@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.axelor.apps.account.db.AnalyticMoveLine;
 import com.axelor.apps.account.db.Invoice;
 import com.axelor.apps.account.db.InvoiceLine;
+import com.axelor.apps.account.service.invoice.InvoiceLineService;
 import com.axelor.apps.base.db.PriceList;
 import com.axelor.apps.base.db.PriceListLine;
 import com.axelor.apps.base.db.Product;
@@ -16,6 +18,7 @@ import com.axelor.apps.sale.db.SaleOrderLine;
 import com.axelor.apps.stock.db.StockMoveLine;
 import com.axelor.apps.supplychain.service.invoice.generator.InvoiceLineGeneratorSupplyChain;
 import com.axelor.exception.AxelorException;
+import com.axelor.inject.Beans;
 
 public class ExtendedInvoiceLineGeneratorSupplyChain extends InvoiceLineGeneratorSupplyChain {
 
@@ -35,6 +38,7 @@ public class ExtendedInvoiceLineGeneratorSupplyChain extends InvoiceLineGenerato
 	public List<InvoiceLine> creates() throws AxelorException {
 		// Create invoice lines
 		final InvoiceLine invoiceLine = this.createInvoiceLine();
+		final InvoiceLineService invoiceLineService = Beans.get(InvoiceLineService.class);
 
 		// add second discount information
 		if (this.saleOrderLine != null) {
@@ -45,23 +49,44 @@ public class ExtendedInvoiceLineGeneratorSupplyChain extends InvoiceLineGenerato
 			invoiceLine.setSecDiscountTypeSelect(this.saleOrderLine.getSecDiscountTypeSelect());
 
 		} else if (this.stockMoveLine != null) {
+
+			// If there is a price list
 			if (invoiceLine.getInvoice().getPriceList() != null) {
+
+				// Get the invoice price list
 				final PriceList priceList = invoiceLine.getInvoice().getPriceList();
 
+				// check if the price list line exist
 				if (this.priceListService.getPriceListLine(invoiceLine.getProduct(), invoiceLine.getQty(), priceList,
 						invoiceLine.getPrice()) != null) {
 
+					// Get the price list line
 					final PriceListLine priceListLine = this.priceListService.getPriceListLine(invoiceLine.getProduct(),
 							invoiceLine.getQty(), priceList, invoiceLine.getPrice());
+
+					// if not null
 					if (priceListLine != null) {
+						// Apply the discount
 						invoiceLine.setDiscountTypeSelect(priceListLine.getAmountTypeSelect());
 						invoiceLine.setDiscountAmount(priceListLine.getAmount());
 						invoiceLine.setSecDiscountAmount(priceListLine.getSecAmount());
 						invoiceLine.setSecDiscountTypeSelect(priceListLine.getSecTypeSelect());
+
+						// Reload price determination
+						invoiceLine.setPrice(invoiceLineService.computeDiscount(invoiceLine, false));
+						invoiceLine.setInTaxPrice(invoiceLineService.getInTaxUnitPrice(this.invoice, invoiceLine,
+								invoiceLine.getTaxLine(), false));
+
 					}
 				}
 			}
 		}
+
+		// Fill the Analytics part
+		final List<AnalyticMoveLine> analyticMoveLineList = invoiceLineService
+				.getAndComputeAnalyticDistribution(invoiceLine, this.invoice);
+
+		analyticMoveLineList.stream().forEach(invoiceLine::addAnalyticMoveLineListItem);
 
 		final List<InvoiceLine> invoiceLines = new ArrayList<>();
 		invoiceLines.add(invoiceLine);
