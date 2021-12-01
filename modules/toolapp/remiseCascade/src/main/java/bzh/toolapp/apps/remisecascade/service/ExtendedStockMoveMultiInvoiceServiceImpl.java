@@ -85,9 +85,6 @@ public class ExtendedStockMoveMultiInvoiceServiceImpl extends StockMoveMultiInvo
 			dummyInvoice.setSecDiscountTypeSelect(saleOrder.getSecDiscountTypeSelect());
 			dummyInvoice.setSecDiscountAmount(saleOrder.getSecDiscountAmount());
 
-			this.logger.debug("Le nom de la priceList appliquee est timmy {} {} {}", dummyInvoice.getPriceList(),
-					dummyInvoice.getDiscountAmount(), dummyInvoice.getDiscountTypeSelect());
-
 		} else {
 
 			dummyInvoice.setCurrency(stockMove.getCompany().getCurrency());
@@ -104,10 +101,7 @@ public class ExtendedStockMoveMultiInvoiceServiceImpl extends StockMoveMultiInvo
 
 				final PriceList priceList = this.findPriceList(partnerPriceListSet, stockMove.getStockMoveLineList());
 
-				this.logger.debug("Le nom de la priceList appliquee est {}", priceList.getTitle());
-
 				if (priceList != null) {
-					this.logger.debug("Le nom de la priceList appliquee est {}", priceList.getTitle());
 					dummyInvoice.setPriceList(priceList);
 					dummyInvoice.setDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
 					dummyInvoice.setDiscountAmount(priceList.getGeneralDiscount());

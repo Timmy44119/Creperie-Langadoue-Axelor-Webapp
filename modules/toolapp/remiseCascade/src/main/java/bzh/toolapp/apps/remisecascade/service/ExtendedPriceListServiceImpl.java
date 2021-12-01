@@ -231,8 +231,6 @@ public class ExtendedPriceListServiceImpl extends PriceListService {
 		final PriceListLine priceListLine = super.getPriceListLine(product, qty, priceList, price);
 
 		if (priceListLine != null) {
-			this.logger.debug("{}", priceListLine);
-
 			priceListLineTemp.setId(priceListLine.getId());
 			priceListLineTemp.setTypeSelect(priceListLine.getTypeSelect());
 			priceListLineTemp.setProduct(priceListLine.getProduct());
@@ -255,7 +253,23 @@ public class ExtendedPriceListServiceImpl extends PriceListService {
 				}
 			}
 		}
-		this.logger.debug("{}", priceListLineTemp);
 		return priceListLineTemp;
 	}
+
+	@Override
+	public BigDecimal computeDiscount(final BigDecimal unitPrice, final int discountTypeSelect,
+			final BigDecimal discountAmount) {
+		// Change the scale on 3 digits
+		if (discountTypeSelect == PriceListLineRepository.AMOUNT_TYPE_FIXED) {
+			return unitPrice.subtract(discountAmount).setScale(3, RoundingMode.HALF_UP);
+		}
+		// Change the scale on 3 digits
+		if (discountTypeSelect == PriceListLineRepository.AMOUNT_TYPE_PERCENT) {
+			return unitPrice.multiply(new BigDecimal(100).subtract(discountAmount)).divide(new BigDecimal(100), 3,
+					RoundingMode.HALF_UP);
+		}
+
+		return unitPrice;
+	}
+
 }

@@ -167,13 +167,13 @@ public class ExtendedInvoiceGeneratorFromScratch extends InvoiceGenerator {
 
 			// compute price for this line with global discount (HT + taxes)
 			final BigDecimal intermediateInTaxPrice = intermediateExTaxPrice.add(taxPrice);
-			this.logger.debug("Remise globale appliquée sur le montant de la ligne : HT = {}, TTC = {}",
+			this.logger.debug("Remise globale appliquee sur le montant de la ligne : HT = {}, TTC = {}",
 					intermediateExTaxPrice, intermediateInTaxPrice);
 
 			// update also final total with taxes
 			invoice.setInTaxTotal(
 					invoice.getInTaxTotal().add(intermediateInTaxPrice).setScale(2, RoundingMode.HALF_UP));
-			this.logger.debug("prix global intermédiaire : TTC = {}", invoice.getInTaxTotal());
+			this.logger.debug("prix global intermediaire : TTC = {}", invoice.getInTaxTotal());
 		}
 
 		for (final InvoiceLineTax invoiceLineTax : invoice.getInvoiceLineTaxList()) {

@@ -68,7 +68,6 @@ public class ExtendedInvoiceGeneratorFromSaleOrder extends InvoiceGeneratorSuppl
 		}
 
 		if (this.stockMove != null) {
-			this.logger.debug("***********Appel ExtendedInvoiceGeneratorFromSaleOrder ************");
 			// Select the PriceListSet from partner
 			final Set<PriceList> partnerPriceListSet = this.stockMove.getPartner().getSalePartnerPriceList()
 					.getPriceListSet();
