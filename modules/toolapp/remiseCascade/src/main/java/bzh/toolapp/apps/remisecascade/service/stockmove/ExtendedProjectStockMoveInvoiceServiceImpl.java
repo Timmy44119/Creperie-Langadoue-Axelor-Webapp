@@ -1,4 +1,4 @@
-package bzh.toolapp.apps.remisecascade.service;
+package bzh.toolapp.apps.remisecascade.service.stockmove;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -12,6 +12,7 @@ import com.axelor.apps.account.db.Invoice;
 import com.axelor.apps.account.db.InvoiceLine;
 import com.axelor.apps.account.db.repo.InvoiceLineRepository;
 import com.axelor.apps.account.db.repo.InvoiceRepository;
+import com.axelor.apps.account.service.invoice.InvoiceLineService;
 import com.axelor.apps.account.service.invoice.generator.InvoiceGenerator;
 import com.axelor.apps.account.service.invoice.generator.InvoiceLineGenerator;
 import com.axelor.apps.base.db.Product;
@@ -38,11 +39,15 @@ import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
 import com.google.inject.persist.Transactional;
 
+import bzh.toolapp.apps.remisecascade.service.invoice.ExtendedInvoiceGeneratorFromSaleOrder;
+import bzh.toolapp.apps.remisecascade.service.invoice.ExtendedInvoiceLineGeneratorSupplyChain;
+
 public class ExtendedProjectStockMoveInvoiceServiceImpl extends ProjectStockMoveInvoiceServiceImpl {
 
 	private final StockMoveLineRepository stockMoveLineRepository;
 	private final InvoiceRepository invoiceRepository;
 	private final PriceListService priceListService;
+	protected InvoiceLineService invoiceLineService;
 
 	@Inject
 	public ExtendedProjectStockMoveInvoiceServiceImpl(final SaleOrderInvoiceService saleOrderInvoiceService,
@@ -51,13 +56,14 @@ public class ExtendedProjectStockMoveInvoiceServiceImpl extends ProjectStockMove
 			final InvoiceRepository invoiceRepository, final SaleOrderRepository saleOrderRepo,
 			final PurchaseOrderRepository purchaseOrderRepo, final StockMoveLineRepository stockMoveLineRepositoryParam,
 			final InvoiceLineRepository invoiceLineRepository, final SupplyChainConfigService supplyChainConfigService,
-			final PriceListService priceListService) {
+			final PriceListService priceListService, final InvoiceLineService invoiceLineServiceParam) {
 		super(saleOrderInvoiceService, purchaseOrderInvoiceService, stockMoveLineServiceSupplychain, invoiceRepository,
 				saleOrderRepo, purchaseOrderRepo, stockMoveLineRepositoryParam, invoiceLineRepository,
 				supplyChainConfigService);
 		this.stockMoveLineRepository = stockMoveLineRepositoryParam;
 		this.invoiceRepository = invoiceRepository;
 		this.priceListService = priceListService;
+		this.invoiceLineService = invoiceLineServiceParam;
 	}
 
 	@Override
@@ -87,7 +93,7 @@ public class ExtendedProjectStockMoveInvoiceServiceImpl extends ProjectStockMove
 		}
 
 		final InvoiceGenerator invoiceGenerator = new ExtendedInvoiceGeneratorFromSaleOrder(stockMove,
-				invoiceOperationType, this.priceListService);
+				invoiceOperationType, this.priceListService, this.invoiceLineService);
 
 		final Invoice invoice = invoiceGenerator.generate();
 

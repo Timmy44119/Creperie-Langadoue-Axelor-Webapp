@@ -8,6 +8,28 @@
 		onNew="action-account-invoice-line-onnew-group"
 		onLoad="action-group-account-invoice-line-onload"
 		id="invoice-line-form-extend" extension="true">
+		
+		<extend
+			target="panel-tabs[@name='mainPanelTab']//panel[@name='informationsPanel']//field[@name='product']">
+			<replace>
+				<field name="product" canEdit="false" onChange="action-group-account-invoice-line-product-onchange-extended" onSelect="action-invoice-line-attrs-set-product-domain-onselect" form-view="product-form" grid-view="product-grid"/>
+			</replace>
+		</extend>
+		
+		<extend
+			target="panel-tabs[@name='mainPanelTab']//panel[@name='informationsPanel']//field[@name='qty']">
+			<replace>
+				<field name="qty" colSpan="3" required="true" onChange="action-group-account-invoice-line-qty-onchange-extend"/>
+			</replace>
+		</extend>
+
+		<extend
+			target="panel-tabs[@name='mainPanelTab']//panel[@name='informationsPanel']//field[@name='price']">
+			<replace>	
+				<field name="price" colSpan="3" required="true" onChange="action-invoice-line-method-onchange-price,action-invoice-line-method-compute-extended,action-invoice-line-method-compute-analytic-distribution,action-budget-validate-exceed-line-amount"/>
+			</replace>
+		</extend>
+				
 		<extend
 			target="panel-tabs[@name='mainPanelTab']//panel[@name='informationsPanel']//panel[@name='discountPanel']">
 			<replace>
@@ -36,6 +58,26 @@
 		</extend>
 	</form>
 
+    <action-group name="action-group-account-invoice-line-product-onchange-extended">
+    	<action name="action-invoice-line-method-get-product-information"/>
+    	<action name="action-invoice-line-method-compute-extended"/>
+    	<action name="action-invoice-line-method-get-and-compute-analytic-distribution"/>
+    	<action name="action-budget-validate-exceed-line-amount"/>
+    	<action name="action-invoice-line-method-get-fixed-asset-category" if="__config__.app.isApp('account')"/>
+    	<action name="action-attrs-account-invoice-line-onnew-onload"/>
+    </action-group>
+
+    <action-group name="action-group-account-invoice-line-qty-onchange-extend">
+		<action name="action-invoice-line-method-get-discount"/>
+		<action name="action-invoice-line-method-compute-extended"/>
+		<action name="action-invoice-line-method-compute-analytic-distribution"/>
+		<action name="action-budget-validate-exceed-line-amount"/>
+	</action-group>
+
+	<action-method name="action-invoice-line-method-get-discount">
+		<call class="com.axelor.apps.account.web.InvoiceLineController" method="getDiscount"/>
+	</action-method>
+
 	<action-method
 		name="action-invoice-line-method-compute-extended">
 		<call
@@ -43,4 +85,7 @@
 			method="compute" />
 	</action-method>
 
+	<action-method name="action-invoice-line-method-compute-analytic-distribution">
+		<call class="com.axelor.apps.account.web.InvoiceLineController" method="computeAnalyticDistribution"/>
+	</action-method>
 </object-views>

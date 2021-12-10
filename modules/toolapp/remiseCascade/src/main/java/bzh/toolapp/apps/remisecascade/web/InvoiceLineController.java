@@ -1,103 +1,85 @@
 package bzh.toolapp.apps.remisecascade.web;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
 import com.axelor.apps.account.db.Invoice;
 import com.axelor.apps.account.db.InvoiceLine;
-import com.axelor.apps.account.service.invoice.InvoiceLineService;
-import com.axelor.apps.account.service.invoice.generator.line.InvoiceLineManagement;
 import com.axelor.exception.AxelorException;
+import com.axelor.exception.service.TraceBackService;
 import com.axelor.inject.Beans;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 import com.axelor.rpc.Context;
 import com.google.inject.Singleton;
-import java.math.BigDecimal;
+
+import bzh.toolapp.apps.remisecascade.service.invoice.ExtendedInvoiceLineServiceImpl;
 
 @Singleton
 public class InvoiceLineController {
 
-  /**
-   * Extends existing behavior in project axelor-account to be able to manage two discounts
-   * information.
-   *
-   * @param request
-   * @param response
-   * @throws AxelorException
-   */
-  public void compute(ActionRequest request, ActionResponse response) throws AxelorException {
+	/**
+	 * Extends existing behavior in project axelor-account to be able to manage two
+	 * discounts information.
+	 *
+	 * @param request
+	 * @param response
+	 * @throws AxelorException
+	 */
+	public void compute(final ActionRequest request, final ActionResponse response) throws AxelorException {
 
-    Context context = request.getContext();
-    InvoiceLineService invoiceLineService = Beans.get(InvoiceLineService.class);
+		Context context = request.getContext();
 
-    InvoiceLine invoiceLine = context.asType(InvoiceLine.class);
+		final InvoiceLine invoiceLine = context.asType(InvoiceLine.class);
 
-    if (context.getParent().getContextClass() == InvoiceLine.class) {
-      context = request.getContext().getParent();
-    }
+		if (context.getParent().getContextClass() == InvoiceLine.class) {
+			context = request.getContext().getParent();
+		}
 
-    Invoice invoice = this.getInvoice(context);
+		final Invoice invoice = this.getInvoice(context);
 
-    if (invoice == null
-        || invoiceLine.getPrice() == null
-        || invoiceLine.getInTaxPrice() == null
-        || invoiceLine.getQty() == null) {
-      return;
-    }
+		if ((invoice == null) || (invoiceLine.getPrice() == null) || (invoiceLine.getInTaxPrice() == null)
+				|| (invoiceLine.getQty() == null)) {
+			return;
+		}
+		// Application des remises
+		try {
+			this.compute(response, invoice, invoiceLine);
+		} catch (final Exception e) {
+			TraceBackService.trace(response, e);
+		}
+	}
 
-    BigDecimal exTaxTotal;
-    BigDecimal companyExTaxTotal;
-    BigDecimal inTaxTotal;
-    BigDecimal companyInTaxTotal;
-    BigDecimal priceDiscounted =
-        invoiceLineService.computeDiscount(invoiceLine, invoice.getInAti());
+	private void compute(final ActionResponse response, final Invoice invoice, final InvoiceLine invoiceLine)
+			throws AxelorException {
 
-    response.setValue("priceDiscounted", priceDiscounted);
-    response.setAttr(
-        "priceDiscounted",
-        "hidden",
-        priceDiscounted.compareTo(
-                invoice.getInAti() ? invoiceLine.getInTaxPrice() : invoiceLine.getPrice())
-            == 0);
+		final Map<String, BigDecimal> map = Beans.get(ExtendedInvoiceLineServiceImpl.class).computeValues(invoice,
+				invoiceLine);
 
-    BigDecimal taxRate = BigDecimal.ZERO;
-    if (invoiceLine.getTaxLine() != null) {
-      taxRate = invoiceLine.getTaxLine().getValue();
-      response.setValue("taxRate", taxRate);
-      response.setValue("taxCode", invoiceLine.getTaxLine().getTax().getCode());
-    }
+		response.setValues(map);
+		if (invoiceLine.getTaxLine() != null) {
+		response.setValue("taxCode", invoiceLine.getTaxLine().getTax().getCode());
+		}
+		response.setAttr("priceDiscounted", "hidden", map.getOrDefault("priceDiscounted", BigDecimal.ZERO)
+				.compareTo(invoice.getInAti() ? invoiceLine.getInTaxPrice() : invoiceLine.getPrice()) == 0);
 
-    if (!invoice.getInAti()) {
-      exTaxTotal = InvoiceLineManagement.computeAmount(invoiceLine.getQty(), priceDiscounted);
-      inTaxTotal = exTaxTotal.add(exTaxTotal.multiply(taxRate));
-    } else {
-      inTaxTotal = InvoiceLineManagement.computeAmount(invoiceLine.getQty(), priceDiscounted);
-      exTaxTotal = inTaxTotal.divide(taxRate.add(BigDecimal.ONE), 2, BigDecimal.ROUND_HALF_UP);
-    }
+	}
 
-    companyExTaxTotal = invoiceLineService.getCompanyExTaxTotal(exTaxTotal, invoice);
-    companyInTaxTotal = invoiceLineService.getCompanyExTaxTotal(inTaxTotal, invoice);
+	public Invoice getInvoice(final Context context) {
 
-    response.setValue("exTaxTotal", exTaxTotal);
-    response.setValue("inTaxTotal", inTaxTotal);
-    response.setValue("companyInTaxTotal", companyInTaxTotal);
-    response.setValue("companyExTaxTotal", companyExTaxTotal);
-  }
+		final Context parentContext = context.getParent();
 
-  public Invoice getInvoice(Context context) {
+		Invoice invoice;
 
-    Context parentContext = context.getParent();
+		if ((parentContext == null) || !parentContext.getContextClass().toString().equals(Invoice.class.toString())) {
 
-    Invoice invoice;
+			final InvoiceLine invoiceLine = context.asType(InvoiceLine.class);
 
-    if (parentContext == null
-        || !parentContext.getContextClass().toString().equals(Invoice.class.toString())) {
+			invoice = invoiceLine.getInvoice();
+		} else {
+			invoice = parentContext.asType(Invoice.class);
+		}
 
-      InvoiceLine invoiceLine = context.asType(InvoiceLine.class);
-
-      invoice = invoiceLine.getInvoice();
-    } else {
-      invoice = parentContext.asType(Invoice.class);
-    }
-
-    return invoice;
-  }
+		return invoice;
+	}
 }

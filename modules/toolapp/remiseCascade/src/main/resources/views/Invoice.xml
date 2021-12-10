@@ -14,18 +14,20 @@
 					colSpan="12" itemSpan="6" canCollapse="true" collapseIf="true">
 					<panel name="firstDiscountPanel"
 						title="First global discount" colSpan="12">
-						<field name="discountTypeSelect"
-							onChange="action-invoice-method-compute-extend" canEdit="true" />
+						<field name="discountTypeSelect" 
+						onChange="action-update-invoice"
+						canEdit="true" />
 						<field name="discountAmount"
-	onChange="action-invoice-method-compute-extend"
-	hideIf="discountTypeSelect == 0" x-scale="2" />
+							onChange="action-update-invoice"
+							hideIf="discountTypeSelect == 0" x-scale="2" />
 					</panel>
 					<panel name="secondDiscountPanel"
 						title="Second global discount" colSpan="12">
-						<field name="secDiscountTypeSelect"
-							onChange="action-invoice-method-compute-extend" canEdit="true" />
+						<field name="secDiscountTypeSelect" 
+						onChange="action-update-invoice"
+						canEdit="true" />
 						<field name="secDiscountAmount"
-							onChange="action-invoice-method-compute-extend"
+							onChange="action-update-invoice"
 							hideIf="secDiscountTypeSelect == 0" x-scale="2" />
 					</panel>
 				</panel>
@@ -60,7 +62,7 @@
 	
 	 <action-group name="action-group-account-invoice-partner-onchange-extended">
     	<action name="action-invoice-record-partner-change"/>
-		  <action name="action-invoice-method-payment-mode-condition"/>
+		<action name="action-invoice-method-payment-mode-condition"/>
     	<action name="action-invoice-record-due-date"/>
     	<action name="action-invoice-record-estimated-payment-date"/>
 			<action name="action-invoice-method-fill-company-bank-details"/>
@@ -75,6 +77,18 @@
         if="__config__.app.getApp('account').getActivatePassedForPayment() &amp;&amp; (company.accountConfig.isManagePassedForPayment &amp;&amp; (operationTypeSelect == 1 || company.accountConfig.isManagePFPInRefund &amp;&amp; operationTypeSelect == 2) ) "/>
       <action name="action-invoice-record-set-dummy-field-language"/>
     </action-group>
+    
+    <action-group name="action-update-invoice">
+    	<action	name="action-invoice-method-compute-extend"/>
+    	<action	name="action-invoice-update-invoice-list-line"/>
+    </action-group>
+    
+    <action-method
+		name="action-invoice-update-invoice-list-line">
+		<call
+			class="bzh.toolapp.apps.remisecascade.web.InvoiceController"
+			method="updateInvoice" />
+	</action-method>
     
 	<action-method
 		name="action-invoice-method-compute-extend">

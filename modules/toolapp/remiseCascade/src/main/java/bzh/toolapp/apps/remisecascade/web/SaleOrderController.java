@@ -26,6 +26,7 @@ public class SaleOrderController {
 	private final Logger logger = LoggerFactory.getLogger(SaleOrderLineService.class);
 
 	public void compute(final ActionRequest request, final ActionResponse response) {
+
 		SaleOrder saleOrder = request.getContext().asType(SaleOrder.class);
 
 		try {
@@ -42,7 +43,6 @@ public class SaleOrderController {
 		final PriceList priceList = saleOrder.getPriceList();
 
 		if (priceList != null) {
-			this.logger.debug("La price list est {}", priceList.getTitle());
 			// override global discount information
 			saleOrder.setDiscountAmount(priceList.getGeneralDiscount());
 			saleOrder.setDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);

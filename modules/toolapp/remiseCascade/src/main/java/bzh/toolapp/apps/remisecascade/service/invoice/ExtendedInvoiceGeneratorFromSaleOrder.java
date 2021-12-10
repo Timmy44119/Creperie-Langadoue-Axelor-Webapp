@@ -1,4 +1,4 @@
-package bzh.toolapp.apps.remisecascade.service;
+package bzh.toolapp.apps.remisecascade.service.invoice;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.axelor.apps.account.db.Invoice;
+import com.axelor.apps.account.service.invoice.InvoiceLineService;
+import com.axelor.apps.account.service.invoice.InvoiceService;
 import com.axelor.apps.account.service.invoice.generator.InvoiceGenerator;
 import com.axelor.apps.base.db.PriceList;
 import com.axelor.apps.base.db.repo.PriceListLineRepository;
@@ -27,14 +29,19 @@ public class ExtendedInvoiceGeneratorFromSaleOrder extends InvoiceGeneratorSuppl
 	private final StockMove stockMove;
 	private final SaleOrder saleOrder;
 	private final boolean isRefund;
+	protected InvoiceLineService invoiceLineService;
+	protected InvoiceService invoiceService;
 
-	protected ExtendedInvoiceGeneratorFromSaleOrder(final SaleOrder saleOrder, final boolean isRefund,
-			final PriceListService priceListServiceParam) throws AxelorException {
+	public ExtendedInvoiceGeneratorFromSaleOrder(final SaleOrder saleOrder, final boolean isRefund,
+			final PriceListService priceListServiceParam, final InvoiceLineService invoiceLineServiceParam)
+			throws AxelorException {
 		super(saleOrder, isRefund);
 		this.saleOrder = saleOrder;
 		this.isRefund = isRefund;
 		this.priceListService = priceListServiceParam;
 		this.stockMove = null;
+		this.invoiceService = null;
+		this.invoiceLineService = invoiceLineServiceParam;
 	}
 
 	/**
@@ -47,13 +54,15 @@ public class ExtendedInvoiceGeneratorFromSaleOrder extends InvoiceGeneratorSuppl
 	 * @param contactPartner
 	 * @throws AxelorException
 	 */
-	protected ExtendedInvoiceGeneratorFromSaleOrder(final StockMove stockMove, final int invoiceOperationType,
-			final PriceListService priceListServiceParam) throws AxelorException {
+	public ExtendedInvoiceGeneratorFromSaleOrder(final StockMove stockMove, final int invoiceOperationType,
+			final PriceListService priceListServiceParam, final InvoiceLineService invoiceLineServiceParam)
+			throws AxelorException {
 		super(stockMove, invoiceOperationType);
 		this.stockMove = stockMove;
 		this.priceListService = priceListServiceParam;
 		this.saleOrder = null;
 		this.isRefund = false;
+		this.invoiceLineService = invoiceLineServiceParam;
 	}
 
 	@Override
@@ -132,7 +141,7 @@ public class ExtendedInvoiceGeneratorFromSaleOrder extends InvoiceGeneratorSuppl
 	public void computeInvoice(final Invoice invoice) throws AxelorException {
 		// reuse modified algorithm (avoid duplication)
 		final ExtendedInvoiceGeneratorFromScratch invoiceGenerator = new ExtendedInvoiceGeneratorFromScratch(invoice,
-				this.priceListService);
+				this.priceListService, this.invoiceService, this.invoiceLineService);
 		invoiceGenerator.computeInvoice(invoice);
 	}
 }

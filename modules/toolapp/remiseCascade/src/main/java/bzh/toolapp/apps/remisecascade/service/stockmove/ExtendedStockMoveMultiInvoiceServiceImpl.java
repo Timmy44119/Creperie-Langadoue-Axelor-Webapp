@@ -1,4 +1,4 @@
-package bzh.toolapp.apps.remisecascade.service;
+package bzh.toolapp.apps.remisecascade.service.stockmove;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import com.axelor.apps.account.db.Invoice;
 import com.axelor.apps.account.db.InvoiceLine;
 import com.axelor.apps.account.db.repo.InvoiceRepository;
+import com.axelor.apps.account.service.invoice.InvoiceLineService;
+import com.axelor.apps.account.service.invoice.InvoiceService;
 import com.axelor.apps.account.service.invoice.generator.InvoiceGenerator;
 import com.axelor.apps.base.db.Address;
 import com.axelor.apps.base.db.PriceList;
@@ -33,6 +35,8 @@ import com.axelor.exception.AxelorException;
 import com.axelor.inject.Beans;
 import com.google.inject.persist.Transactional;
 
+import bzh.toolapp.apps.remisecascade.service.invoice.ExtendedInvoiceGeneratorFromScratch;
+
 public class ExtendedStockMoveMultiInvoiceServiceImpl extends StockMoveMultiInvoiceServiceImpl {
 
 	private final Logger logger = LoggerFactory.getLogger(InvoiceGenerator.class);
@@ -42,17 +46,22 @@ public class ExtendedStockMoveMultiInvoiceServiceImpl extends StockMoveMultiInvo
 	protected PurchaseOrderRepository purchaseOrderRepository;
 	protected StockMoveInvoiceService stockMoveInvoiceService;
 	protected PriceListService priceListService;
+	protected InvoiceLineService invoiceLineService;
+	protected InvoiceService invoiceService;
 
 	@Inject
 	public ExtendedStockMoveMultiInvoiceServiceImpl(final InvoiceRepository invoiceRepository,
 			final SaleOrderRepository saleOrderRepository, final PurchaseOrderRepository purchaseOrderRepository,
-			final StockMoveInvoiceService stockMoveInvoiceService, final PriceListService priceListService) {
+			final StockMoveInvoiceService stockMoveInvoiceService, final PriceListService priceListService,
+			final InvoiceLineService invoiceLineServiceParam, final InvoiceService invoiceServiceParam) {
 		super(invoiceRepository, saleOrderRepository, purchaseOrderRepository, stockMoveInvoiceService);
 		this.invoiceRepository = invoiceRepository;
 		this.saleOrderRepository = saleOrderRepository;
 		this.purchaseOrderRepository = purchaseOrderRepository;
 		this.stockMoveInvoiceService = stockMoveInvoiceService;
 		this.priceListService = priceListService;
+		this.invoiceLineService = invoiceLineServiceParam;
+		this.invoiceService = invoiceServiceParam;
 	}
 
 	/**
@@ -182,7 +191,8 @@ public class ExtendedStockMoveMultiInvoiceServiceImpl extends StockMoveMultiInvo
 				dummyInvoice.getPaymentCondition(), dummyInvoice.getPaymentMode(), dummyInvoice.getAddress(),
 				dummyInvoice.getPartner(), dummyInvoice.getContactPartner(), dummyInvoice.getCurrency(),
 				dummyInvoice.getPriceList(), dummyInvoice.getInternalReference(), dummyInvoice.getExternalReference(),
-				dummyInvoice.getInAti(), null, dummyInvoice.getTradingName(), true, this.priceListService);
+				dummyInvoice.getInAti(), null, dummyInvoice.getTradingName(), true, this.priceListService,
+				this.invoiceLineService, this.invoiceService);
 
 		Invoice invoice = invoiceGenerator.generate();
 		invoice.setAddressStr(dummyInvoice.getAddressStr());

@@ -1,4 +1,4 @@
-package bzh.toolapp.apps.remisecascade.service;
+package bzh.toolapp.apps.remisecascade.service.invoice;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

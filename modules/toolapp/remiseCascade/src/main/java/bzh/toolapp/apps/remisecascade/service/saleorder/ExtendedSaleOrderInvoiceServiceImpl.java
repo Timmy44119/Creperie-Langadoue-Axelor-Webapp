@@ -1,4 +1,4 @@
-package bzh.toolapp.apps.remisecascade.service;
+package bzh.toolapp.apps.remisecascade.service.saleorder;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import com.axelor.apps.account.db.Invoice;
 import com.axelor.apps.account.db.InvoiceLine;
 import com.axelor.apps.account.db.repo.InvoiceRepository;
+import com.axelor.apps.account.service.invoice.InvoiceLineService;
 import com.axelor.apps.account.service.invoice.InvoiceService;
 import com.axelor.apps.account.service.invoice.generator.InvoiceGenerator;
 import com.axelor.apps.account.service.invoice.generator.InvoiceLineGenerator;
@@ -29,8 +30,12 @@ import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
 
+import bzh.toolapp.apps.remisecascade.service.invoice.ExtendedInvoiceGeneratorFromSaleOrder;
+import bzh.toolapp.apps.remisecascade.service.invoice.ExtendedInvoiceLineGeneratorSupplyChain;
+
 public class ExtendedSaleOrderInvoiceServiceImpl extends SaleOrderInvoiceProjectServiceImpl {
 	private final PriceListService priceListService;
+	protected InvoiceLineService invoiceLineService;
 
 	@Inject
 	public ExtendedSaleOrderInvoiceServiceImpl(final AppBaseService appBaseService,
@@ -39,10 +44,11 @@ public class ExtendedSaleOrderInvoiceServiceImpl extends SaleOrderInvoiceProject
 			final AppBusinessProjectService appBusinessProjectService, final StockMoveRepository stockMoveRepository,
 			final SaleOrderLineService saleOrderLineService,
 			final SaleOrderWorkflowServiceImpl saleOrderWorkflowServiceImpl,
-			final PriceListService priceListServiceParam) {
+			final PriceListService priceListServiceParam, final InvoiceLineService invoiceLineServiceParam) {
 		super(appBaseService, appSupplychainService, saleOrderRepo, invoiceRepo, invoiceService,
 				appBusinessProjectService, stockMoveRepository, saleOrderLineService, saleOrderWorkflowServiceImpl);
 		this.priceListService = priceListServiceParam;
+		this.invoiceLineService = invoiceLineServiceParam;
 	}
 
 	@Override
@@ -53,7 +59,8 @@ public class ExtendedSaleOrderInvoiceServiceImpl extends SaleOrderInvoiceProject
 					I18n.get(IExceptionMessage.SO_INVOICE_6), saleOrder.getSaleOrderSeq());
 		}
 
-		return new ExtendedInvoiceGeneratorFromSaleOrder(saleOrder, isRefund, this.priceListService);
+		return new ExtendedInvoiceGeneratorFromSaleOrder(saleOrder, isRefund, this.priceListService,
+				this.invoiceLineService);
 	}
 
 	@Override

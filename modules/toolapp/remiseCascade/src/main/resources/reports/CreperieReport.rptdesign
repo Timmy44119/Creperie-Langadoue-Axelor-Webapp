@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.8.0.v201805221921</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.9.0.v202111131404</property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
-            <property name="id">93</property>
+            <property name="id">149</property>
         </structure>
         <structure>
             <property name="name">queryTimeOut</property>
-            <property name="id">93</property>
+            <property name="id">149</property>
         </structure>
         <structure>
             <property name="name">rowFetchSize</property>
-            <property name="id">93</property>
+            <property name="id">149</property>
+        </structure>
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">567</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">567</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">567</property>
         </structure>
     </list-property>
     <property name="units">cm</property>
@@ -20,22 +32,6 @@
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
     <parameters>
-        <scalar-parameter name="InvoicedId" id="37">
-            <property name="valueType">static</property>
-            <property name="isRequired">true</property>
-            <property name="dataType">decimal</property>
-            <property name="distinct">true</property>
-            <simple-property-list name="defaultValue">
-                <value type="constant">1</value>
-            </simple-property-list>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="concealValue">false</property>
-            <property name="controlType">text-box</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
         <scalar-parameter name="Locale" id="38">
             <property name="valueType">static</property>
             <property name="dataType">string</property>
@@ -62,12 +58,13 @@
             </structure>
         </scalar-parameter>
         <scalar-parameter name="InvoiceId" id="99">
+            <text-property name="promptText">Numéro de la facture</text-property>
             <property name="valueType">static</property>
             <property name="isRequired">true</property>
-            <property name="dataType">decimal</property>
+            <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">17</value>
+                <value type="constant">212</value>
             </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -79,28 +76,6 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="6">
-            <list-property name="privateDriverProperties">
-                <ex-property>
-                    <name>metadataBidiFormatStr</name>
-                    <value>ILYNN</value>
-                </ex-property>
-                <ex-property>
-                    <name>disabledMetadataBidiFormatStr</name>
-                </ex-property>
-                <ex-property>
-                    <name>contentBidiFormatStr</name>
-                    <value>ILYNN</value>
-                </ex-property>
-                <ex-property>
-                    <name>disabledContentBidiFormatStr</name>
-                </ex-property>
-            </list-property>
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/lorflam</property>
-            <property name="odaUser">toolapp</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">VG9vbGFwcDQ0IQ==</encrypted-property>
-        </oda-data-source>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="postgres" id="566">
             <list-property name="privateDriverProperties">
                 <ex-property>
@@ -125,281 +100,33 @@
         </oda-data-source>
     </data-sources>
     <data-sets>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Invoice" id="93">
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="InvoiceLines" id="149">
             <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">id</property>
+                    <property name="columnName">ex_tax_total</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">id</text-property>
-                    <text-property name="heading">id</text-property>
+                    <text-property name="displayName">ex_tax_total</text-property>
+                    <text-property name="heading">ex_tax_total</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">invoice_date</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">invoice_date</text-property>
-                    <text-property name="heading">invoice_date</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">payment_mode</property>
+                    <property name="columnName">in_tax_total</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">payment_mode</text-property>
-                    <text-property name="heading">payment_mode</text-property>
+                    <text-property name="displayName">in_tax_total</text-property>
+                    <text-property name="heading">in_tax_total</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">name</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">name</text-property>
-                    <text-property name="heading">name</text-property>
+                    <property name="columnName">discount_amount</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">discount_amount</text-property>
+                    <text-property name="heading">discount_amount</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">fixed_phone</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">fixed_phone</text-property>
-                    <text-property name="heading">fixed_phone</text-property>
+                    <property name="columnName">price</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">price</text-property>
+                    <text-property name="heading">price</text-property>
                 </structure>
-                <structure>
-                    <property name="columnName">fax</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">fax</text-property>
-                    <text-property name="heading">fax</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">email</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">email</text-property>
-                    <text-property name="heading">email</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">addressl4</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">addressl4</text-property>
-                    <text-property name="heading">addressl4</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">addressl6</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">addressl6</text-property>
-                    <text-property name="heading">addressl6</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">code</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">code</text-property>
-                    <text-property name="heading">code</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">internal_reference</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">internal_reference</text-property>
-                    <text-property name="heading">internal_reference</text-property>
-                </structure>
-            </list-property>
-            <list-property name="parameters">
-                <structure>
-                    <property name="name">param_1</property>
-                    <property name="paramName">InvoiceId</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
-                    <property name="position">1</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-            </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">id</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">invoice_date</property>
-                        <property name="dataType">date</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
-                        <property name="name">payment_mode</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">fixed_phone</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">fax</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
-                        <property name="name">email</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
-                        <property name="name">addressl4</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">9</property>
-                        <property name="name">addressl6</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">code</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
-                        <property name="name">internal_reference</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">Data Source</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">id</property>
-                    <property name="nativeName">id</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">invoice_date</property>
-                    <property name="nativeName">invoice_date</property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">payment_mode</property>
-                    <property name="nativeName">payment_mode</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">name</property>
-                    <property name="nativeName">name</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
-                    <property name="name">fixed_phone</property>
-                    <property name="nativeName">fixed_phone</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">fax</property>
-                    <property name="nativeName">fax</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
-                    <property name="name">email</property>
-                    <property name="nativeName">email</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">addressl4</property>
-                    <property name="nativeName">addressl4</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">9</property>
-                    <property name="name">addressl6</property>
-                    <property name="nativeName">addressl6</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">code</property>
-                    <property name="nativeName">code</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
-                    <property name="name">internal_reference</property>
-                    <property name="nativeName">internal_reference</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[select Invoice.id,
-Invoice.invoice_date,
-Invoice.payment_mode,
-Company.name,
-Partner.fixed_phone,
-Partner.fax,
-EmailAddress.address as email,
-Address.addressl4,
-Address.addressl6,
-Account.code,
-internal_reference
-from account_invoice as Invoice
-left outer join base_company as Company on (Company.id = Invoice.company) 
-left outer join base_partner as Partner on (Partner.id = Company.partner) 
-left outer join base_partner_address as PartnerAddress on (PartnerAddress.partner = Partner.id)
-left outer join base_address as Address on (Address.id = PartnerAddress.address)
-left outer join message_email_address as EmailAddress on (EmailAddress.id = Partner.email_address)
-left outer join account_account as Account on (Account.id = Invoice.partner_account)
-where Invoice.id = ?]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>2.0</Version>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>name</design:name>
-              <design:position>1</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>255</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>name</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>name</design:label>
-            <design:formattingHints>
-              <design:displaySize>255</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
-        </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="InvoiceLines" id="149">
-            <list-property name="columnHints">
                 <structure>
                     <property name="columnName">product_code</property>
                     <property name="analysis">dimension</property>
@@ -419,24 +146,30 @@ where Invoice.id = ?]]></xml-property>
                     <text-property name="heading">qty</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">price</property>
+                    <property name="columnName">unit</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">price</text-property>
-                    <text-property name="heading">price</text-property>
+                    <text-property name="displayName">unit</text-property>
+                    <text-property name="heading">unit</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">ex_tax_total</property>
+                    <property name="columnName">sec_discount_amount</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">ex_tax_total</text-property>
-                    <text-property name="heading">ex_tax_total</text-property>
+                    <text-property name="displayName">sec_discount_amount</text-property>
+                    <text-property name="heading">sec_discount_amount</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">real_date</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">real_date</text-property>
+                    <text-property name="heading">real_date</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
-                    <property name="name">param_1</property>
-                    <property name="paramName">InvoicedId</property>
+                    <property name="name">invoiceId</property>
+                    <property name="paramName">InvoiceId</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">decimal</property>
+                    <property name="dataType">integer</property>
                     <property name="nativeDataType">-5</property>
                     <property name="position">1</property>
                     <property name="isInput">true</property>
@@ -447,17 +180,17 @@ where Invoice.id = ?]]></xml-property>
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">product_code</property>
-                        <property name="dataType">string</property>
+                        <property name="name">ex_tax_total</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">product_name</property>
-                        <property name="dataType">string</property>
+                        <property name="name">in_tax_total</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">qty</property>
+                        <property name="name">discount_amount</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
@@ -467,31 +200,56 @@ where Invoice.id = ?]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">ex_tax_total</property>
+                        <property name="name">product_code</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">product_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">qty</property>
                         <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">unit</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">sec_discount_amount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">real_date</property>
+                        <property name="dataType">date</property>
                     </structure>
                 </list-property>
             </structure>
-            <property name="dataSource">Data Source</property>
+            <property name="dataSource">postgres</property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">product_code</property>
-                    <property name="nativeName">product_code</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
+                    <property name="name">ex_tax_total</property>
+                    <property name="nativeName">ex_tax_total</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">product_name</property>
-                    <property name="nativeName">product_name</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
+                    <property name="name">in_tax_total</property>
+                    <property name="nativeName">in_tax_total</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">qty</property>
-                    <property name="nativeName">qty</property>
+                    <property name="name">discount_amount</property>
+                    <property name="nativeName">discount_amount</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
@@ -504,19 +262,62 @@ where Invoice.id = ?]]></xml-property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">ex_tax_total</property>
-                    <property name="nativeName">ex_tax_total</property>
+                    <property name="name">product_code</property>
+                    <property name="nativeName">product_code</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">product_name</property>
+                    <property name="nativeName">product_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">qty</property>
+                    <property name="nativeName">qty</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">unit</property>
+                    <property name="nativeName">unit</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">sec_discount_amount</property>
+                    <property name="nativeName">sec_discount_amount</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">real_date</property>
+                    <property name="nativeName">real_date</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select product_code,
-product_name,
-qty,
-price,
-ex_tax_total
+            <xml-property name="queryText"><![CDATA[select InvoiceLine.ex_tax_total,
+InvoiceLine.in_tax_total,
+InvoiceLine.discount_amount,
+InvoiceLine.price,
+InvoiceLine.product_code,
+InvoiceLine.product_name,
+InvoiceLine.qty,
+InvoiceLine.unit,
+InvoiceLine.sec_discount_amount,
+StockMove.real_date
 from account_invoice_line as InvoiceLine
-where invoice = ?]]></xml-property>
+inner join stock_stock_move_line as StockMoveLine on (InvoiceLine.stock_move_line = StockMoveLine.id)
+inner join stock_stock_move as StockMove on (StockMove.id = StockMoveLine.stock_move)
+where InvoiceLine.invoice = ?
+Order by StockMove.real_date ASC]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1538,6 +1339,7 @@ where invoice = ?]]></xml-property>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="invoices" id="567">
+            <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">id</property>
@@ -1552,66 +1354,42 @@ where invoice = ?]]></xml-property>
                     <text-property name="heading">invoice_date</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">payment_mode</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">payment_mode</text-property>
-                    <text-property name="heading">payment_mode</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name</text-property>
                     <text-property name="heading">name</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">fixed_phone</property>
+                    <property name="columnName">name_1</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">fixed_phone</text-property>
-                    <text-property name="heading">fixed_phone</text-property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">fax</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">fax</text-property>
-                    <text-property name="heading">fax</text-property>
+                    <property name="columnName">ex_tax_base</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">ex_tax_base</text-property>
+                    <text-property name="heading">ex_tax_base</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">email</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">email</text-property>
-                    <text-property name="heading">email</text-property>
+                    <property name="columnName">in_tax_total</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">in_tax_total</text-property>
+                    <text-property name="heading">in_tax_total</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">addressl4</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">addressl4</text-property>
-                    <text-property name="heading">addressl4</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">addressl6</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">addressl6</text-property>
-                    <text-property name="heading">addressl6</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">code</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">code</text-property>
-                    <text-property name="heading">code</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">internal_reference</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">internal_reference</text-property>
-                    <text-property name="heading">internal_reference</text-property>
+                    <property name="columnName">tax_total</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">tax_total</text-property>
+                    <text-property name="heading">tax_total</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
-                    <property name="name">param_1</property>
-                    <property name="paramName">InvoicedId</property>
+                    <property name="name">invoiceId</property>
+                    <property name="paramName">InvoiceId</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">decimal</property>
+                    <property name="dataType">integer</property>
                     <property name="nativeDataType">-5</property>
                     <property name="position">1</property>
                     <property name="isInput">true</property>
@@ -1632,48 +1410,28 @@ where invoice = ?]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">payment_mode</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
                         <property name="name">name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
-                        <property name="name">fixed_phone</property>
+                        <property name="position">4</property>
+                        <property name="name">name_1</property>
                         <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">ex_tax_base</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">fax</property>
-                        <property name="dataType">string</property>
+                        <property name="name">in_tax_total</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">email</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
-                        <property name="name">addressl4</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">9</property>
-                        <property name="name">addressl6</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">code</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
-                        <property name="name">internal_reference</property>
-                        <property name="dataType">string</property>
+                        <property name="name">tax_total</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                 </list-property>
             </structure>
@@ -1695,107 +1453,55 @@ where invoice = ?]]></xml-property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">payment_mode</property>
-                    <property name="nativeName">payment_mode</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
                     <property name="name">name</property>
                     <property name="nativeName">name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
-                    <property name="name">fixed_phone</property>
-                    <property name="nativeName">fixed_phone</property>
+                    <property name="position">4</property>
+                    <property name="name">name_1</property>
+                    <property name="nativeName">name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">ex_tax_base</property>
+                    <property name="nativeName">ex_tax_base</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
-                    <property name="name">fax</property>
-                    <property name="nativeName">fax</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
+                    <property name="name">in_tax_total</property>
+                    <property name="nativeName">in_tax_total</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">7</property>
-                    <property name="name">email</property>
-                    <property name="nativeName">email</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">addressl4</property>
-                    <property name="nativeName">addressl4</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">9</property>
-                    <property name="name">addressl6</property>
-                    <property name="nativeName">addressl6</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">code</property>
-                    <property name="nativeName">code</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
-                    <property name="name">internal_reference</property>
-                    <property name="nativeName">internal_reference</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
+                    <property name="name">tax_total</property>
+                    <property name="nativeName">tax_total</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select Invoice.id,
 Invoice.invoice_date,
-Invoice.payment_mode,
-Company.name,
-Partner.fixed_phone,
-Partner.fax,
-EmailAddress.address as email,
-Address.addressl4,
-Address.addressl6,
-Account.code,
-internal_reference
+Currency.name,
+PaymentMode.name,
+InvoiceLineTax.ex_tax_base,
+InvoiceLineTax.in_tax_total,
+InvoiceLineTax.tax_total
 from account_invoice as Invoice
-left outer join base_company as Company on (Company.id = Invoice.company) 
-left outer join base_partner as Partner on (Partner.id = Company.partner) 
-left outer join base_partner_address as PartnerAddress on (PartnerAddress.partner = Partner.id)
-left outer join base_address as Address on (Address.id = PartnerAddress.address)
-left outer join message_email_address as EmailAddress on (EmailAddress.id = Partner.email_address)
-left outer join account_account as Account on (Account.id = Invoice.partner_account)
+inner join base_currency as Currency on (Currency.id = Invoice.currency)
+inner join account_payment_mode as PaymentMode on (PaymentMode.id = Invoice.payment_mode)
+inner join account_invoice_line_tax as InvoiceLineTax on (InvoiceLineTax.invoice = Invoice.id)
 where Invoice.id = ?]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>-5</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -2036,259 +1742,6 @@ where Invoice.id = ?]]></xml-property>
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="invoiceLines" id="568">
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">product_code</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">product_code</text-property>
-                    <text-property name="heading">product_code</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">product_name</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">product_name</text-property>
-                    <text-property name="heading">product_name</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">qty</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">qty</text-property>
-                    <text-property name="heading">qty</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">price</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">price</text-property>
-                    <text-property name="heading">price</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">ex_tax_total</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">ex_tax_total</text-property>
-                    <text-property name="heading">ex_tax_total</text-property>
-                </structure>
-            </list-property>
-            <list-property name="parameters">
-                <structure>
-                    <property name="name">param_1</property>
-                    <property name="paramName">InvoicedId</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
-                    <property name="position">1</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-            </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">product_code</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">product_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
-                        <property name="name">qty</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">price</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">ex_tax_total</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">postgres</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">product_code</property>
-                    <property name="nativeName">product_code</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">product_name</property>
-                    <property name="nativeName">product_name</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">qty</property>
-                    <property name="nativeName">qty</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">price</property>
-                    <property name="nativeName">price</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
-                    <property name="name">ex_tax_total</property>
-                    <property name="nativeName">ex_tax_total</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[select product_code,
-product_name,
-qty,
-price,
-ex_tax_total
-from account_invoice_line as InvoiceLine
-where invoice = ?]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>-5</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>product_code</design:name>
-              <design:position>1</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>255</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Nullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>product_code</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>product_code</design:label>
-            <design:formattingHints>
-              <design:displaySize>255</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>product_name</design:name>
-              <design:position>2</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>255</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Nullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>product_name</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>product_name</design:label>
-            <design:formattingHints>
-              <design:displaySize>255</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>qty</design:name>
-              <design:position>3</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
-            <design:precision>20</design:precision>
-            <design:scale>10</design:scale>
-            <design:nullability>Nullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>qty</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>qty</design:label>
-            <design:formattingHints>
-              <design:displaySize>22</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>price</design:name>
-              <design:position>4</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
-            <design:precision>20</design:precision>
-            <design:scale>10</design:scale>
-            <design:nullability>Nullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>price</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>price</design:label>
-            <design:formattingHints>
-              <design:displaySize>22</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>ex_tax_total</design:name>
-              <design:position>5</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
-            <design:precision>20</design:precision>
-            <design:scale>2</design:scale>
-            <design:nullability>Nullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>ex_tax_total</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>ex_tax_total</design:label>
-            <design:formattingHints>
-              <design:displaySize>22</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
-        </oda-data-set>
     </data-sets>
     <styles>
         <style name="NewStyle" id="95">
@@ -2373,7 +1826,6 @@ where invoice = ?]]></xml-property>
                     <property name="rowSpan">1</property>
                     <data name="NomSociete" id="94">
                         <property name="style">NewStyle</property>
-                        <property name="dataSet">Invoice</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">name</property>
@@ -2409,7 +1861,6 @@ where invoice = ?]]></xml-property>
                     <property name="colSpan">3</property>
                     <property name="rowSpan">1</property>
                     <data name="Voies" id="104">
-                        <property name="dataSet">Invoice</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">addressl4</property>
@@ -2458,7 +1909,6 @@ where invoice = ?]]></xml-property>
                     <property name="colSpan">3</property>
                     <property name="rowSpan">1</property>
                     <data name="CpVille" id="105">
-                        <property name="dataSet">Invoice</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">addressl6</property>
@@ -2484,7 +1934,6 @@ where invoice = ?]]></xml-property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">medium</property>
                     <data id="148">
-                        <property name="dataSet">Invoice</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">code</property>
@@ -2505,7 +1954,6 @@ where invoice = ?]]></xml-property>
                     <property name="colSpan">3</property>
                     <property name="rowSpan">1</property>
                     <data name="Tel" id="100">
-                        <property name="dataSet">Invoice</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">fixed_phone</property>
@@ -2544,7 +1992,6 @@ where invoice = ?]]></xml-property>
                     <property name="colSpan">3</property>
                     <property name="rowSpan">1</property>
                     <data name="Fax" id="101">
-                        <property name="dataSet">Invoice</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">fax</property>
@@ -2569,7 +2016,6 @@ where invoice = ?]]></xml-property>
                     <property name="colSpan">3</property>
                     <property name="rowSpan">1</property>
                     <data name="Email" id="103">
-                        <property name="dataSet">Invoice</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">email</property>
@@ -2810,7 +2256,6 @@ where invoice = ?]]></xml-property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">medium</property>
                     <data id="283">
-                        <property name="dataSet">Invoice</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">id</property>
@@ -2833,7 +2278,6 @@ where invoice = ?]]></xml-property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">medium</property>
                     <data id="289">
-                        <property name="dataSet">Invoice</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">invoice_date</property>
@@ -2860,7 +2304,6 @@ where invoice = ?]]></xml-property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">medium</property>
                     <data id="291">
-                        <property name="dataSet">Invoice</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">payment_mode</property>
@@ -2885,11 +2328,33 @@ where invoice = ?]]></xml-property>
                 </cell>
             </row>
         </grid>
-        <table name="InvoiceLines" id="150">
-            <property name="height">16cm</property>
-            <property name="width">20.5cm</property>
+        <table id="576">
             <property name="dataSet">InvoiceLines</property>
             <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">ex_tax_total</property>
+                    <text-property name="displayName">ex_tax_total</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ex_tax_total"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">in_tax_total</property>
+                    <text-property name="displayName">in_tax_total</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["in_tax_total"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">discount_amount</property>
+                    <text-property name="displayName">discount_amount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["discount_amount"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">price</property>
+                    <text-property name="displayName">price</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["price"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
                 <structure>
                     <property name="name">product_code</property>
                     <text-property name="displayName">product_code</text-property>
@@ -2909,157 +2374,124 @@ where invoice = ?]]></xml-property>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="name">price</property>
-                    <text-property name="displayName">price</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["price"]</expression>
+                    <property name="name">unit</property>
+                    <text-property name="displayName">unit</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["unit"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="name">ex_tax_total</property>
-                    <text-property name="displayName">ex_tax_total</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["ex_tax_total"]</expression>
+                    <property name="name">sec_discount_amount</property>
+                    <text-property name="displayName">sec_discount_amount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sec_discount_amount"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
             </list-property>
-            <column id="179"/>
-            <column id="180"/>
-            <column id="181"/>
-            <column id="182"/>
-            <column id="183"/>
+            <column id="625"/>
+            <column id="626"/>
+            <column id="627"/>
+            <column id="629"/>
+            <column id="630"/>
+            <column id="631"/>
+            <column id="632"/>
+            <column id="633"/>
             <header>
-                <row id="151">
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">medium</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">medium</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">medium</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">medium</property>
-                    <cell id="152">
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
-                        <label id="153">
+                <row id="577">
+                    <cell id="578">
+                        <label name="productCode" id="587">
                             <text-property name="text">product_code</text-property>
                         </label>
                     </cell>
-                    <cell id="154">
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
-                        <label id="155">
+                    <cell id="580">
+                        <label name="productName" id="589">
                             <text-property name="text">product_name</text-property>
                         </label>
                     </cell>
-                    <cell id="156">
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
-                        <label id="157">
+                    <cell id="582">
+                        <label name="qty" id="591">
                             <text-property name="text">qty</text-property>
                         </label>
                     </cell>
-                    <cell id="158">
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
-                        <label id="159">
-                            <text-property name="text">price</text-property>
+                    <cell id="586">
+                        <label name="unit" id="593">
+                            <text-property name="text">unit</text-property>
                         </label>
                     </cell>
-                    <cell id="160">
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
-                        <label id="161">
+                    <cell id="588">
+                        <label name="discountAmount" id="583">
+                            <text-property name="text">discount_amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="590">
+                        <label name="secDiscount" id="595">
+                            <text-property name="text">sec_discount_amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="592">
+                        <label name="exTaxTotal" id="579">
                             <text-property name="text">ex_tax_total</text-property>
+                        </label>
+                    </cell>
+                    <cell id="594">
+                        <label name="inTaxTotal" id="581">
+                            <text-property name="text">in_tax_total</text-property>
                         </label>
                     </cell>
                 </row>
             </header>
             <detail>
-                <row id="162">
-                    <cell id="163">
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
-                        <data id="164">
-                            <property name="textAlign">center</property>
+                <row id="596">
+                    <cell id="597">
+                        <data id="606">
                             <property name="resultSetColumn">product_code</property>
                         </data>
                     </cell>
-                    <cell id="165">
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
-                        <data id="166">
-                            <property name="textAlign">center</property>
-                            <property name="whiteSpace">normal</property>
+                    <cell id="599">
+                        <data id="608">
                             <property name="resultSetColumn">product_name</property>
                         </data>
                     </cell>
-                    <cell id="167">
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
-                        <data id="168">
-                            <property name="textAlign">right</property>
+                    <cell id="601">
+                        <data id="610">
                             <property name="resultSetColumn">qty</property>
                         </data>
                     </cell>
-                    <cell id="169">
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
-                        <data id="170">
-                            <property name="textAlign">right</property>
-                            <property name="resultSetColumn">price</property>
+                    <cell id="605">
+                        <data id="612">
+                            <property name="resultSetColumn">unit</property>
                         </data>
                     </cell>
-                    <cell id="171">
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
-                        <data id="172">
-                            <property name="textAlign">right</property>
+                    <cell id="607">
+                        <data id="602">
+                            <property name="resultSetColumn">discount_amount</property>
+                        </data>
+                    </cell>
+                    <cell id="609">
+                        <data id="614">
+                            <property name="resultSetColumn">sec_discount_amount</property>
+                        </data>
+                    </cell>
+                    <cell id="611">
+                        <data id="598">
                             <property name="resultSetColumn">ex_tax_total</property>
+                        </data>
+                    </cell>
+                    <cell id="613">
+                        <data id="600">
+                            <property name="resultSetColumn">in_tax_total</property>
                         </data>
                     </cell>
                 </row>
             </detail>
             <footer>
-                <row id="173">
-                    <cell id="174">
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
-                    </cell>
-                    <cell id="175">
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
-                    </cell>
-                    <cell id="176">
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
-                    </cell>
-                    <cell id="177">
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
-                    </cell>
-                    <cell id="178">
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
-                    </cell>
+                <row id="615">
+                    <cell id="616"/>
+                    <cell id="617"/>
+                    <cell id="618"/>
+                    <cell id="620"/>
+                    <cell id="621"/>
+                    <cell id="622"/>
+                    <cell id="623"/>
+                    <cell id="624"/>
                 </row>
             </footer>
         </table>

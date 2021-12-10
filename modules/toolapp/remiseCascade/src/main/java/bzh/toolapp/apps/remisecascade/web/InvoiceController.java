@@ -18,6 +18,8 @@ import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 import com.google.inject.Singleton;
 
+import bzh.toolapp.apps.remisecascade.service.invoice.ExtendedInvoiceServiceImpl;
+
 @Singleton
 public class InvoiceController {
 	private final Logger logger = LoggerFactory.getLogger(SaleOrderLineService.class);
@@ -36,7 +38,25 @@ public class InvoiceController {
 
 		try {
 			invoice = Beans.get(InvoiceService.class).compute(invoice);
+
 			response.setValues(invoice);
+		} catch (final Exception e) {
+			TraceBackService.trace(response, e);
+		}
+	}
+
+	/**
+	 * Method permettant la mise à jours des montant de la facture
+	 *
+	 * @param request
+	 * @param response
+	 */
+	public void updateInvoice(final ActionRequest request, final ActionResponse response) {
+		// Recupération de la facture
+		final Invoice invoice = request.getContext().asType(Invoice.class);
+		try {
+			Beans.get(ExtendedInvoiceServiceImpl.class).updateInvoiceLineList(invoice);
+			response.setValue("invoiceLineList", invoice.getInvoiceLineList());
 		} catch (final Exception e) {
 			TraceBackService.trace(response, e);
 		}

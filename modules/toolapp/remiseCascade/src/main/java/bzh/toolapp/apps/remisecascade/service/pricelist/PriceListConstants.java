@@ -1,4 +1,4 @@
-package bzh.toolapp.apps.remisecascade.service;
+package bzh.toolapp.apps.remisecascade.service.pricelist;
 
 /** To share elements identifiers. For instance, discount keys... */
 public class PriceListConstants {
