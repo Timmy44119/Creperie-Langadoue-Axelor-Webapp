@@ -182,8 +182,10 @@ public class ExtendedInvoiceGeneratorFromScratch extends InvoiceGenerator {
 
 		// MAJ des taxes
 		this.logger.debug("Taxe list {}", invoiceLineTaxList);
+
 		invoice.getInvoiceLineTaxList().clear();
 		invoice.setInvoiceLineTaxList(invoiceLineTaxList);
+
 		for (final InvoiceLineTax invoiceLineTax : invoice.getInvoiceLineTaxList()) {
 
 			// In the invoice currency
