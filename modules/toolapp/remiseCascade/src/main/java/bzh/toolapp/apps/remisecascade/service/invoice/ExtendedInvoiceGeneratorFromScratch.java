@@ -184,7 +184,7 @@ public class ExtendedInvoiceGeneratorFromScratch extends InvoiceGenerator {
 		this.logger.debug("Taxe list {}", invoiceLineTaxList);
 
 		invoice.getInvoiceLineTaxList().clear();
-		invoice.setInvoiceLineTaxList(invoiceLineTaxList);
+		invoice.getInvoiceLineTaxList().addAll(invoiceLineTaxList);
 
 		for (final InvoiceLineTax invoiceLineTax : invoice.getInvoiceLineTaxList()) {
 
