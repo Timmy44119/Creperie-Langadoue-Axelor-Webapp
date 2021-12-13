@@ -231,16 +231,16 @@ public class ExtendedInvoiceGeneratorFromScratch extends InvoiceGenerator {
 
 		// Calcul des montants globaux
 		if (!invoice.getInAti()) {
-			exTaxTotal = InvoiceLineManagement.computeAmount(invoiceLine.getQty(), priceDiscounted);
+			exTaxTotal = InvoiceLineManagement.computeAmount(invoiceLine.getQty(), priceDiscounted).setScale(2,
+					BigDecimal.ROUND_HALF_UP);
 			// Application des remises globales
 			exTaxTotal = this.computeGlobalDiscount(invoice, exTaxTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
 			inTaxTotal = exTaxTotal.add(exTaxTotal.multiply(taxRate));
 		} else {
-			inTaxTotal = InvoiceLineManagement.computeAmount(invoiceLine.getQty(), priceDiscounted);
+			inTaxTotal = InvoiceLineManagement.computeAmount(invoiceLine.getQty(), priceDiscounted).setScale(2,
+					BigDecimal.ROUND_HALF_UP);
 			// Application des remises globales
-			inTaxTotal =
-
-					this.computeGlobalDiscount(invoice, inTaxTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
+			inTaxTotal = this.computeGlobalDiscount(invoice, inTaxTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
 			exTaxTotal = inTaxTotal.divide(taxRate.add(BigDecimal.ONE), 2, BigDecimal.ROUND_HALF_UP);
 		}
 

@@ -227,7 +227,7 @@ public class ExtendedSaleOrderComputeServiceImpl extends SaleOrderComputeService
 		// Modification des zones
 		saleOrderLine.setInTaxTotal(inTaxTotal);
 		saleOrderLine.setExTaxTotal(exTaxTotal);
-		saleOrderLine.setPriceDiscounted(priceDiscounted);
+		saleOrderLine.setPriceDiscounted(priceFinaleDiscounted);
 		saleOrderLine.setPriceSecDiscounted(priceSecDiscounted);
 		saleOrderLine.setCompanyInTaxTotal(companyInTaxTotal);
 		saleOrderLine.setCompanyExTaxTotal(companyExTaxTotal);

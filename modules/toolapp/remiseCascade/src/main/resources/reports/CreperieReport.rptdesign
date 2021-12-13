@@ -14,18 +14,6 @@
             <property name="name">rowFetchSize</property>
             <property name="id">149</property>
         </structure>
-        <structure>
-            <property name="name">queryText</property>
-            <property name="id">567</property>
-        </structure>
-        <structure>
-            <property name="name">queryTimeOut</property>
-            <property name="id">567</property>
-        </structure>
-        <structure>
-            <property name="name">rowFetchSize</property>
-            <property name="id">567</property>
-        </structure>
     </list-property>
     <property name="units">cm</property>
     <property name="iconFile">/templates/blank_report.gif</property>
@@ -64,7 +52,7 @@
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">212</value>
+                <value type="constant">225</value>
             </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -1383,6 +1371,12 @@ Order by StockMove.real_date ASC]]></xml-property>
                     <text-property name="displayName">tax_total</text-property>
                     <text-property name="heading">tax_total</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">value</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">value</text-property>
+                    <text-property name="heading">value</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -1431,6 +1425,11 @@ Order by StockMove.real_date ASC]]></xml-property>
                     <structure>
                         <property name="position">7</property>
                         <property name="name">tax_total</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">value</property>
                         <property name="dataType">decimal</property>
                     </structure>
                 </list-property>
@@ -1486,6 +1485,13 @@ Order by StockMove.real_date ASC]]></xml-property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">value</property>
+                    <property name="nativeName">value</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select Invoice.id,
 Invoice.invoice_date,
@@ -1493,11 +1499,13 @@ Currency.name,
 PaymentMode.name,
 InvoiceLineTax.ex_tax_base,
 InvoiceLineTax.in_tax_total,
-InvoiceLineTax.tax_total
+InvoiceLineTax.tax_total,
+AccountTaxLine.value
 from account_invoice as Invoice
 inner join base_currency as Currency on (Currency.id = Invoice.currency)
 inner join account_payment_mode as PaymentMode on (PaymentMode.id = Invoice.payment_mode)
 inner join account_invoice_line_tax as InvoiceLineTax on (InvoiceLineTax.invoice = Invoice.id)
+inner join account_tax_line as AccountTaxLine on (AccountTaxLine.id = InvoiceLineTax.tax_line)
 where Invoice.id = ?]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -2255,7 +2263,8 @@ where Invoice.id = ?]]></xml-property>
                     <property name="borderRightWidth">medium</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">medium</property>
-                    <data id="283">
+                    <data id="635">
+                        <property name="dataSet">invoices</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">id</property>
