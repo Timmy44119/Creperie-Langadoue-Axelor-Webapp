@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
     <property name="createdBy">Eclipse BIRT Designer Version 4.9.0.v202111131404</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">567</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">567</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">567</property>
+        </structure>
+    </list-property>
     <property name="units">cm</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
@@ -37,7 +51,7 @@
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">231</value>
+                <value type="constant">233</value>
             </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -2528,7 +2542,7 @@ true;&#13;
                             </structure>
                         </list-property>
                         <property name="source">file</property>
-                        <expression name="uri" type="constant">src/main/resources/reports/img/La Quimperloise.jpg</expression>
+                        <expression name="uri" type="constant">src/main/resources/reports/img/LaQuimperloise.jpg</expression>
                     </image>
                     <image name="Logo_Maison_Roz_Spernez" id="1035">
                         <property name="height">2.4cm</property>
@@ -2544,7 +2558,7 @@ true;&#13;
                             </structure>
                         </list-property>
                         <property name="source">file</property>
-                        <expression name="uri" type="constant">src/main/resources/reports/img/Maison Roz Spernez.jpg</expression>
+                        <expression name="uri" type="constant">src/main/resources/reports/img/MaisonRozSpernez.jpg</expression>
                     </image>
                 </cell>
                 <cell id="415"/>
@@ -2934,7 +2948,7 @@ true;&#13;
                     <property name="rowSpan">1</property>
                     <text name="lblIntracom" id="232">
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[N°Intracomm]]></text-property>
+                        <text-property name="content"><![CDATA[N°Intracom]]></text-property>
                     </text>
                 </cell>
                 <cell id="66">
@@ -3196,8 +3210,7 @@ true;&#13;
                     <property name="borderTopWidth">thin</property>
                     <data name="dataDate" id="289">
                         <structure name="dateTimeFormat">
-                            <property name="category">Short Date</property>
-                            <property name="pattern">Short Date</property>
+                            <property name="category">Unformatted</property>
                         </structure>
                         <property name="textAlign">center</property>
                         <property name="verticalAlign">middle</property>
@@ -3206,8 +3219,9 @@ true;&#13;
                             <structure>
                                 <property name="name">invoice_date</property>
                                 <text-property name="displayName">invoice_date</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["invoice_date"]</expression>
-                                <property name="dataType">date</property>
+                                <expression name="expression" type="javascript">dataSetRow["invoice_date"].toString().substr(8,2) + "/" + dataSetRow["invoice_date"].toString().substr(5,2) + "/" + dataSetRow["invoice_date"].toString().substr(0,4);</expression>
+                                <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
                             </structure>
                         </list-property>
                         <property name="resultSetColumn">invoice_date</property>
@@ -3392,9 +3406,9 @@ true;&#13;
                     <property name="name">num_bon</property>
                     <text-property name="displayName">numero bon</text-property>
                     <expression name="expression" type="javascript">if(row["type_select"] == 2){&#13;
-"Livraison N° " + row["stock_move_seq"] + " du " + row["real_date"].substr(7,2) + "/" + row["real_date"].substr(5,2) + "/" + row["real_date"].substr(0,4);&#13;
+"Livraison N° " + row["stock_move_seq"] + " du " + row["real_date"].toString().substr(8,2) + "/" + row["real_date"].toString().substr(5,2) + "/" + row["real_date"].toString().substr(0,4);&#13;
 }else{&#13;
-"Retour N° " + row["stock_move_seq"] + " du " + row["real_date"].substr(7,2) + "/" + row["real_date"].substr(5,2) + "/" + row["real_date"].substr(0,4);&#13;
+"Retour N° " + row["stock_move_seq"] + " du " + row["real_date"].toString().substr(8,2) + "/" + row["real_date"].toString().substr(5,2) + "/" + row["real_date"].toString().substr(0,4);&#13;
 }</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
@@ -4531,6 +4545,8 @@ true&#13;
                 <property name="verticalAlign">middle</property>
                 <property name="height">0.65cm</property>
                 <cell id="525">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
                     <property name="borderLeftStyle">solid</property>
                     <property name="borderLeftWidth">thin</property>
                     <property name="borderTopStyle">solid</property>
@@ -4543,11 +4559,15 @@ true&#13;
                     </text>
                 </cell>
                 <cell id="526">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <property name="verticalAlign">middle</property>
                 </cell>
                 <cell id="527">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
                     <property name="borderTopStyle">solid</property>
@@ -4622,8 +4642,7 @@ true&#13;
                     <property name="verticalAlign">middle</property>
                     <data name="dataEcheance" id="1000">
                         <structure name="dateTimeFormat">
-                            <property name="category">Short Date</property>
-                            <property name="pattern">Short Date</property>
+                            <property name="category">Unformatted</property>
                         </structure>
                         <property name="textAlign">center</property>
                         <property name="dataSet">invoices</property>
@@ -4631,8 +4650,9 @@ true&#13;
                             <structure>
                                 <property name="name">due_date</property>
                                 <text-property name="displayName">due_date</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["due_date"]</expression>
-                                <property name="dataType">date</property>
+                                <expression name="expression" type="javascript">dataSetRow["due_date"].toString().substr(8,2) + "/" + dataSetRow["due_date"].toString().substr(5,2) + "/" + dataSetRow["due_date"].toString().substr(0,4);</expression>
+                                <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
                             </structure>
                         </list-property>
                         <property name="resultSetColumn">due_date</property>
