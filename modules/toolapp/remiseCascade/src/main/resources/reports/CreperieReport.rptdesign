@@ -2386,6 +2386,14 @@ and basePartnerAddress.is_delivery_addr = true]]></xml-property>
             <property name="showFooterOnLast">true</property>
             <property name="headerHeight">1cm</property>
             <property name="footerHeight">1cm</property>
+            <page-footer>
+                <text name="lblMention" id="1051">
+                    <property name="contentType">auto</property>
+                    <text-property name="content"><![CDATA[Conformement à l'article L.441-6 du code de commerce, des pénalités de retard, au taux annuel de 20% et une indemnité de 40€ sont dues à défaut de règlement le jour suivant la date de paiement figurant sur la facture.
+
+Pas d'escompte pour paiement anticipé, passé la date d'échéance, tout paiement différé entraine l'application d'une pénalité de 3 fois le taux d'intérêt légale.(Loi no 2008-776 du 04/08/2008)]]></text-property>
+                </text>
+            </page-footer>
         </simple-master-page>
     </page-setup>
     <body>
@@ -3862,7 +3870,7 @@ true;&#13;
         </table>
         <grid name="Pied de page" id="434">
             <property name="verticalAlign">bottom</property>
-            <property name="height">5.5245cm</property>
+            <property name="height">5.376333333333333cm</property>
             <property name="width">20.08716666666667cm</property>
             <list-property name="visibility">
                 <structure>
@@ -4747,38 +4755,77 @@ true&#13;
                     </data>
                 </cell>
             </row>
+            <row id="1039">
+                <property name="height">0.27516666666666667cm</property>
+                <cell id="1040">
+                    <property name="colSpan">1</property>
+                    <property name="rowSpan">1</property>
+                    <property name="verticalAlign">middle</property>
+                </cell>
+                <cell id="1052">
+                    <property name="verticalAlign">middle</property>
+                </cell>
+                <cell id="1053">
+                    <property name="verticalAlign">middle</property>
+                </cell>
+                <cell id="1054">
+                    <property name="verticalAlign">middle</property>
+                </cell>
+                <cell id="1055">
+                    <property name="verticalAlign">middle</property>
+                </cell>
+                <cell id="1056">
+                    <property name="verticalAlign">middle</property>
+                </cell>
+                <cell id="1057">
+                    <property name="verticalAlign">middle</property>
+                </cell>
+                <cell id="1058">
+                    <property name="verticalAlign">middle</property>
+                </cell>
+                <cell id="1059">
+                    <property name="verticalAlign">middle</property>
+                </cell>
+                <cell id="1060">
+                    <property name="verticalAlign">middle</property>
+                </cell>
+                <cell id="1061">
+                    <property name="verticalAlign">middle</property>
+                </cell>
+            </row>
             <row id="552">
-                <cell id="553">
+                <property name="height">0.1905cm</property>
+                <cell id="1062">
                     <property name="verticalAlign">middle</property>
                 </cell>
-                <cell id="554">
+                <cell id="1063">
                     <property name="verticalAlign">middle</property>
                 </cell>
-                <cell id="555">
+                <cell id="1064">
                     <property name="verticalAlign">middle</property>
                 </cell>
-                <cell id="556">
+                <cell id="1065">
                     <property name="verticalAlign">middle</property>
                 </cell>
-                <cell id="557">
+                <cell id="1066">
                     <property name="verticalAlign">middle</property>
                 </cell>
-                <cell id="558">
+                <cell id="1067">
                     <property name="verticalAlign">middle</property>
                 </cell>
-                <cell id="559">
+                <cell id="1068">
                     <property name="verticalAlign">middle</property>
                 </cell>
-                <cell id="560">
+                <cell id="1069">
                     <property name="verticalAlign">middle</property>
                 </cell>
-                <cell id="561">
+                <cell id="1070">
                     <property name="verticalAlign">middle</property>
                 </cell>
-                <cell id="562">
+                <cell id="1071">
                     <property name="verticalAlign">middle</property>
                 </cell>
-                <cell id="563">
+                <cell id="1072">
                     <property name="verticalAlign">middle</property>
                 </cell>
             </row>
