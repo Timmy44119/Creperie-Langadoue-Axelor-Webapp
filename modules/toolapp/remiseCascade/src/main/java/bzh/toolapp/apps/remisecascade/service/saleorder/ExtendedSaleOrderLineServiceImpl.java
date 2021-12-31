@@ -40,7 +40,9 @@ public class ExtendedSaleOrderLineServiceImpl extends SaleOrderLineBusinessProdu
 
 	// Calcul de la seconde remises
 	public BigDecimal computeSecDiscount(final SaleOrderLine saleOrderLine, final BigDecimal priceDiscounted) {
-
+		if (saleOrderLine.getProduct().getIsShippingCostsProduct()) {
+			return priceDiscounted;
+		}
 		return this.priceListService.computeDiscount(priceDiscounted, saleOrderLine.getSecDiscountTypeSelect(),
 				saleOrderLine.getSecDiscountAmount());
 	}
@@ -64,7 +66,7 @@ public class ExtendedSaleOrderLineServiceImpl extends SaleOrderLineBusinessProdu
 
 		final BigDecimal priceDiscounted = this.computeDiscount(saleOrderLine, saleOrder.getInAti());
 
-		// Verification si une deuxi�me remise est applicable
+		// Verification si une deuxieme remise est applicable
 		if (saleOrderLine.getSecDiscountTypeSelect() != PriceListLineRepository.AMOUNT_TYPE_NONE) {
 			priceSecDiscounted = this.computeSecDiscount(saleOrderLine, priceDiscounted);
 		} else {
@@ -80,7 +82,7 @@ public class ExtendedSaleOrderLineServiceImpl extends SaleOrderLineBusinessProdu
 		BigDecimal taxRate = BigDecimal.ZERO;
 		BigDecimal subTotalCostPrice = BigDecimal.ZERO;
 
-		// R�cup�ration des montants des taxe
+		// Recuperation des montants des taxe
 		if (saleOrderLine.getTaxLine() != null) {
 			taxRate = saleOrderLine.getTaxLine().getValue();
 		}

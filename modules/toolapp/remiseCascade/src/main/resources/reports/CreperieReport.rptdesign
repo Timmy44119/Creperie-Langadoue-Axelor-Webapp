@@ -3804,8 +3804,9 @@ true;&#13;
             </group>
             <detail>
                 <row id="690">
-                    <method name="onPrepare"><![CDATA[vars["totalHtBrut"] = vars["totalHtBrut"] + (row["Quantité"]*row["price"]);]]></method>
-                    <method name="onCreate"><![CDATA[if(row["Frais de port"]==1){vars["fraisPort"] = vars["fraisPort"] + (row["Quantité"]*row["price"]);} ]]></method>
+                    <method name="onPrepare"><![CDATA[//vars["totalHtBrut"] = vars["totalHtBrut"] + (row["Quantité"]*row["price"]);
+if(row["Frais de port"]==1){vars["fraisPort"] = vars["fraisPort"] + (row["Quantité"]*row["sale_price"]);}]]></method>
+                    <method name="onCreate"><![CDATA[ ]]></method>
                     <property name="verticalAlign">middle</property>
                     <property name="masterPage">MasterPage</property>
                     <property name="height">0.7cm</property>
@@ -4946,6 +4947,7 @@ true&#13;
             <property name="type">report</property>
         </variable-element>
         <variable-element name="fraisPort">
+            <expression name="value" type="javascript">0</expression>
             <property name="type">report</property>
         </variable-element>
     </property>
