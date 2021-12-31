@@ -3805,7 +3805,7 @@ true;&#13;
             <detail>
                 <row id="690">
                     <method name="onPrepare"><![CDATA[vars["totalHtBrut"] = vars["totalHtBrut"] + (row["Quantité"]*row["price"]);
-if(row["Frais de port"]=='1'){vars["fraisPort"] = vars["fraisPort"] + (row["Quantité"]*row["price"]);} ]]></method>
+if(row["Frais de port"]==1){vars["fraisPort"] = vars["fraisPort"] + (row["Quantité"]*row["price"]);} ]]></method>
                     <property name="verticalAlign">middle</property>
                     <property name="masterPage">MasterPage</property>
                     <property name="height">0.7cm</property>
