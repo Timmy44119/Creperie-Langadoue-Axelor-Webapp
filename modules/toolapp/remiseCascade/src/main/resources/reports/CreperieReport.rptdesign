@@ -107,69 +107,87 @@
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">discount_amount</property>
+                    <property name="alias">Premiere remise</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">Montant Remise</text-property>
                     <text-property name="heading">discount_amount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">product_name</property>
+                    <property name="alias">Description</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Libellé</text-property>
                     <text-property name="heading">product_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">qty</property>
+                    <property name="alias">Quantite</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">Qté</text-property>
                     <text-property name="heading">qty</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">unit</property>
+                    <property name="alias">Unité</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">Unité</text-property>
                     <text-property name="heading">unit</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sec_discount_amount</property>
+                    <property name="alias">Deuxieme remise</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">Montant Remise 2</text-property>
                     <text-property name="heading">sec_discount_amount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">type_select</property>
+                    <property name="alias">Type de document</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">type_select</text-property>
                     <text-property name="heading">type_select</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">real_date</property>
+                    <property name="alias">Date de facturation</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Date</text-property>
                     <text-property name="heading">real_date</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">stock_move_seq</property>
+                    <property name="alias">Sequence du mouvement de stock</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">stock_move_seq</text-property>
                     <text-property name="heading">stock_move_seq</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">stock_move_origin</property>
+                    <property name="alias">Origine du mouvement de stock</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">stock_move_origin</text-property>
                     <text-property name="heading">stock_move_origin</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">serial_number</property>
+                    <property name="alias">Numero de serie</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">serial_number</text-property>
                     <text-property name="heading">serial_number</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sale_price</property>
+                    <property name="alias">Prix de vente</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">sale_price</text-property>
                     <text-property name="heading">sale_price</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">is_shipping_costs_product</property>
+                    <property name="alias">Frais de port</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">is_shipping_costs_product</text-property>
+                    <text-property name="heading">is_shipping_costs_product</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -188,58 +206,63 @@
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">discount_amount</property>
+                        <property name="name">Premiere remise</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">product_name</property>
+                        <property name="name">Description</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">qty</property>
+                        <property name="name">Quantite</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">unit</property>
+                        <property name="name">Unité</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">sec_discount_amount</property>
+                        <property name="name">Deuxieme remise</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">type_select</property>
+                        <property name="name">Type de document</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">real_date</property>
+                        <property name="name">Date de facturation</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">stock_move_seq</property>
+                        <property name="name">Sequence du mouvement de stock</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">stock_move_origin</property>
+                        <property name="name">Origine du mouvement de stock</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">serial_number</property>
+                        <property name="name">Numero de serie</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">sale_price</property>
+                        <property name="name">Prix de vente</property>
                         <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">Frais de port</property>
+                        <property name="dataType">integer</property>
                     </structure>
                 </list-property>
             </structure>
@@ -324,6 +347,13 @@
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">is_shipping_costs_product</property>
+                    <property name="nativeName">is_shipping_costs_product</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-7</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select InvoiceLine.discount_amount,
 InvoiceLine.product_name,
@@ -335,7 +365,8 @@ StockMove.real_date,
 StockMove.stock_move_seq,
 StockMove.stock_move_origin,
 BaseProduct.serial_number,
-baseProduct.sale_price
+BaseProduct.sale_price, 
+BaseProduct.is_shipping_costs_product
 from account_invoice_line as InvoiceLine
 inner join stock_stock_move_line as StockMoveLine on (InvoiceLine.stock_move_line = StockMoveLine.id)
 inner join stock_stock_move as StockMove on (StockMove.id = StockMoveLine.stock_move)
@@ -3720,7 +3751,8 @@ true;&#13;
             </group>
             <detail>
                 <row id="690">
-                    <method name="onPrepare"><![CDATA[vars["totalHtBrut"] = vars["totalHtBrut"] + (row["Quantité"]*row["price"])]]></method>
+                    <method name="onPrepare"><![CDATA[vars["totalHtBrut"] = vars["totalHtBrut"] + (row["Quantité"]*row["price"]);
+if(row["is_shipping_costs_product"]==1){vars["fraisPort"] = vars["fraisPort"] + (row["Quantité"]*row["price"]);} ]]></method>
                     <property name="verticalAlign">middle</property>
                     <property name="masterPage">MasterPage</property>
                     <property name="height">0.7cm</property>
@@ -4182,6 +4214,22 @@ true&#13;
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <property name="verticalAlign">middle</property>
+                    <data name="dataFraisPort" id="1073">
+                        <structure name="numberFormat">
+                            <property name="category">Currency</property>
+                            <property name="pattern">###0.00 €{RoundingMode=HALF_UP}</property>
+                        </structure>
+                        <property name="textAlign">right</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">fraisPort</property>
+                                <text-property name="displayName">fraisPort</text-property>
+                                <expression name="expression" type="javascript">vars["fraisPort"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">fraisPort</property>
+                    </data>
                 </cell>
                 <cell id="473">
                     <property name="colSpan">1</property>
@@ -4836,6 +4884,9 @@ true&#13;
             <property name="type">report</property>
         </variable-element>
         <variable-element name="customerName">
+            <property name="type">report</property>
+        </variable-element>
+        <variable-element name="fraisPort">
             <property name="type">report</property>
         </variable-element>
     </property>

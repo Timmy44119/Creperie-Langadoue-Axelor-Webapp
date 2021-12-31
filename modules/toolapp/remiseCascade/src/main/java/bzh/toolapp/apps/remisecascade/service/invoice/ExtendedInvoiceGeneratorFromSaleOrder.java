@@ -1,12 +1,5 @@
 package bzh.toolapp.apps.remisecascade.service.invoice;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.axelor.apps.account.db.Invoice;
 import com.axelor.apps.account.service.invoice.InvoiceLineService;
 import com.axelor.apps.account.service.invoice.InvoiceService;
@@ -19,129 +12,141 @@ import com.axelor.apps.stock.db.StockMove;
 import com.axelor.apps.stock.db.StockMoveLine;
 import com.axelor.apps.supplychain.service.invoice.generator.InvoiceGeneratorSupplyChain;
 import com.axelor.exception.AxelorException;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** To generate Invoice from Sales order. */
 public class ExtendedInvoiceGeneratorFromSaleOrder extends InvoiceGeneratorSupplyChain {
 
-	private final Logger logger = LoggerFactory.getLogger(InvoiceGenerator.class);
+  private final Logger logger = LoggerFactory.getLogger(InvoiceGenerator.class);
 
-	private final PriceListService priceListService;
-	private final StockMove stockMove;
-	private final SaleOrder saleOrder;
-	private final boolean isRefund;
-	protected InvoiceLineService invoiceLineService;
-	protected InvoiceService invoiceService;
+  private final PriceListService priceListService;
+  private final StockMove stockMove;
+  private final SaleOrder saleOrder;
+  private final boolean isRefund;
+  protected InvoiceLineService invoiceLineService;
+  protected InvoiceService invoiceService;
 
-	public ExtendedInvoiceGeneratorFromSaleOrder(final SaleOrder saleOrder, final boolean isRefund,
-			final PriceListService priceListServiceParam, final InvoiceLineService invoiceLineServiceParam)
-			throws AxelorException {
-		super(saleOrder, isRefund);
-		this.saleOrder = saleOrder;
-		this.isRefund = isRefund;
-		this.priceListService = priceListServiceParam;
-		this.stockMove = null;
-		this.invoiceService = null;
-		this.invoiceLineService = invoiceLineServiceParam;
-	}
+  public ExtendedInvoiceGeneratorFromSaleOrder(
+      final SaleOrder saleOrder,
+      final boolean isRefund,
+      final PriceListService priceListServiceParam,
+      final InvoiceLineService invoiceLineServiceParam)
+      throws AxelorException {
+    super(saleOrder, isRefund);
+    this.saleOrder = saleOrder;
+    this.isRefund = isRefund;
+    this.priceListService = priceListServiceParam;
+    this.stockMove = null;
+    this.invoiceService = null;
+    this.invoiceLineService = invoiceLineServiceParam;
+  }
 
-	/**
-	 * PaymentCondition, Paymentmode, MainInvoicingAddress, Currency récupérés du
-	 * tiers
-	 *
-	 * @param operationType
-	 * @param company
-	 * @param partner
-	 * @param contactPartner
-	 * @throws AxelorException
-	 */
-	public ExtendedInvoiceGeneratorFromSaleOrder(final StockMove stockMove, final int invoiceOperationType,
-			final PriceListService priceListServiceParam, final InvoiceLineService invoiceLineServiceParam)
-			throws AxelorException {
-		super(stockMove, invoiceOperationType);
-		this.stockMove = stockMove;
-		this.priceListService = priceListServiceParam;
-		this.saleOrder = null;
-		this.isRefund = false;
-		this.invoiceLineService = invoiceLineServiceParam;
-	}
+  /**
+   * PaymentCondition, Paymentmode, MainInvoicingAddress, Currency récupérés du tiers
+   *
+   * @param operationType
+   * @param company
+   * @param partner
+   * @param contactPartner
+   * @throws AxelorException
+   */
+  public ExtendedInvoiceGeneratorFromSaleOrder(
+      final StockMove stockMove,
+      final int invoiceOperationType,
+      final PriceListService priceListServiceParam,
+      final InvoiceLineService invoiceLineServiceParam)
+      throws AxelorException {
+    super(stockMove, invoiceOperationType);
+    this.stockMove = stockMove;
+    this.priceListService = priceListServiceParam;
+    this.saleOrder = null;
+    this.isRefund = false;
+    this.invoiceLineService = invoiceLineServiceParam;
+  }
 
-	@Override
-	public Invoice generate() throws AxelorException {
-		final Invoice invoiceResult = super.createInvoiceHeader();
-		if (this.saleOrder != null) {
-			invoiceResult.setHeadOfficeAddress(this.saleOrder.getClientPartner().getHeadOfficeAddress());
-			invoiceResult.setDiscountAmount(this.saleOrder.getDiscountAmount());
-			invoiceResult.setDiscountTypeSelect(this.saleOrder.getDiscountTypeSelect());
-			invoiceResult.setSecDiscountAmount(this.saleOrder.getSecDiscountAmount());
-			invoiceResult.setSecDiscountTypeSelect(this.saleOrder.getSecDiscountTypeSelect());
-		}
+  @Override
+  public Invoice generate() throws AxelorException {
+    final Invoice invoiceResult = super.createInvoiceHeader();
+    if (this.saleOrder != null) {
+      invoiceResult.setHeadOfficeAddress(this.saleOrder.getClientPartner().getHeadOfficeAddress());
+      invoiceResult.setDiscountAmount(this.saleOrder.getDiscountAmount());
+      invoiceResult.setDiscountTypeSelect(this.saleOrder.getDiscountTypeSelect());
+      invoiceResult.setSecDiscountAmount(this.saleOrder.getSecDiscountAmount());
+      invoiceResult.setSecDiscountTypeSelect(this.saleOrder.getSecDiscountTypeSelect());
+    }
 
-		if (this.stockMove != null) {
-			// Select the PriceListSet from partner
-			final Set<PriceList> partnerPriceListSet = this.stockMove.getPartner().getSalePartnerPriceList()
-					.getPriceListSet();
+    if (this.stockMove != null) {
+      // Select the PriceListSet from partner
+      final Set<PriceList> partnerPriceListSet =
+          this.stockMove.getPartner().getSalePartnerPriceList().getPriceListSet();
 
-			final PriceList priceList = this.findPriceList(partnerPriceListSet, this.stockMove.getStockMoveLineList());
-			if (priceList != null) {
-				invoiceResult.setDiscountAmount(priceList.getGeneralDiscount());
-				invoiceResult.setDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
-				invoiceResult.setSecDiscountAmount(priceList.getSecGeneralDiscount());
-				invoiceResult.setSecDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
-			} else {
-				invoiceResult.setDiscountAmount(BigDecimal.ZERO);
-				invoiceResult.setDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_NONE);
-				invoiceResult.setSecDiscountAmount(BigDecimal.ZERO);
-				invoiceResult.setSecDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_NONE);
-			}
+      final PriceList priceList =
+          this.findPriceList(partnerPriceListSet, this.stockMove.getStockMoveLineList());
+      if (priceList != null) {
+        invoiceResult.setDiscountAmount(priceList.getGeneralDiscount());
+        invoiceResult.setDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
+        invoiceResult.setSecDiscountAmount(priceList.getSecGeneralDiscount());
+        invoiceResult.setSecDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_PERCENT);
+      } else {
+        invoiceResult.setDiscountAmount(BigDecimal.ZERO);
+        invoiceResult.setDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_NONE);
+        invoiceResult.setSecDiscountAmount(BigDecimal.ZERO);
+        invoiceResult.setSecDiscountTypeSelect(PriceListLineRepository.AMOUNT_TYPE_NONE);
+      }
 
-			invoiceResult.setPriceList(priceList);
-		}
-		return invoiceResult;
-	}
+      invoiceResult.setPriceList(priceList);
+    }
+    return invoiceResult;
+  }
 
-	private PriceList findPriceList(final Set<PriceList> partnerPriceListSet,
-			final List<StockMoveLine> stockMoveLineList) {
-		PriceList priceList = null;
+  private PriceList findPriceList(
+      final Set<PriceList> partnerPriceListSet, final List<StockMoveLine> stockMoveLineList) {
+    PriceList priceList = null;
 
-		switch (partnerPriceListSet.size()) {
-		case 1:
-			// Verify if the priceList is Activated
-			final PriceList pl = partnerPriceListSet.iterator().next();
-			if (pl.getIsActive()) {
-				priceList = pl;
-			}
-			break;
+    switch (partnerPriceListSet.size()) {
+      case 1:
+        // Verify if the priceList is Activated
+        final PriceList pl = partnerPriceListSet.iterator().next();
+        if (pl.getIsActive()) {
+          priceList = pl;
+        }
+        break;
 
-		default:
-			Integer activatedPriceList = 0;
-			// Verify how many price list is activate
-			for (final PriceList pl1 : partnerPriceListSet) {
-				if (pl1.getIsActive()) {
-					activatedPriceList++;
-					priceList = pl1;
-				}
-			}
-			// If the number of price list is over 1 the price cannot be found
-			if (activatedPriceList > 1) {
-				priceList = null;
-			}
+      default:
+        Integer activatedPriceList = 0;
+        // Verify how many price list is activate
+        for (final PriceList pl1 : partnerPriceListSet) {
+          if (pl1.getIsActive()) {
+            activatedPriceList++;
+            priceList = pl1;
+          }
+        }
+        // If the number of price list is over 1 the price cannot be found
+        if (activatedPriceList > 1) {
+          priceList = null;
+        }
 
-			break;
-		}
-		return priceList;
-	}
+        break;
+    }
+    return priceList;
+  }
 
-	/**
-	 * Compute the invoice total amounts
-	 *
-	 * @param invoice
-	 * @throws AxelorException
-	 */
-	@Override
-	public void computeInvoice(final Invoice invoice) throws AxelorException {
-		// reuse modified algorithm (avoid duplication)
-		final ExtendedInvoiceGeneratorFromScratch invoiceGenerator = new ExtendedInvoiceGeneratorFromScratch(invoice,
-				this.priceListService, this.invoiceService, this.invoiceLineService);
-		invoiceGenerator.computeInvoice(invoice);
-	}
+  /**
+   * Compute the invoice total amounts
+   *
+   * @param invoice
+   * @throws AxelorException
+   */
+  @Override
+  public void computeInvoice(final Invoice invoice) throws AxelorException {
+    // reuse modified algorithm (avoid duplication)
+    final ExtendedInvoiceGeneratorFromScratch invoiceGenerator =
+        new ExtendedInvoiceGeneratorFromScratch(
+            invoice, this.priceListService, this.invoiceService, this.invoiceLineService);
+    invoiceGenerator.computeInvoice(invoice);
+  }
 }

@@ -1,10 +1,5 @@
 package bzh.toolapp.apps.remisecascade.service.invoice;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.axelor.apps.account.db.AnalyticMoveLine;
 import com.axelor.apps.account.db.Invoice;
 import com.axelor.apps.account.db.InvoiceLine;
@@ -21,106 +16,144 @@ import com.axelor.apps.stock.db.StockMoveLine;
 import com.axelor.apps.supplychain.service.invoice.generator.InvoiceLineGeneratorSupplyChain;
 import com.axelor.exception.AxelorException;
 import com.axelor.inject.Beans;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExtendedInvoiceLineGeneratorSupplyChain extends InvoiceLineGeneratorSupplyChain {
 
-	private final PriceListService priceListService;
+  private final PriceListService priceListService;
 
-	public ExtendedInvoiceLineGeneratorSupplyChain(final Invoice invoice, final Product product,
-			final String productName, final String description, final BigDecimal qty, final Unit unit,
-			final int sequence, final boolean isTaxInvoice, final SaleOrderLine saleOrderLine,
-			final PurchaseOrderLine purchaseOrderLine, final StockMoveLine stockMoveLine,
-			final PriceListService priceListServiceParam) throws AxelorException {
-		super(invoice, product, productName, description, qty, unit, sequence, isTaxInvoice, saleOrderLine,
-				purchaseOrderLine, stockMoveLine);
-		this.priceListService = priceListServiceParam;
-	}
+  public ExtendedInvoiceLineGeneratorSupplyChain(
+      final Invoice invoice,
+      final Product product,
+      final String productName,
+      final String description,
+      final BigDecimal qty,
+      final Unit unit,
+      final int sequence,
+      final boolean isTaxInvoice,
+      final SaleOrderLine saleOrderLine,
+      final PurchaseOrderLine purchaseOrderLine,
+      final StockMoveLine stockMoveLine,
+      final PriceListService priceListServiceParam)
+      throws AxelorException {
+    super(
+        invoice,
+        product,
+        productName,
+        description,
+        qty,
+        unit,
+        sequence,
+        isTaxInvoice,
+        saleOrderLine,
+        purchaseOrderLine,
+        stockMoveLine);
+    this.priceListService = priceListServiceParam;
+  }
 
-	@Override
-	public List<InvoiceLine> creates() throws AxelorException {
-		// Create invoice lines
-		final InvoiceLine invoiceLine = this.createInvoiceLine();
-		final InvoiceLineService invoiceLineService = Beans.get(InvoiceLineService.class);
+  @Override
+  public List<InvoiceLine> creates() throws AxelorException {
+    // Create invoice lines
+    final InvoiceLine invoiceLine = this.createInvoiceLine();
+    final InvoiceLineService invoiceLineService = Beans.get(InvoiceLineService.class);
 
-		// add second discount information
-		if (this.saleOrderLine != null) {
-			// Add second discount amount
-			invoiceLine.setSecDiscountAmount(this.saleOrderLine.getSecDiscountAmount());
+    // add second discount information
+    if (this.saleOrderLine != null) {
+      // Add second discount amount
+      invoiceLine.setSecDiscountAmount(this.saleOrderLine.getSecDiscountAmount());
 
-			// Add second discount type select
-			invoiceLine.setSecDiscountTypeSelect(this.saleOrderLine.getSecDiscountTypeSelect());
+      // Add second discount type select
+      invoiceLine.setSecDiscountTypeSelect(this.saleOrderLine.getSecDiscountTypeSelect());
 
-		} else if (this.stockMoveLine != null) {
+    } else if (this.stockMoveLine != null) {
 
-			// If there is a price list
-			if (invoiceLine.getInvoice().getPriceList() != null) {
+      // If there is a price list
+      if (invoiceLine.getInvoice().getPriceList() != null) {
 
-				// Get the invoice price list
-				final PriceList priceList = invoiceLine.getInvoice().getPriceList();
+        // Get the invoice price list
+        final PriceList priceList = invoiceLine.getInvoice().getPriceList();
 
-				// check if the price list line exist
-				if (this.priceListService.getPriceListLine(invoiceLine.getProduct(), invoiceLine.getQty(), priceList,
-						invoiceLine.getPrice()) != null) {
+        // check if the price list line exist
+        if (this.priceListService.getPriceListLine(
+                invoiceLine.getProduct(), invoiceLine.getQty(), priceList, invoiceLine.getPrice())
+            != null) {
 
-					// Get the price list line
-					final PriceListLine priceListLine = this.priceListService.getPriceListLine(invoiceLine.getProduct(),
-							invoiceLine.getQty(), priceList, invoiceLine.getPrice());
+          // Get the price list line
+          final PriceListLine priceListLine =
+              this.priceListService.getPriceListLine(
+                  invoiceLine.getProduct(),
+                  invoiceLine.getQty(),
+                  priceList,
+                  invoiceLine.getPrice());
 
-					// if not null
-					if (priceListLine != null) {
-						// Apply the first discount
-						invoiceLine.setDiscountTypeSelect(priceListLine.getAmountTypeSelect());
-						invoiceLine.setDiscountAmount(priceListLine.getAmount());
+          // if not null
+          if (priceListLine != null) {
+            // Apply the first discount
+            invoiceLine.setDiscountTypeSelect(priceListLine.getAmountTypeSelect());
+            invoiceLine.setDiscountAmount(priceListLine.getAmount());
 
-						// Reload price determination with the first
-						invoiceLine.setPriceDiscounted(
-								invoiceLineService.computeDiscount(invoiceLine, invoiceLine.getInvoice().getInAti()));
+            // Reload price determination with the first
+            invoiceLine.setPriceDiscounted(
+                invoiceLineService.computeDiscount(
+                    invoiceLine, invoiceLine.getInvoice().getInAti()));
 
-						if (!(priceListLine.getSecAmount() == BigDecimal.ZERO)) {
-							invoiceLine.setSecDiscountAmount(priceListLine.getSecAmount());
-							invoiceLine.setSecDiscountTypeSelect(priceListLine.getSecTypeSelect());
+            if (!(priceListLine.getSecAmount() == BigDecimal.ZERO)) {
+              invoiceLine.setSecDiscountAmount(priceListLine.getSecAmount());
+              invoiceLine.setSecDiscountTypeSelect(priceListLine.getSecTypeSelect());
 
-							// Reload price determination
-							invoiceLine.setPriceSecDiscounted(invoiceLineService.computeDiscount(invoiceLine,
-									invoiceLine.getInvoice().getInAti()));
+              // Reload price determination
+              invoiceLine.setPriceSecDiscounted(
+                  invoiceLineService.computeDiscount(
+                      invoiceLine, invoiceLine.getInvoice().getInAti()));
 
-							// Update price Discounted to display it in the list
-							invoiceLine.setPriceDiscounted(invoiceLine.getPriceSecDiscounted());
-						}
+              // Update price Discounted to display it in the list
+              invoiceLine.setPriceDiscounted(invoiceLine.getPriceSecDiscounted());
+            }
 
-						// Check if the invoice is in ATI
-						if (!invoiceLine.getInvoice().getInAti()) {
-							// Calculate the total excluding tax
-							invoiceLine.setExTaxTotal(InvoiceLineManagement.computeAmount(invoiceLine.getQty(),
-									invoiceLine.getPriceDiscounted(), 2));
-							// Calculate the total including tax
-							invoiceLine.setInTaxTotal(invoiceLine.getExTaxTotal()
-									.add(invoiceLine.getExTaxTotal().multiply(invoiceLine.getTaxRate()))
-									.setScale(2, RoundingMode.HALF_UP));
-						} else {
-							// Calculate the total including tax
-							invoiceLine.setInTaxTotal(InvoiceLineManagement.computeAmount(invoiceLine.getQty(),
-									invoiceLine.getPriceDiscounted(), 2));
+            // Check if the invoice is in ATI
+            if (!invoiceLine.getInvoice().getInAti()) {
+              // Calculate the total excluding tax
+              invoiceLine.setExTaxTotal(
+                  InvoiceLineManagement.computeAmount(
+                      invoiceLine.getQty(), invoiceLine.getPriceDiscounted(), 2));
+              // Calculate the total including tax
+              invoiceLine.setInTaxTotal(
+                  invoiceLine
+                      .getExTaxTotal()
+                      .add(invoiceLine.getExTaxTotal().multiply(invoiceLine.getTaxRate()))
+                      .setScale(2, RoundingMode.HALF_UP));
+            } else {
+              // Calculate the total including tax
+              invoiceLine.setInTaxTotal(
+                  InvoiceLineManagement.computeAmount(
+                      invoiceLine.getQty(), invoiceLine.getPriceDiscounted(), 2));
 
-							// Calculate the total excluding tax
-							invoiceLine.setExTaxTotal(invoiceLine.getInTaxTotal()
-									.divide(invoiceLine.getTaxRate().add(BigDecimal.ONE), 2, BigDecimal.ROUND_HALF_UP));
-						}
+              // Calculate the total excluding tax
+              invoiceLine.setExTaxTotal(
+                  invoiceLine
+                      .getInTaxTotal()
+                      .divide(
+                          invoiceLine.getTaxRate().add(BigDecimal.ONE),
+                          2,
+                          BigDecimal.ROUND_HALF_UP));
+            }
+          }
+        }
+      }
+    }
 
-					}
-				}
-			}
-		}
+    // Fill the Analytics part
+    final List<AnalyticMoveLine> analyticMoveLineList =
+        invoiceLineService.getAndComputeAnalyticDistribution(invoiceLine, invoiceLine.getInvoice());
 
-		// Fill the Analytics part
-		final List<AnalyticMoveLine> analyticMoveLineList = invoiceLineService
-				.getAndComputeAnalyticDistribution(invoiceLine, invoiceLine.getInvoice());
+    analyticMoveLineList.stream().forEach(invoiceLine::addAnalyticMoveLineListItem);
 
-		analyticMoveLineList.stream().forEach(invoiceLine::addAnalyticMoveLineListItem);
+    final List<InvoiceLine> invoiceLines = new ArrayList<>();
+    invoiceLines.add(invoiceLine);
 
-		final List<InvoiceLine> invoiceLines = new ArrayList<>();
-		invoiceLines.add(invoiceLine);
-
-		return invoiceLines;
-	}
+    return invoiceLines;
+  }
 }

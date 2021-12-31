@@ -48,16 +48,18 @@ public class ExtendedInvoiceLineServiceImpl extends InvoiceLineProjectServiceImp
 
 		final BigDecimal unitPrice = inAti ? invoiceLine.getInTaxPrice() : invoiceLine.getPrice();
 
-		logger.debug("Prix unitaire {}", unitPrice);
+		// Si le produit est un produit frais de port alors on applique pas de remise
+		if (invoiceLine.getProduct().getIsShippingCostsProduct()) {
+			return unitPrice;
+		}
 
-		// compute first discount
+		// Application de la premiere remise
 		final BigDecimal firstDiscount = this.priceListService.computeDiscount(unitPrice,
 				invoiceLine.getDiscountTypeSelect(), invoiceLine.getDiscountAmount());
-		// then second discount
+
+		// Application de la seconde remise
 		final BigDecimal secondDiscount = this.priceListService.computeDiscount(firstDiscount,
 				invoiceLine.getSecDiscountTypeSelect(), invoiceLine.getSecDiscountAmount());
-
-		logger.debug("Prix remise {}", secondDiscount);
 
 		return secondDiscount;
 	}
@@ -159,6 +161,5 @@ public class ExtendedInvoiceLineServiceImpl extends InvoiceLineProjectServiceImp
 
 		// Renvoi du montant globale remise
 		return totalAmount;
-
 	}
 }

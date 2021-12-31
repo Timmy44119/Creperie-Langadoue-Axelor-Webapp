@@ -146,7 +146,6 @@ public class ExtendedSaleOrderComputeServiceImpl extends SaleOrderComputeService
 			saleOrder.setAdvanceTotal(this.computeTotalInvoiceAdvancePayment(saleOrder));
 		}
 		Beans.get(SaleOrderServiceSupplychainImpl.class).updateAmountToBeSpreadOverTheTimetable(saleOrder);
-
 	}
 
 	// Application des remises globales
@@ -175,7 +174,7 @@ public class ExtendedSaleOrderComputeServiceImpl extends SaleOrderComputeService
 
 		priceDiscounted = this.extendedSaleOrderLineServiceImpl.computeDiscount(saleOrderLine, saleOrder.getInAti());
 
-		// Verification si une deuxième remise est applicable
+		// Verification si une deuxieme remise est applicable
 		if (saleOrderLine.getSecDiscountTypeSelect() != PriceListLineRepository.AMOUNT_TYPE_NONE) {
 			priceSecDiscounted = this.extendedSaleOrderLineServiceImpl.computeSecDiscount(saleOrderLine,
 					priceDiscounted);
@@ -183,7 +182,7 @@ public class ExtendedSaleOrderComputeServiceImpl extends SaleOrderComputeService
 			priceSecDiscounted = BigDecimal.ZERO;
 		}
 
-		// Définition de la remise finale
+		// Definition de la remise finale
 		if (priceSecDiscounted != BigDecimal.ZERO) {
 			priceFinaleDiscounted = priceSecDiscounted;
 		} else {
@@ -193,7 +192,7 @@ public class ExtendedSaleOrderComputeServiceImpl extends SaleOrderComputeService
 		BigDecimal taxRate = BigDecimal.ZERO;
 		BigDecimal subTotalCostPrice = BigDecimal.ZERO;
 
-		// Récupération des montants des taxe
+		// Recuperation des montants des taxe
 		if (saleOrderLine.getTaxLine() != null) {
 			taxRate = saleOrderLine.getTaxLine().getValue();
 		}

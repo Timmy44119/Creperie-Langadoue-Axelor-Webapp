@@ -64,13 +64,13 @@ public class ExtendedSaleOrderLineServiceImpl extends SaleOrderLineBusinessProdu
 
 		final BigDecimal priceDiscounted = this.computeDiscount(saleOrderLine, saleOrder.getInAti());
 
-		// Verification si une deuxième remise est applicable
+		// Verification si une deuxiï¿½me remise est applicable
 		if (saleOrderLine.getSecDiscountTypeSelect() != PriceListLineRepository.AMOUNT_TYPE_NONE) {
 			priceSecDiscounted = this.computeSecDiscount(saleOrderLine, priceDiscounted);
 		} else {
 			priceSecDiscounted = BigDecimal.ZERO;
 		}
-		// Définition de la remise finale
+		// Dï¿½finition de la remise finale
 		if (priceSecDiscounted != BigDecimal.ZERO) {
 			priceFinaleDiscounted = priceSecDiscounted;
 		} else {
@@ -80,7 +80,7 @@ public class ExtendedSaleOrderLineServiceImpl extends SaleOrderLineBusinessProdu
 		BigDecimal taxRate = BigDecimal.ZERO;
 		BigDecimal subTotalCostPrice = BigDecimal.ZERO;
 
-		// Récupération des montants des taxe
+		// Rï¿½cupï¿½ration des montants des taxe
 		if (saleOrderLine.getTaxLine() != null) {
 			taxRate = saleOrderLine.getTaxLine().getValue();
 		}
@@ -149,6 +149,22 @@ public class ExtendedSaleOrderLineServiceImpl extends SaleOrderLineBusinessProdu
 
 		// Renvoi du montant globale remise
 		return totalAmount;
+	}
+
+	@Override
+	public BigDecimal computeDiscount(final SaleOrderLine saleOrderLine, final Boolean inAti) {
+		// Definition du prix de la ligne
+		final BigDecimal price = inAti ? saleOrderLine.getInTaxPrice() : saleOrderLine.getPrice();
+
+		// Verification du type d'article
+		if (saleOrderLine.getProduct().getIsShippingCostsProduct()) {
+			// Pas de remise sur les produits Frais de port
+			return price;
+		}
+
+		// Application des remises par ligne et globale
+		return this.priceListService.computeDiscount(price, saleOrderLine.getDiscountTypeSelect(),
+				saleOrderLine.getDiscountAmount());
 	}
 
 	/*
