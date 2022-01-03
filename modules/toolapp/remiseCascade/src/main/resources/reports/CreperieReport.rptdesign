@@ -2436,7 +2436,7 @@ Pas d'escompte pour paiement anticipé, passé la date d'échéance, tout paieme
         <grid name="Entete" id="40">
             <property name="masterPage">MasterPage</property>
             <property name="height">12.213166666666668cm</property>
-            <property name="width">20.1cm</property>
+            <property name="width">20.4cm</property>
             <list-property name="visibility">
                 <structure>
                     <property name="format">all</property>
@@ -2497,7 +2497,7 @@ true&#13;
                 <property name="width">0.5cm</property>
             </column>
             <column id="117">
-                <property name="width">2cm</property>
+                <property name="width">2.3918333333333335cm</property>
             </column>
             <row id="43">
                 <property name="verticalAlign">middle</property>
@@ -3336,7 +3336,7 @@ if(row["trading_name"]==1){
             <property name="masterPage">MasterPage</property>
             <property name="pageBreakAfter">auto</property>
             <property name="pageBreakBefore">auto</property>
-            <property name="width">20.404666666666667cm</property>
+            <property name="width">20.4cm</property>
             <property name="dataSet">InvoiceLines</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -3475,14 +3475,18 @@ if(row["trading_name"]==1){
                 <structure>
                     <property name="name">Column Binding_7</property>
                     <text-property name="displayName">stockMoveSeq</text-property>
-                    <expression name="expression" type="javascript">row["stock_move_seq"]</expression>
+                    <expression name="expression" type="javascript">if(row["type_select"]==1){&#13;
+'Livraison ' + row["stock_move_seq"] + 'du' + row["real_date"].toString().substr(0,4) + '/' + row["real_date"].toString().substr(4,2) + '/' + row["real_date"].toString().substr(6,2);&#13;
+}else{&#13;
+'Retour' + row["stock_move_seq"] + 'du' + row["real_date"].toString().substr(0,4) + '/' + row["real_date"].toString().substr(4,2) + '/' + row["real_date"].toString().substr(6,2);&#13;
+}</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">Column Binding_8</property>
                     <text-property name="displayName">stockMoveOrigin</text-property>
-                    <expression name="expression" type="javascript">row["stock_move_origin"]</expression>
+                    <expression name="expression" type="javascript">'Commande N°' + row["stock_move_origin"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -3678,6 +3682,14 @@ if(row["trading_name"]==1){
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
                             <data name="dataStockMoveOrigin" id="1084">
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if(row["stock_move_origin"]==null){&#13;
+true&#13;
+}</expression>
+                                    </structure>
+                                </list-property>
                                 <property name="resultSetColumn">Column Binding_8</property>
                             </data>
                         </cell>
@@ -3884,7 +3896,7 @@ if(row["is_shipping_costs_product"]==1){
         <grid name="Pied de page" id="434">
             <property name="verticalAlign">bottom</property>
             <property name="height">5.376333333333333cm</property>
-            <property name="width">20.08716666666667cm</property>
+            <property name="width">20.4cm</property>
             <list-property name="visibility">
                 <structure>
                     <property name="format">all</property>
@@ -3926,7 +3938,7 @@ true&#13;
                 <property name="width">0.08466666666666667cm</property>
             </column>
             <column id="444">
-                <property name="width">2.7304999999999997cm</property>
+                <property name="width">3.1961666666666666cm</property>
             </column>
             <row id="445">
                 <cell id="446">
