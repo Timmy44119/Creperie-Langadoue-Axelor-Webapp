@@ -199,16 +199,26 @@ public class ExtendedSaleOrderComputeServiceImpl extends SaleOrderComputeService
 		if (!saleOrder.getInAti()) {
 			// Calcul du montant total
 			exTaxTotal = this.saleOrderLineService.computeAmount(saleOrderLine.getQty(), priceFinaleDiscounted);
-			// Calcul du montant total avec les remises globales
-			exTaxTotal = this.extendedSaleOrderLineServiceImpl.computeGlobalDiscount(saleOrder, exTaxTotal);
+
+			// Controle sur le type du produit
+			if (!saleOrderLine.getProduct().getIsShippingCostsProduct()) {
+				// Calcul du montant total avec les remises globales
+				exTaxTotal = this.extendedSaleOrderLineServiceImpl.computeGlobalDiscount(saleOrder, exTaxTotal);
+			}
+
 			inTaxTotal = exTaxTotal.add(exTaxTotal.multiply(taxRate));
 			companyExTaxTotal = this.saleOrderLineService.getAmountInCompanyCurrency(exTaxTotal, saleOrder);
 			companyInTaxTotal = companyExTaxTotal.add(companyExTaxTotal.multiply(taxRate));
 		} else {
 			// Calcul du montant total
 			inTaxTotal = this.saleOrderLineService.computeAmount(saleOrderLine.getQty(), priceFinaleDiscounted);
-			// Calcul du montant total avec les remises globales
-			exTaxTotal = this.extendedSaleOrderLineServiceImpl.computeGlobalDiscount(saleOrder, inTaxTotal);
+
+			// Controle sur le type du produit
+			if (!saleOrderLine.getProduct().getIsShippingCostsProduct()) {
+				// Calcul du montant total avec les remises globales
+				inTaxTotal = this.extendedSaleOrderLineServiceImpl.computeGlobalDiscount(saleOrder, inTaxTotal);
+			}
+
 			exTaxTotal = inTaxTotal.divide(taxRate.add(BigDecimal.ONE), 2, BigDecimal.ROUND_HALF_UP);
 			companyInTaxTotal = this.saleOrderLineService.getAmountInCompanyCurrency(inTaxTotal, saleOrder);
 			companyExTaxTotal = companyInTaxTotal.divide(taxRate.add(BigDecimal.ONE), 2, BigDecimal.ROUND_HALF_UP);
