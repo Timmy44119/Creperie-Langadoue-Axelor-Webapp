@@ -72,7 +72,7 @@ public class ExtendedSaleOrderLineServiceImpl extends SaleOrderLineBusinessProdu
 		} else {
 			priceSecDiscounted = BigDecimal.ZERO;
 		}
-		// D�finition de la remise finale
+		// Definition de la remise finale
 		if (priceSecDiscounted != BigDecimal.ZERO) {
 			priceFinaleDiscounted = priceSecDiscounted;
 		} else {
@@ -91,16 +91,20 @@ public class ExtendedSaleOrderLineServiceImpl extends SaleOrderLineBusinessProdu
 		if (!saleOrder.getInAti()) {
 			// Calcul du montant total
 			exTaxTotal = this.computeAmount(saleOrderLine.getQty(), priceFinaleDiscounted);
-			// Calcul du montant total avec les remises globales
-			exTaxTotal = this.computeGlobalDiscount(saleOrder, exTaxTotal);
+			if (!saleOrderLine.getProduct().getIsShippingCostsProduct()) {
+				// Calcul du montant total avec les remises globales
+				exTaxTotal = this.computeGlobalDiscount(saleOrder, exTaxTotal);
+			}
 			inTaxTotal = exTaxTotal.add(exTaxTotal.multiply(taxRate));
 			companyExTaxTotal = this.getAmountInCompanyCurrency(exTaxTotal, saleOrder);
 			companyInTaxTotal = companyExTaxTotal.add(companyExTaxTotal.multiply(taxRate));
 		} else {
 			// Calcul du montant total
 			inTaxTotal = this.computeAmount(saleOrderLine.getQty(), priceFinaleDiscounted);
-			// Calcul du montant total avec les remises globales
-			exTaxTotal = this.computeGlobalDiscount(saleOrder, inTaxTotal);
+			if (!saleOrderLine.getProduct().getIsShippingCostsProduct()) {
+				// Calcul du montant total avec les remises globales
+				exTaxTotal = this.computeGlobalDiscount(saleOrder, inTaxTotal);
+			}
 			exTaxTotal = inTaxTotal.divide(taxRate.add(BigDecimal.ONE), 2, BigDecimal.ROUND_HALF_UP);
 			companyInTaxTotal = this.getAmountInCompanyCurrency(inTaxTotal, saleOrder);
 			companyExTaxTotal = companyInTaxTotal.divide(taxRate.add(BigDecimal.ONE), 2, BigDecimal.ROUND_HALF_UP);
@@ -157,12 +161,6 @@ public class ExtendedSaleOrderLineServiceImpl extends SaleOrderLineBusinessProdu
 	public BigDecimal computeDiscount(final SaleOrderLine saleOrderLine, final Boolean inAti) {
 		// Definition du prix de la ligne
 		final BigDecimal price = inAti ? saleOrderLine.getInTaxPrice() : saleOrderLine.getPrice();
-
-		// Verification du type d'article
-		if (saleOrderLine.getProduct().getIsShippingCostsProduct()) {
-			// Pas de remise sur les produits Frais de port
-			return price;
-		}
 
 		// Application des remises par ligne et globale
 		return this.priceListService.computeDiscount(price, saleOrderLine.getDiscountTypeSelect(),

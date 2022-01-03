@@ -232,14 +232,20 @@ public class ExtendedInvoiceGeneratorFromScratch extends InvoiceGenerator {
 		if (!invoice.getInAti()) {
 			exTaxTotal = InvoiceLineManagement.computeAmount(invoiceLine.getQty(), priceDiscounted).setScale(2,
 					BigDecimal.ROUND_HALF_UP);
-			// Application des remises globales
-			exTaxTotal = this.computeGlobalDiscount(invoice, exTaxTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
+			// Controle sur le type du produit
+			if (!invoiceLine.getProduct().getIsShippingCostsProduct()) {
+				// Application des remises globales
+				exTaxTotal = this.computeGlobalDiscount(invoice, exTaxTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
+			}
 			inTaxTotal = exTaxTotal.add(exTaxTotal.multiply(taxRate));
 		} else {
 			inTaxTotal = InvoiceLineManagement.computeAmount(invoiceLine.getQty(), priceDiscounted).setScale(2,
 					BigDecimal.ROUND_HALF_UP);
-			// Application des remises globales
-			inTaxTotal = this.computeGlobalDiscount(invoice, inTaxTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
+			// Controle sur le type du produit
+			if (!invoiceLine.getProduct().getIsShippingCostsProduct()) {
+				// Application des remises globales
+				inTaxTotal = this.computeGlobalDiscount(invoice, inTaxTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
+			}
 			exTaxTotal = inTaxTotal.divide(taxRate.add(BigDecimal.ONE), 2, BigDecimal.ROUND_HALF_UP);
 		}
 

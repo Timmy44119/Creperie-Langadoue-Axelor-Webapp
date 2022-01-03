@@ -14,6 +14,18 @@
             <property name="name">rowFetchSize</property>
             <property name="id">567</property>
         </structure>
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">149</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">149</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">149</property>
+        </structure>
     </list-property>
     <property name="units">cm</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -51,7 +63,7 @@
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">233</value>
+                <value type="constant">234</value>
             </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -107,84 +119,72 @@
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">discount_amount</property>
-                    <property name="alias">Premiere remise</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">Montant Remise</text-property>
                     <text-property name="heading">discount_amount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">product_name</property>
-                    <property name="alias">Description</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Libellé</text-property>
                     <text-property name="heading">product_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">qty</property>
-                    <property name="alias">Quantite</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">Qté</text-property>
                     <text-property name="heading">qty</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">unit</property>
-                    <property name="alias">Unité</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">Unité</text-property>
                     <text-property name="heading">unit</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sec_discount_amount</property>
-                    <property name="alias">Deuxieme remise</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">Montant Remise 2</text-property>
                     <text-property name="heading">sec_discount_amount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">type_select</property>
-                    <property name="alias">Type de document</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">type_select</text-property>
                     <text-property name="heading">type_select</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">real_date</property>
-                    <property name="alias">Date de facturation</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Date</text-property>
                     <text-property name="heading">real_date</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">stock_move_seq</property>
-                    <property name="alias">Sequence du mouvement de stock</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">stock_move_seq</text-property>
                     <text-property name="heading">stock_move_seq</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">stock_move_origin</property>
-                    <property name="alias">Origine du mouvement de stock</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">stock_move_origin</text-property>
                     <text-property name="heading">stock_move_origin</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">serial_number</property>
-                    <property name="alias">Numero de serie</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">serial_number</text-property>
                     <text-property name="heading">serial_number</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sale_price</property>
-                    <property name="alias">Prix de vente</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">sale_price</text-property>
                     <text-property name="heading">sale_price</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">is_shipping_costs_product</property>
-                    <property name="alias">Frais de port</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">is_shipping_costs_product</text-property>
                     <text-property name="heading">is_shipping_costs_product</text-property>
@@ -206,62 +206,62 @@
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">Premiere remise</property>
+                        <property name="name">discount_amount</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">Description</property>
+                        <property name="name">product_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">Quantite</property>
+                        <property name="name">qty</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">Unité</property>
+                        <property name="name">unit</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">Deuxieme remise</property>
+                        <property name="name">sec_discount_amount</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">Type de document</property>
+                        <property name="name">type_select</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">Date de facturation</property>
+                        <property name="name">real_date</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">Sequence du mouvement de stock</property>
+                        <property name="name">stock_move_seq</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">Origine du mouvement de stock</property>
+                        <property name="name">stock_move_origin</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">Numero de serie</property>
+                        <property name="name">serial_number</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">Prix de vente</property>
+                        <property name="name">sale_price</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">Frais de port</property>
+                        <property name="name">is_shipping_costs_product</property>
                         <property name="dataType">integer</property>
                     </structure>
                 </list-property>
@@ -365,11 +365,11 @@ StockMove.real_date,
 StockMove.stock_move_seq,
 StockMove.stock_move_origin,
 BaseProduct.serial_number,
-BaseProduct.sale_price, 
+BaseProduct.sale_price,
 BaseProduct.is_shipping_costs_product
 from account_invoice_line as InvoiceLine
-inner join stock_stock_move_line as StockMoveLine on (InvoiceLine.stock_move_line = StockMoveLine.id)
-inner join stock_stock_move as StockMove on (StockMove.id = StockMoveLine.stock_move)
+left outer join stock_stock_move_line as StockMoveLine on (InvoiceLine.stock_move_line = StockMoveLine.id)
+left outer join stock_stock_move as StockMove on (StockMove.id = StockMoveLine.stock_move)
 left outer join base_product as BaseProduct on (BaseProduct.id = InvoiceLine.product)
 where InvoiceLine.invoice = ?
 Order by StockMove.real_date ASC]]></xml-property>
@@ -1645,10 +1645,10 @@ InvoiceLineTax.in_tax_total,
 InvoiceLineTax.tax_total,
 AccountTaxLine.value as tva
 from account_invoice as Invoice
-inner join base_currency as Currency on (Currency.id = Invoice.currency)
-inner join account_payment_mode as PaymentMode on (PaymentMode.id = Invoice.payment_mode)
-inner join account_invoice_line_tax as InvoiceLineTax on (InvoiceLineTax.invoice = Invoice.id)
-inner join account_tax_line as AccountTaxLine on (AccountTaxLine.id = InvoiceLineTax.tax_line)
+left outer join base_currency as Currency on (Currency.id = Invoice.currency)
+left outer join account_payment_mode as PaymentMode on (PaymentMode.id = Invoice.payment_mode)
+left outer join account_invoice_line_tax as InvoiceLineTax on (InvoiceLineTax.invoice = Invoice.id)
+left outer join account_tax_line as AccountTaxLine on (AccountTaxLine.id = InvoiceLineTax.tax_line)
 where Invoice.id = ?]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -2062,9 +2062,9 @@ where Invoice.id = ?]]></xml-property>
             <xml-property name="queryText"><![CDATA[select baseCompany.name, basePartner.tax_nbr, basePartner.registration_code,baseAddress.addressl4, baseAddress.addressl6, basePartner.fixed_phone, basePartner.fax,
 messageEmailAddress.address
 from account_invoice as invoice
-inner join base_company as baseCompany on (baseCompany.id = invoice.company)
-inner join base_address as baseAddress on (baseAddress.id = baseCompany.address)
-inner join base_partner as basePartner on (basePartner.id = baseCompany.partner)
+left outer join base_company as baseCompany on (baseCompany.id = invoice.company)
+left outer join base_address as baseAddress on (baseAddress.id = baseCompany.address)
+left outer join base_partner as basePartner on (basePartner.id = baseCompany.partner)
 left outer join message_email_address as messageEmailAddress on (messageEmailAddress.id = basePartner.email_address)
 where invoice.id = ?]]></xml-property>
         </oda-data-set>
@@ -2257,9 +2257,9 @@ where invoice.id = ?]]></xml-property>
             <xml-property name="queryText"><![CDATA[select basePartner.description, basePartner.name, basePartner.partner_seq, basePartner.tax_nbr, baseAddress.addressl2, 
 baseAddress.addressl3, baseAddress.addressl4, baseAddress.addressl6, baseCountry.name as countryName
 from account_invoice as invoice
-inner join base_partner as basePartner on (basePartner.id = invoice.partner)
-inner join base_address as baseAddress on (baseAddress.id = basePartner.main_address)
-inner join base_country as baseCountry on (baseCountry.id = baseAddress.addressl7country)
+left outer join base_partner as basePartner on (basePartner.id = invoice.partner)
+left outer join base_address as baseAddress on (baseAddress.id = basePartner.main_address)
+left outer join base_country as baseCountry on (baseCountry.id = baseAddress.addressl7country)
 where invoice.id = ?]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="CustomerDeliveryAddress" id="1008">
@@ -2344,38 +2344,43 @@ where invoice.id = ?]]></xml-property>
                     <property name="name">description</property>
                     <property name="nativeName">description</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
                     <property name="name">name</property>
                     <property name="nativeName">name</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
                     <property name="name">addressl4</property>
                     <property name="nativeName">addressl4</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
                     <property name="name">addressl6</property>
                     <property name="nativeName">addressl6</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
                     <property name="name">countryname</property>
                     <property name="nativeName">countryname</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select basePartner.description, basePartner.name, baseAddress.addressl4, baseAddress.addressl6, baseCountry.name as countryName
 from account_invoice as invoice
-inner join base_partner as basePartner on (basePartner.id = invoice.partner)
-inner join base_partner_address as basePartnerAddress on (basePartnerAddress.partner = basePartner.id)
-inner join base_address as baseAddress on (baseAddress.id = basePartnerAddress.address)
-inner join base_country as baseCountry on (baseCountry.id = baseAddress.addressl7country)
+left outer join base_partner as basePartner on (basePartner.id = invoice.partner)
+left outer join base_partner_address as basePartnerAddress on (basePartnerAddress.partner = basePartner.id)
+left outer join base_address as baseAddress on (baseAddress.id = basePartnerAddress.address)
+left outer join base_country as baseCountry on (baseCountry.id = baseAddress.addressl7country)
 where invoice.id = ?
 and basePartnerAddress.is_delivery_addr = true]]></xml-property>
         </oda-data-set>
@@ -3319,7 +3324,7 @@ if(row["trading_name"]==1){
                 </cell>
             </row>
         </grid>
-        <table id="576">
+        <table name="tableInvoiceLine" id="576">
             <property name="borderBottomStyle">solid</property>
             <property name="borderBottomWidth">thin</property>
             <property name="borderLeftStyle">solid</property>
@@ -3401,149 +3406,85 @@ if(row["trading_name"]==1){
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="name">Column Binding</property>
-                    <expression name="expression" type="javascript">row["stock_move_seq"]</expression>
-                    <property name="dataType">string</property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">num_bon</property>
-                    <text-property name="displayName">numero bon</text-property>
-                    <expression name="expression" type="javascript">if(row["type_select"] == 2){&#13;
-"Livraison N° " + row["stock_move_seq"] + " du " + row["real_date"].toString().substr(8,2) + "/" + row["real_date"].toString().substr(5,2) + "/" + row["real_date"].toString().substr(0,4);&#13;
-}else{&#13;
-"Retour N° " + row["stock_move_seq"] + " du " + row["real_date"].toString().substr(8,2) + "/" + row["real_date"].toString().substr(5,2) + "/" + row["real_date"].toString().substr(0,4);&#13;
-}</expression>
-                    <property name="dataType">string</property>
-                    <property name="allowExport">true</property>
+                    <property name="name">is_shipping_costs_product</property>
+                    <text-property name="displayName">is_shipping_costs_product</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["is_shipping_costs_product"]</expression>
+                    <property name="dataType">integer</property>
                 </structure>
                 <structure>
                     <property name="name">num_serie</property>
-                    <text-property name="displayName">numero_serie</text-property>
                     <expression name="expression" type="javascript">row["serial_number"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">designation</property>
-                    <text-property name="displayName">designation</text-property>
                     <expression name="expression" type="javascript">row["product_name"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">qte</property>
-                    <text-property name="displayName">quantite</text-property>
-                    <expression name="expression" type="javascript">row["qty"]</expression>
+                    <property name="name">Column Binding</property>
+                    <text-property name="displayName">mttHt</text-property>
+                    <expression name="expression" type="javascript">row["qty"]*((row["sale_price"]*(1-row["discount_amount"]/100))*(1-row["sec_discount_amount"]/100))</expression>
                     <property name="dataType">decimal</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">pu</property>
-                    <text-property name="displayName">prix_unitaire</text-property>
-                    <expression name="expression" type="javascript">row["sale_price"]</expression>
-                    <property name="dataType">decimal</property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">remiseligne1</property>
-                    <text-property name="displayName">remise_ligne_1</text-property>
-                    <expression name="expression" type="javascript">row["discount_amount"]</expression>
-                    <property name="dataType">decimal</property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">remiseligne2</property>
-                    <text-property name="displayName">remise_ligne_2</text-property>
+                    <property name="name">Column Binding_1</property>
+                    <text-property name="displayName">remise2</text-property>
                     <expression name="expression" type="javascript">row["sec_discount_amount"]</expression>
                     <property name="dataType">decimal</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">montantht</property>
-                    <text-property name="displayName">montant_ht</text-property>
-                    <expression name="expression" type="javascript">(((row["qty"]*row["sale_price"])*(1-(row["discount_amount"]/100)))*(1-(row["sec_discount_amount"]/100)));</expression>
+                    <property name="name">Column Binding_2</property>
+                    <text-property name="displayName">remise1</text-property>
+                    <expression name="expression" type="javascript">row["discount_amount"]</expression>
                     <property name="dataType">decimal</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">numero commande de vente</property>
-                    <text-property name="displayName">Num_com_vente</text-property>
-                    <expression name="expression" type="javascript">"Commande de vente n° " + row["stock_move_origin"];</expression>
+                    <property name="name">Column Binding_3</property>
+                    <text-property name="displayName">puht</text-property>
+                    <expression name="expression" type="javascript">row["sale_price"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding_4</property>
+                    <text-property name="displayName">Quantite</text-property>
+                    <expression name="expression" type="javascript">row["qty"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding_5</property>
+                    <text-property name="displayName">Description</text-property>
+                    <expression name="expression" type="javascript">row["product_name"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">Premiere remise</property>
-                    <text-property name="displayName">Montant Remise</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Premiere remise"]</expression>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="name">Description</property>
-                    <text-property name="displayName">Libellé</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Description"]</expression>
+                    <property name="name">Column Binding_6</property>
+                    <text-property name="displayName">num_serie</text-property>
+                    <expression name="expression" type="javascript">row["serial_number"]</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">Quantite</property>
-                    <text-property name="displayName">Qté</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Quantite"]</expression>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="name">Unité</property>
-                    <text-property name="displayName">Unité</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Unité"]</expression>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="name">Deuxieme remise</property>
-                    <text-property name="displayName">Montant Remise 2</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Deuxieme remise"]</expression>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="name">Type de document</property>
-                    <text-property name="displayName">type_select</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Type de document"]</expression>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="name">Date de facturation</property>
-                    <text-property name="displayName">Date</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Date de facturation"]</expression>
-                    <property name="dataType">date</property>
-                </structure>
-                <structure>
-                    <property name="name">Sequence du mouvement de stock</property>
-                    <text-property name="displayName">stock_move_seq</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Sequence du mouvement de stock"]</expression>
+                    <property name="name">Column Binding_7</property>
+                    <text-property name="displayName">stockMoveSeq</text-property>
+                    <expression name="expression" type="javascript">row["stock_move_seq"]</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">Origine du mouvement de stock</property>
-                    <text-property name="displayName">stock_move_origin</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Origine du mouvement de stock"]</expression>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="name">Numero de serie</property>
-                    <text-property name="displayName">serial_number</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Numero de serie"]</expression>
+                    <property name="name">Column Binding_8</property>
+                    <text-property name="displayName">stockMoveOrigin</text-property>
+                    <expression name="expression" type="javascript">row["stock_move_origin"]</expression>
                     <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">Prix de vente</property>
-                    <text-property name="displayName">sale_price</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Prix de vente"]</expression>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="name">Frais de port</property>
-                    <text-property name="displayName">is_shipping_costs_product</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Frais de port"]</expression>
-                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
                 </structure>
             </list-property>
             <property name="repeatHeader">true</property>
@@ -3703,8 +3644,8 @@ if(row["trading_name"]==1){
                         <cell id="951">
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
-                            <data name="dataNumBon" id="1025">
-                                <property name="resultSetColumn">num_bon</property>
+                            <data name="dataStockMoveSeq" id="1083">
+                                <property name="resultSetColumn">Column Binding_7</property>
                             </data>
                         </cell>
                         <cell id="952">
@@ -3736,16 +3677,8 @@ if(row["trading_name"]==1){
                         <cell id="969">
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
-                            <data name="dataNumComVente" id="1038">
-                                <list-property name="visibility">
-                                    <structure>
-                                        <property name="format">all</property>
-                                        <expression name="valueExpr" type="javascript">if(row["stock_move_origin"] == null){&#13;
-true;&#13;
-}</expression>
-                                    </structure>
-                                </list-property>
-                                <property name="resultSetColumn">numero commande de vente</property>
+                            <data name="dataStockMoveOrigin" id="1084">
+                                <property name="resultSetColumn">Column Binding_8</property>
                             </data>
                         </cell>
                         <cell id="970">
@@ -3805,15 +3738,14 @@ true;&#13;
             <detail>
                 <row id="690">
                     <method name="onPrepare"><![CDATA[//vars["totalHtBrut"] = vars["totalHtBrut"] + (row["Quantité"]*row["price"]);
-if(row["Frais de port"]==1){vars["fraisPort"] = vars["fraisPort"] + (row["Quantité"]*row["sale_price"]);}]]></method>
-                    <method name="onCreate"><![CDATA[ ]]></method>
+]]></method>
                     <property name="verticalAlign">middle</property>
                     <property name="masterPage">MasterPage</property>
                     <property name="height">0.7cm</property>
                     <list-property name="visibility">
                         <structure>
                             <property name="format">all</property>
-                            <expression name="valueExpr" type="javascript">if (row["Frais de port"]==1){true};</expression>
+                            <expression name="valueExpr" type="javascript">if (row["is_shipping_costs_product"]==1){true};</expression>
                         </structure>
                     </list-property>
                     <cell id="691">
@@ -3821,8 +3753,8 @@ if(row["Frais de port"]==1){vars["fraisPort"] = vars["fraisPort"] + (row["Quanti
                         <property name="borderLeftWidth">thin</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <data name="dataNumSerie" id="1026">
-                            <property name="resultSetColumn">num_serie</property>
+                        <data name="dataNumSerie" id="1082">
+                            <property name="resultSetColumn">Column Binding_6</property>
                         </data>
                     </cell>
                     <cell id="692">
@@ -3830,8 +3762,8 @@ if(row["Frais de port"]==1){vars["fraisPort"] = vars["fraisPort"] + (row["Quanti
                         <property name="borderLeftWidth">thin</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <data name="dataDesignation" id="1027">
-                            <property name="resultSetColumn">designation</property>
+                        <data name="dataDescription" id="1081">
+                            <property name="resultSetColumn">Column Binding_5</property>
                         </data>
                     </cell>
                     <cell id="693">
@@ -3839,13 +3771,13 @@ if(row["Frais de port"]==1){vars["fraisPort"] = vars["fraisPort"] + (row["Quanti
                         <property name="borderLeftWidth">thin</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <data name="dataQty" id="1028">
+                        <data name="dataQuantite" id="1080">
                             <structure name="numberFormat">
-                                <property name="category">Fixed</property>
-                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">qte</property>
+                            <property name="resultSetColumn">Column Binding_4</property>
                         </data>
                     </cell>
                     <cell id="694">
@@ -3853,13 +3785,13 @@ if(row["Frais de port"]==1){vars["fraisPort"] = vars["fraisPort"] + (row["Quanti
                         <property name="borderLeftWidth">thin</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <data name="dataPuHt" id="1029">
+                        <data name="dataPU" id="1079">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">pu</property>
+                            <property name="resultSetColumn">Column Binding_3</property>
                         </data>
                     </cell>
                     <cell id="695">
@@ -3867,13 +3799,13 @@ if(row["Frais de port"]==1){vars["fraisPort"] = vars["fraisPort"] + (row["Quanti
                         <property name="borderLeftWidth">thin</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <data name="dataRemLigne1" id="1030">
+                        <data name="dataRemise1" id="1078">
                             <structure name="numberFormat">
-                                <property name="category">Fixed</property>
-                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">remiseligne1</property>
+                            <property name="resultSetColumn">Column Binding_2</property>
                         </data>
                     </cell>
                     <cell id="696">
@@ -3881,13 +3813,13 @@ if(row["Frais de port"]==1){vars["fraisPort"] = vars["fraisPort"] + (row["Quanti
                         <property name="borderLeftWidth">thin</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <data name="dataRemLigne2" id="1031">
+                        <data name="dataRemise2" id="1077">
                             <structure name="numberFormat">
-                                <property name="category">Fixed</property>
-                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">remiseligne2</property>
+                            <property name="resultSetColumn">Column Binding_1</property>
                         </data>
                     </cell>
                     <cell id="697">
@@ -3901,8 +3833,13 @@ if(row["Frais de port"]==1){vars["fraisPort"] = vars["fraisPort"] + (row["Quanti
                                 <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <method name="onRender"><![CDATA[vars["totalHtBrut"] = vars["totalHtBrut"] +((((row["qty"]*row["sale_price"])*(1-(row["discount_amount"]/100)))*(1-(row["sec_discount_amount"]/100))));]]></method>
-                            <property name="resultSetColumn">montantht</property>
+                            <method name="onRender"><![CDATA[//Calcul du montant total brut
+vars["totalHtBrut"] = vars["totalHtBrut"] +((((row["qty"]*row["sale_price"])*(1-(row["discount_amount"]/100)))*(1-(row["sec_discount_amount"]/100))));
+//Calcul des frais de port
+if(row["is_shipping_costs_product"]==1){
+	vars["fraisPort"] = vars["fraisPort"] + (row["qty"]*row["sale_price"]);
+}]]></method>
+                            <property name="resultSetColumn">Column Binding</property>
                         </data>
                     </cell>
                 </row>
@@ -4233,7 +4170,7 @@ true&#13;
                     <data name="dataMttHt" id="637">
                         <structure name="numberFormat">
                             <property name="category">Currency</property>
-                            <property name="pattern">###0.00 €{RoundingMode=HALF_UP}</property>
+                            <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
                         </structure>
                         <property name="textAlign">right</property>
                         <property name="verticalAlign">middle</property>
@@ -4277,7 +4214,7 @@ true&#13;
                     <data name="dataFraisPort" id="1073">
                         <structure name="numberFormat">
                             <property name="category">Currency</property>
-                            <property name="pattern">###0.00 €{RoundingMode=HALF_UP}</property>
+                            <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
                         </structure>
                         <property name="textAlign">right</property>
                         <list-property name="boundDataColumns">
@@ -4319,7 +4256,7 @@ true&#13;
                     <data name="dataMttTva" id="639">
                         <structure name="numberFormat">
                             <property name="category">Currency</property>
-                            <property name="pattern">###0.00 €{RoundingMode=HALF_UP}</property>
+                            <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
                         </structure>
                         <property name="textAlign">right</property>
                         <property name="verticalAlign">middle</property>

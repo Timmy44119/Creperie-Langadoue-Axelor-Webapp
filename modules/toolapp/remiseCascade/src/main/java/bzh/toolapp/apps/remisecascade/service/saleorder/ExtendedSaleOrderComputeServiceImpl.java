@@ -120,8 +120,6 @@ public class ExtendedSaleOrderComputeServiceImpl extends SaleOrderComputeService
 
 		saleOrder.setInTaxTotal(saleOrder.getExTaxTotal().add(saleOrder.getTaxTotal()));
 		saleOrder.setAdvanceTotal(this.computeTotalAdvancePayment(saleOrder));
-		this.logger.debug("Montant de la facture: HTT = {},  HT = {}, TTC = {}", saleOrder.getExTaxTotal(),
-				saleOrder.getTaxTotal(), saleOrder.getInTaxTotal());
 
 		// duplicate also supplychain behavior
 		if (!Beans.get(AppSupplychainService.class).isApp("supplychain")) {

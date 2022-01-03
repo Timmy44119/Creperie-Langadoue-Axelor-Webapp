@@ -48,8 +48,8 @@ public class ExtendedInvoiceLineServiceImpl extends InvoiceLineProjectServiceImp
 
 		final BigDecimal unitPrice = inAti ? invoiceLine.getInTaxPrice() : invoiceLine.getPrice();
 
-		// Si le produit est un produit frais de port alors on applique pas de remise
-		if (invoiceLine.getProduct().getIsShippingCostsProduct()) {
+		// Controle sur le type du produit
+		if (!invoiceLine.getProduct().getIsShippingCostsProduct()) {
 			return unitPrice;
 		}
 
@@ -123,13 +123,17 @@ public class ExtendedInvoiceLineServiceImpl extends InvoiceLineProjectServiceImp
 
 		if (!invoice.getInAti()) {
 			exTaxTotal = InvoiceLineManagement.computeAmount(invoiceLine.getQty(), priceDiscounted);
-			// Application des remises globales
-			exTaxTotal = this.computeGlobalDiscount(invoice, exTaxTotal);
+			if (!invoiceLine.getProduct().getIsShippingCostsProduct()) {
+				// Application des remises globales
+				exTaxTotal = this.computeGlobalDiscount(invoice, exTaxTotal);
+			}
 			inTaxTotal = exTaxTotal.add(exTaxTotal.multiply(taxRate));
 		} else {
 			inTaxTotal = InvoiceLineManagement.computeAmount(invoiceLine.getQty(), priceDiscounted);
-			// Application des remises globales
-			inTaxTotal = this.computeGlobalDiscount(invoice, inTaxTotal);
+			if (!invoiceLine.getProduct().getIsShippingCostsProduct()) {
+				// Application des remises globales
+				inTaxTotal = this.computeGlobalDiscount(invoice, inTaxTotal);
+			}
 			exTaxTotal = inTaxTotal.divide(taxRate.add(BigDecimal.ONE), 2, BigDecimal.ROUND_HALF_UP);
 		}
 
