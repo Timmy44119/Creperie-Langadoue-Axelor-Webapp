@@ -49,7 +49,7 @@ public class ExtendedInvoiceLineServiceImpl extends InvoiceLineProjectServiceImp
 		final BigDecimal unitPrice = inAti ? invoiceLine.getInTaxPrice() : invoiceLine.getPrice();
 
 		// Controle sur le type du produit
-		if (!invoiceLine.getProduct().getIsShippingCostsProduct()) {
+		if (invoiceLine.getProduct().getIsShippingCostsProduct()) {
 			return unitPrice;
 		}
 
