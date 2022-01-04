@@ -4370,7 +4370,7 @@ true&#13;
                                                 <property name="name">fraisPort</property>
                                                 <text-property name="displayName">fraisPort</text-property>
                                                 <expression name="expression" type="javascript">vars["fraisPort"];</expression>
-                                                <property name="dataType">string</property>
+                                                <property name="dataType">decimal</property>
                                                 <property name="allowExport">true</property>
                                             </structure>
                                         </list-property>
