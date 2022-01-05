@@ -129,6 +129,12 @@ reportContext.setPersistentGlobalVariable("log", log);
                     <text-property name="heading">discount_amount</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">price</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">price</text-property>
+                    <text-property name="heading">price</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">product_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">Libellé</text-property>
@@ -222,61 +228,66 @@ reportContext.setPersistentGlobalVariable("log", log);
                     </structure>
                     <structure>
                         <property name="position">2</property>
+                        <property name="name">price</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
                         <property name="name">product_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">3</property>
+                        <property name="position">4</property>
                         <property name="name">qty</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">4</property>
+                        <property name="position">5</property>
                         <property name="name">unit</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
+                        <property name="position">6</property>
                         <property name="name">sec_discount_amount</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
+                        <property name="position">7</property>
                         <property name="name">tax_line</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">8</property>
                         <property name="name">type_select</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">9</property>
                         <property name="name">real_date</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">10</property>
                         <property name="name">stock_move_seq</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">11</property>
                         <property name="name">stock_move_origin</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">12</property>
                         <property name="name">serial_number</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">13</property>
                         <property name="name">sale_price</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">14</property>
                         <property name="name">is_shipping_costs_product</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -295,83 +306,90 @@ reportContext.setPersistentGlobalVariable("log", log);
                 </structure>
                 <structure>
                     <property name="position">2</property>
+                    <property name="name">price</property>
+                    <property name="nativeName">price</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
                     <property name="name">product_name</property>
                     <property name="nativeName">product_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                     <property name="name">qty</property>
                     <property name="nativeName">qty</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                     <property name="name">unit</property>
                     <property name="nativeName">unit</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                     <property name="name">sec_discount_amount</property>
                     <property name="nativeName">sec_discount_amount</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">tax_line</property>
                     <property name="nativeName">tax_line</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">type_select</property>
                     <property name="nativeName">type_select</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                     <property name="name">real_date</property>
                     <property name="nativeName">real_date</property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                     <property name="name">stock_move_seq</property>
                     <property name="nativeName">stock_move_seq</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">11</property>
                     <property name="name">stock_move_origin</property>
                     <property name="nativeName">stock_move_origin</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">12</property>
                     <property name="name">serial_number</property>
                     <property name="nativeName">serial_number</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">13</property>
                     <property name="name">sale_price</property>
                     <property name="nativeName">sale_price</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">14</property>
                     <property name="name">is_shipping_costs_product</property>
                     <property name="nativeName">is_shipping_costs_product</property>
                     <property name="dataType">integer</property>
@@ -379,6 +397,7 @@ reportContext.setPersistentGlobalVariable("log", log);
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select InvoiceLine.discount_amount,
+InvoiceLine.price,
 InvoiceLine.product_name,
 InvoiceLine.qty,
 InvoiceLine.unit,
@@ -1439,6 +1458,12 @@ Order by StockMove.real_date ASC]]></xml-property>
                     <text-property name="heading">invoice_date</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">invoice_id</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">invoice_id</text-property>
+                    <text-property name="heading">invoice_id</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">discount_amount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">discount_amount</text-property>
@@ -1542,61 +1567,66 @@ Order by StockMove.real_date ASC]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
+                        <property name="name">invoice_id</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
                         <property name="name">discount_amount</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
+                        <property name="position">6</property>
                         <property name="name">sec_discount_amount</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
+                        <property name="position">7</property>
                         <property name="name">trading_name</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">8</property>
                         <property name="name">ex_tax_total</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">9</property>
                         <property name="name">in_tax_total</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">10</property>
                         <property name="name">tax_total</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">11</property>
                         <property name="name">currency</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">12</property>
                         <property name="name">modereglement</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">13</property>
                         <property name="name">ex_tax_base</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">14</property>
                         <property name="name">intaxtotalline</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">15</property>
                         <property name="name">tax_total_1</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">16</property>
                         <property name="name">tva</property>
                         <property name="dataType">decimal</property>
                     </structure>
@@ -1627,83 +1657,90 @@ Order by StockMove.real_date ASC]]></xml-property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
+                    <property name="name">invoice_id</property>
+                    <property name="nativeName">invoice_id</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
                     <property name="name">discount_amount</property>
                     <property name="nativeName">discount_amount</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                     <property name="name">sec_discount_amount</property>
                     <property name="nativeName">sec_discount_amount</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">trading_name</property>
                     <property name="nativeName">trading_name</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">ex_tax_total</property>
                     <property name="nativeName">ex_tax_total</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                     <property name="name">in_tax_total</property>
                     <property name="nativeName">in_tax_total</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                     <property name="name">tax_total</property>
                     <property name="nativeName">tax_total</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">11</property>
                     <property name="name">currency</property>
                     <property name="nativeName">currency</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">12</property>
                     <property name="name">modereglement</property>
                     <property name="nativeName">modereglement</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">13</property>
                     <property name="name">ex_tax_base</property>
                     <property name="nativeName">ex_tax_base</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">14</property>
                     <property name="name">intaxtotalline</property>
                     <property name="nativeName">intaxtotalline</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">15</property>
                     <property name="name">tax_total_1</property>
                     <property name="nativeName">tax_total</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">16</property>
                     <property name="name">tva</property>
                     <property name="nativeName">tva</property>
                     <property name="dataType">decimal</property>
@@ -1713,6 +1750,7 @@ Order by StockMove.real_date ASC]]></xml-property>
             <xml-property name="queryText"><![CDATA[select Invoice.id,
 Invoice.due_date,
 Invoice.invoice_date,
+Invoice.invoice_id,
 Invoice.discount_amount,
 Invoice.sec_discount_amount,
 Invoice.trading_name,
@@ -3476,8 +3514,9 @@ if(row["trading_name"]==1){
                             <structure>
                                 <property name="name">id</property>
                                 <text-property name="displayName">id</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["id"]</expression>
+                                <expression name="expression" type="javascript">dataSetRow["invoice_id"]</expression>
                                 <property name="dataType">decimal</property>
+                                <property name="allowExport">true</property>
                             </structure>
                         </list-property>
                         <property name="resultSetColumn">id</property>
@@ -3703,9 +3742,9 @@ if(row["trading_name"]==1){
                     <property name="name">Column Binding</property>
                     <text-property name="displayName">mttHt</text-property>
                     <expression name="expression" type="javascript">if(row["type_select"]==3){&#13;
-row["qty"]*((row["sale_price"]*(1-row["discount_amount"]/100))*(1-row["sec_discount_amount"]/100))*-1;&#13;
+row["qty"]*((row["price"]*(1-row["discount_amount"]/100))*(1-row["sec_discount_amount"]/100))*-1;&#13;
 }else{&#13;
-row["qty"]*((row["sale_price"]*(1-row["discount_amount"]/100))*(1-row["sec_discount_amount"]/100));&#13;
+row["qty"]*((row["price"]*(1-row["discount_amount"]/100))*(1-row["sec_discount_amount"]/100));&#13;
 }</expression>
                     <property name="dataType">decimal</property>
                     <property name="allowExport">true</property>
@@ -3727,7 +3766,7 @@ row["qty"]*((row["sale_price"]*(1-row["discount_amount"]/100))*(1-row["sec_disco
                 <structure>
                     <property name="name">Column Binding_3</property>
                     <text-property name="displayName">puht</text-property>
-                    <expression name="expression" type="javascript">row["sale_price"]</expression>
+                    <expression name="expression" type="javascript">row["price"]</expression>
                     <property name="dataType">decimal</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -4132,10 +4171,10 @@ true&#13;
                             </structure>
                             <property name="textAlign">right</property>
                             <method name="onRender"><![CDATA[//Calcul du montant total brut
-vars["totalHtBrut"] = vars["totalHtBrut"] +((((row["qty"]*row["sale_price"])*(1-(row["discount_amount"]/100)))*(1-(row["sec_discount_amount"]/100))));
+vars["totalHtBrut"] = vars["totalHtBrut"] +((((row["qty"]*row["price"])*(1-(row["discount_amount"]/100)))*(1-(row["sec_discount_amount"]/100))));
 //Calcul des frais de port
 if(row["is_shipping_costs_product"]==1){
-	vars["fraisPort"] = vars["fraisPort"] + (row["qty"]*row["sale_price"]);
+	vars["fraisPort"] = vars["fraisPort"] + (row["qty"]*row["price"]);
 	vars["fraisPortTax"] = row["tax_line"];
 }]]></method>
                             <property name="resultSetColumn">Column Binding</property>
