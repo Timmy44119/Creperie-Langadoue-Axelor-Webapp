@@ -3515,7 +3515,7 @@ if(row["trading_name"]==1){
                                 <property name="name">id</property>
                                 <text-property name="displayName">id</text-property>
                                 <expression name="expression" type="javascript">dataSetRow["invoice_id"]</expression>
-                                <property name="dataType">decimal</property>
+                                <property name="dataType">string</property>
                                 <property name="allowExport">true</property>
                             </structure>
                         </list-property>
@@ -3813,6 +3813,12 @@ row["qty"]*((row["price"]*(1-row["discount_amount"]/100))*(1-row["sec_discount_a
                     <property name="name">tax_line</property>
                     <text-property name="displayName">tax_line</text-property>
                     <expression name="expression" type="javascript">dataSetRow["tax_line"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">price</property>
+                    <text-property name="displayName">price</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["price"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
             </list-property>
@@ -4170,12 +4176,13 @@ true&#13;
                                 <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <method name="onRender"><![CDATA[//Calcul du montant total brut
-vars["totalHtBrut"] = vars["totalHtBrut"] +((((row["qty"]*row["price"])*(1-(row["discount_amount"]/100)))*(1-(row["sec_discount_amount"]/100))));
-//Calcul des frais de port
+                            <method name="onRender"><![CDATA[//Calcul des frais de port
 if(row["is_shipping_costs_product"]==1){
 	vars["fraisPort"] = vars["fraisPort"] + (row["qty"]*row["price"]);
 	vars["fraisPortTax"] = row["tax_line"];
+}else{
+//Calcul du montant total brut
+	vars["totalHtBrut"] = vars["totalHtBrut"] +((((row["qty"]*row["price"])*(1-(row["discount_amount"]/100)))*(1-(row["sec_discount_amount"]/100))));
 }]]></method>
                             <property name="resultSetColumn">Column Binding</property>
                         </data>

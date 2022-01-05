@@ -214,7 +214,7 @@ public class ExtendedInvoiceGeneratorFromScratch extends InvoiceGenerator {
 		return invoiceLineList;
 	}
 
-	// Mise à jour des montants de chaque ligne de la facture
+	// Mise a jour des montants de chaque ligne de la facture
 	private InvoiceLine updateInvoiceLine(final Invoice invoice, final InvoiceLine invoiceLine) throws AxelorException {
 
 		BigDecimal exTaxTotal;
